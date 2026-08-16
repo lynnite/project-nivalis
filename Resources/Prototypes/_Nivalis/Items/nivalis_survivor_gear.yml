@@ -1,0 +1,8 @@
+- type: startingGear
+  id: NivalisSurvivorGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitColorWhite
+    shoes: ClothingShoesColorBlack
+    id: PassengerPDA
+    ears: ClothingHeadsetService
+    pocket1: ToolboxMechanicalFilled

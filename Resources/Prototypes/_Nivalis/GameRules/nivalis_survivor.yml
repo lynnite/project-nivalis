@@ -1,0 +1,10 @@
+- type: entity
+  parent: BaseGameRule
+  id: NivalisSurvivorGameRule
+  components:
+  - type: NivalisSurvivorRule
+    spawnMarker: NivalisSurvivorSpawnPoint
+    mindRole: MindRoleNivalisSurvivor
+    job: NivalisSurvivor
+    gear: NivalisSurvivorGear
+

@@ -1,0 +1,20 @@
+- type: entity
+  parent: StatusEffectSlowdown
+  id: StatusEffectNivalisExhaustion
+  name: exhausted
+
+- type: entity
+  parent: StatusEffectSlowdown
+  id: StatusEffectNivalisHardship
+  name: starving and dehydrated
+
+- type: entity
+  parent: StatusEffectSlowdown
+  id: StatusEffectNivalisLowMorale
+  name: low morale
+
+- type: entity
+  parent: StatusEffectSlowdown
+  id: StatusEffectNivalisFrenzied
+  name: frenzied
+

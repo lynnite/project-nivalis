@@ -1,0 +1,9 @@
+- type: entity
+  parent: BaseMindRole
+  id: MindRoleNivalisSurvivor
+  name: Nivalis Survivor Role
+  description: You are a survivor. Last one standing wins.
+  components:
+  - type: MindRole
+    sortWeight: 20
+  - type: NivalisSurvivorRole

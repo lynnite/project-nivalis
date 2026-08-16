@@ -1,0 +1,8 @@
+- type: department
+  id: NivalisSurvivor
+  name: nivalis-survivor-department-name
+  description: nivalis-survivor-department-description
+  color: "#00FF00"
+  weight: -100
+  roles:
+  - NivalisSurvivor

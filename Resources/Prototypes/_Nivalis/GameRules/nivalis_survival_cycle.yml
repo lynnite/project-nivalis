@@ -1,0 +1,9 @@
+- type: entity
+  parent: BaseGameRule
+  id: NivalisSurvivalCycleGameRule
+  components:
+  - type: NivalisSurvivalCycle
+    scavengeDuration: 150 # nivalis todo: make this a random time around 100-200 or something similar
+    stormDuration: 600 # hard cap
+
+

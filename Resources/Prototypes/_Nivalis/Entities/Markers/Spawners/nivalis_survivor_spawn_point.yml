@@ -1,0 +1,12 @@
+- type: entity
+  id: NivalisSurvivorSpawnPoint
+  parent: MarkerBase
+  name: Nivalis Survivor Spawn
+  suffix: Nivalis Survivor
+  components:
+  - type: NivalisSurvivorSpawnPoint
+  - type: Sprite
+    sprite: Markers/jobs.rsi
+    layers:
+      - state: green
+

@@ -1,0 +1,13 @@
+- type: gamePreset
+  id: NivalisSurvivor
+  alias:
+    - nivalis
+    - survivorgamemode
+  name: nivalis-survivor-title
+  description: nivalis-survivor-description
+  showInVote: false
+  rules:
+    - NivalisSurvivorGameRule
+    - NivalisSurvivalCycleGameRule
+
+

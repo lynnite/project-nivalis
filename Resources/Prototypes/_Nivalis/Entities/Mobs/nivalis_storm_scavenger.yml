@@ -1,0 +1,35 @@
+- type: entity
+  id: MobNivalisScavenger
+  parent: MobHuman
+  name: storm scavenger
+  description: A desperate, hostile scavenger clawing for what's left on Nivalis-232.
+  components:
+  - type: NpcFactionMember
+    factions:
+      - Syndicate
+  - type: NivalisStormEnemy
+  - type: Loadout
+    prototypes:
+      - SyndicateFootsoldierGearRuin
+  - type: InputMover
+  - type: MobMover
+  - type: HTN
+    rootTask:
+      task: SimpleHumanoidHostileCompound
+
+- type: entity
+  id: NivalisStormSpawner
+  parent: MarkerBase
+  name: Storm Spawner
+  suffix: Nivalis
+  description: where a scav spawns
+  components:
+  - type: NivalisStormSpawner
+    spawnPrototype: MobNivalisScavenger
+    spawnCount: 1
+    threatRampPerWave: 1
+    spawnJitter: 3
+  - type: Sprite
+    sprite: Markers/jobs.rsi
+    layers:
+      - state: red

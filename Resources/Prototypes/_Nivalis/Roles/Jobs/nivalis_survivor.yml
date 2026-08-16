@@ -1,0 +1,9 @@
+- type: job
+  id: NivalisSurvivor
+  name: job-name-nivalis-survivor
+  description: job-description-nivalis-survivor
+  playTimeTracker: JobNivalisSurvivor
+  startingGear: NivalisSurvivorGear
+  icon: JobIconPassenger
+  setPreference: true
+

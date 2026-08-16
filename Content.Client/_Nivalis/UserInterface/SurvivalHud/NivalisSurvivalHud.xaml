@@ -1,0 +1,31 @@
+<widgets:NivalisSurvivalHud xmlns="https://spacestation14.io"
+                              xmlns:widgets="clr-namespace:Content.Client._Nivalis.UserInterface.SurvivalHud"
+                              xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Bottom"
+                              Margin="0 0 10 80">
+    <BoxContainer Orientation="Vertical" SeparationOverride="4">
+        <BoxContainer Orientation="Horizontal" SeparationOverride="6">
+            <Label Text="{Loc 'nivalis-hud-hunger'}" MinWidth="44" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+            <ProgressBar Name="HungerBar" MinWidth="140" MaxValue="100" Value="100" SetHeight="14">
+                <ProgressBar.ForegroundStyleBoxOverride>
+                    <graphics:StyleBoxFlat BackgroundColor="#C8A94B" ContentMarginLeftOverride="4" ContentMarginRightOverride="4"/>
+                </ProgressBar.ForegroundStyleBoxOverride>
+                <ProgressBar.BackgroundStyleBoxOverride>
+                    <graphics:StyleBoxFlat BackgroundColor="#00000088"/>
+                </ProgressBar.BackgroundStyleBoxOverride>
+            </ProgressBar>
+        </BoxContainer>
+        <BoxContainer Orientation="Horizontal" SeparationOverride="6">
+            <Label Text="{Loc 'nivalis-hud-thirst'}" MinWidth="44" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+            <ProgressBar Name="ThirstBar" MinWidth="140" MaxValue="100" Value="100" SetHeight="14">
+                <ProgressBar.ForegroundStyleBoxOverride>
+                    <graphics:StyleBoxFlat BackgroundColor="#4A9FC8" ContentMarginLeftOverride="4" ContentMarginRightOverride="4"/>
+                </ProgressBar.ForegroundStyleBoxOverride>
+                <ProgressBar.BackgroundStyleBoxOverride>
+                    <graphics:StyleBoxFlat BackgroundColor="#00000088"/>
+                </ProgressBar.BackgroundStyleBoxOverride>
+            </ProgressBar>
+        </BoxContainer>
+    </BoxContainer>
+</widgets:NivalisSurvivalHud>

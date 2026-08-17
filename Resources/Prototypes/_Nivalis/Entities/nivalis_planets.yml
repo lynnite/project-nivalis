@@ -1,0 +1,21 @@
+- type: nivalisPlanet
+  id: NivalisTestPlanet
+  name: nivalis-planet-ancient
+  mapFile: /Maps/_Nivalis/test.yml
+  mapId: NivalisMapTest
+  planetEntity: NivalisPlanetTest
+
+- type: entity
+  id: NivalisPlanetBase
+  abstract: true
+  name: nivalis planet
+  description: A Nivalis-232 planet that can be selected for a survival round.
+
+- type: entity
+  id: NivalisPlanetTest
+  parent: NivalisPlanetBase
+  name: Ancient
+  components:
+  - type: NivalisPlanetPool
+
+

@@ -13,6 +13,8 @@ public sealed partial class NivalisSurvivalCycleComponent : Component
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoPausedField]
     public TimeSpan NextPhaseChange = TimeSpan.Zero;
 
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
+    public TimeSpan PhaseEndTime = TimeSpan.Zero;
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float ScavengeDuration = 150f;
 

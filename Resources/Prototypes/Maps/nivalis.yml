@@ -1,0 +1,15 @@
+- type: gameMap
+  id: NivalisMapTest
+  mapName: Ancient
+  mapPath: /Maps/_Nivalis/test.yml
+  minPlayers: 0
+  maxPlayers: 32
+  stations:
+    Planet:
+      stationProto: StandardNanotrasenStation
+      components:
+        - type: StationNameSetup
+          mapNameTemplate: 'Ancient - {0}'
+          nameGenerator:
+            !type:NanotrasenNameGenerator
+            prefixCreator: 'NIV'

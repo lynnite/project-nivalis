@@ -2,7 +2,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Nivalis.Perks;
 
-[Prototype("trait")]
+[Prototype("perk")]
 public sealed partial class NivalisPerkPrototype : IPrototype
 {
     [IdDataField]

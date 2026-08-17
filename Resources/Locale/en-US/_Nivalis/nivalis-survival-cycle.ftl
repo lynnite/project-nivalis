@@ -10,6 +10,8 @@ nivalis-alert-morale-desc = Morale
 # survival HUD
 nivalis-hud-hunger = HUNGER
 nivalis-hud-thirst = THIRST
+nivalis-hud-phase-scavenge = SCAVENGE
+nivalis-hud-phase-storm = STORM
 
 # survivor traits
 trait-risktaker-name = Risktaker
@@ -42,4 +44,13 @@ nivalis-trait-draft-prompt = Choose a trait to add to your loadout:
 nivalis-trait-unnamed = (unnamed trait)
 # round end
 nivalis-round-end-waves = Waves survived: {$waves}
+
+# planet map vote
+nivalis-planet-vote-title = Choose a Planet
+nivalis-planet-vote-win = { $winner } won the planet vote!
+nivalis-planet-vote-tie = Tie for planet vote! Picking... { $picked }
+nivalis-planet-vote-empty = No planets are available to vote on right now.
+
+# planet names
+nivalis-planet-ancient = Ancient
 

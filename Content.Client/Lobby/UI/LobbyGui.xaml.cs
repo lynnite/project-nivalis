@@ -18,6 +18,7 @@ namespace Content.Client.Lobby.UI
             IoCManager.InjectDependencies(this);
             SetAnchorPreset(MainContainer, LayoutPreset.Wide);
             SetAnchorPreset(Background, LayoutPreset.Wide);
+            SetAnchorPreset(NivalisLobby, LayoutPreset.Wide);
 
             LobbySong.SetMarkup(Loc.GetString("lobby-state-song-no-song-text"));
 
@@ -26,6 +27,43 @@ namespace Content.Client.Lobby.UI
 
             CollapseButton.OnPressed += _ => TogglePanel(false);
             ExpandButton.OnPressed += _ => TogglePanel(true);
+
+            NivalisLobby.NavigationPressed += OnNivalisNavigation;
+            NivalisLobby.Visible = true;
+            Background.Visible = false;
+
+            HideDefaultLobbyWidgets();
+            NivalisLobby.HideDefaultLobby(this, Chat);
+        }
+
+        private void HideDefaultLobbyWidgets()
+        {
+            DefaultState.Visible = false;
+            LeftSideTop.Visible = false;
+            DevInfoBanner.Visible = false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+                NivalisLobby.NavigationPressed -= OnNivalisNavigation;
+        }
+
+        private void OnNivalisNavigation(string action)
+        {
+            switch (action)
+            {
+                case "loadout":
+                    SwitchState(LobbyGuiState.CharacterSetup);
+                    break;
+                case "settings":
+                    UserInterfaceManager.GetUIController<OptionsUIController>().ToggleWindow();
+                    break;
+                case "challenges":
+                case "quartermaster": //nivalis todo add purpose for their life
+                    break;
+            }
         }
 
         public void SwitchState(LobbyGuiState state)
@@ -36,11 +74,17 @@ namespace Content.Client.Lobby.UI
             switch (state)
             {
                 case LobbyGuiState.Default:
-                    DefaultState.Visible = true;
-                    RightSide.Visible = true;
+                    DefaultState.Visible = false;
+                    LeftSideTop.Visible = false;
+                    DevInfoBanner.Visible = false;
+                    RightSide.Visible = false;
+                    NivalisLobby.Visible = true;
+                    Background.Visible = false;
                     break;
                 case LobbyGuiState.CharacterSetup:
                     CharacterSetupState.Visible = true;
+                    NivalisLobby.Visible = false;
+                    Background.Visible = true;
 
                     var actualWidth = (float) UserInterfaceManager.RootControl.PixelWidth;
                     var setupWidth = (float) LeftSide.PixelWidth;
@@ -64,13 +108,7 @@ namespace Content.Client.Lobby.UI
 
         public enum LobbyGuiState : byte
         {
-            /// <summary>
-            ///  The default state, i.e., what's seen on launch.
-            /// </summary>
             Default,
-            /// <summary>
-            ///  The character setup state.
-            /// </summary>
             CharacterSetup
         }
     }

@@ -17,7 +17,7 @@ public sealed class NivalisTraitDraftBoundUserInterface : BoundUserInterface
         _window = this.CreateWindow<NivalisTraitDraftWindow>();
         _window.OnTraitPicked += traitId =>
         {
-            SendMessage(new NivalisTraitDraftSelectedMessage(traitId, Owner));
+            SendMessage(new NivalisTraitDraftSelectedMessage(traitId));
         };
     }
 

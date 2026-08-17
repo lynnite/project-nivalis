@@ -6,6 +6,10 @@
                               Margin="0 0 10 80">
     <BoxContainer Orientation="Vertical" SeparationOverride="4">
         <BoxContainer Orientation="Horizontal" SeparationOverride="6">
+            <Label Name="PhaseLabel" Text="---" StyleClasses="LabelSmall" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label Name="TimerLabel" Text="" MinWidth="140" StyleClasses="LabelSmall" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        </BoxContainer>
+        <BoxContainer Orientation="Horizontal" SeparationOverride="6">
             <Label Text="{Loc 'nivalis-hud-hunger'}" MinWidth="44" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
             <ProgressBar Name="HungerBar" MinWidth="140" MaxValue="100" Value="100" SetHeight="14">
                 <ProgressBar.ForegroundStyleBoxOverride>
@@ -29,3 +33,4 @@
         </BoxContainer>
     </BoxContainer>
 </widgets:NivalisSurvivalHud>
+

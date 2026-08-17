@@ -25,9 +25,8 @@ public sealed class NivalisTraitDraftUiState : BoundUserInterfaceState
 }
 
 [Serializable, NetSerializable]
-public sealed class NivalisTraitDraftSelectedMessage(ProtoId<NivalisPerkPrototype> traitId, EntityUid actor) : BoundUserInterfaceMessage
+public sealed class NivalisTraitDraftSelectedMessage(ProtoId<NivalisPerkPrototype> traitId) : BoundUserInterfaceMessage
 {
     public ProtoId<NivalisPerkPrototype> TraitId = traitId;
-    public EntityUid Actor = actor;
 }
 

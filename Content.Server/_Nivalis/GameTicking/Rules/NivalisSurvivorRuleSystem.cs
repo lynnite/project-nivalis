@@ -9,7 +9,10 @@ using Content.Server.Station.Systems;
 using Content.Server._Nivalis.GameTicking.Rules.Components;
 using Content.Server._Nivalis.Survivor.Components;
 using Content.Shared._Nivalis.GameTicking.Components;
+using Content.Shared._Nivalis.Morale;
 using Content.Shared._Nivalis.Perks;
+using Content.Shared._Nivalis.Stamina;
+using Content.Shared._Nivalis.Status;
 using Content.Shared._Nivalis.Survivor.Components;
 using Content.Shared._Nivalis.Traits;
 using Content.Shared.GameTicking;
@@ -149,6 +152,10 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         EnsureComp<NivalisSurvivorComponent>(mob);
 
         EnsureComp<NivalisPerkComponent>(mob);
+
+        EnsureComp<NivalisSurvivalResourceComponent>(mob);
+        EnsureComp<NivalisStaminaComponent>(mob);
+        EnsureComp<NivalisMoraleComponent>(mob);
 
         var ui = EnsureComp<UserInterfaceComponent>(mob);
         _ui.SetUi((mob, ui), NivalisTraitDraftUiKey.Key, new InterfaceData("NivalisTraitDraftBoundUserInterface"));

@@ -39,6 +39,7 @@ public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisS
 
         component.Phase = NivalisSurvivalPhase.Scavenge;
         component.NextPhaseChange = Timing.CurTime + TimeSpan.FromSeconds(component.ScavengeDuration);
+        component.PhaseEndTime = component.NextPhaseChange;
         Dirty(uid, component);
     }
 
@@ -128,6 +129,7 @@ public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisS
             case NivalisSurvivalPhase.Scavenge:
                 component.Phase = NivalisSurvivalPhase.Storm;
                 component.NextPhaseChange = Timing.CurTime + TimeSpan.FromSeconds(component.StormDuration);
+                component.PhaseEndTime = component.NextPhaseChange;
                 _chat.DispatchGlobalAnnouncement(Loc.GetString("nivalis-cycle-storm-start"), colorOverride: Color.DeepSkyBlue);
                 SpawnStormEnemies(component);
                 break;
@@ -135,6 +137,7 @@ public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisS
             case NivalisSurvivalPhase.Storm:
                 component.Phase = NivalisSurvivalPhase.Scavenge;
                 component.NextPhaseChange = Timing.CurTime + TimeSpan.FromSeconds(component.ScavengeDuration);
+                component.PhaseEndTime = component.NextPhaseChange;
                 component.WavesCleared++;
                 Dirty(uid, component);
                 _chat.DispatchGlobalAnnouncement(Loc.GetString("nivalis-cycle-scavenge-start"), colorOverride: Color.Wheat);

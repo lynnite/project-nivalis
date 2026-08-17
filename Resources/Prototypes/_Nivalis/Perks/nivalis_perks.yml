@@ -1,12 +1,12 @@
 # nivalis todo perks for heavy swing and light swing when coded, and for gun recoil etc
-- type: trait
+- type: perk
   id: Risktaker
   name: trait-risktaker-name
   description: trait-risktaker-desc
   damageDealtMult: 1.05
   damageTakenMult: 1.05
 
-- type: trait
+- type: perk
   id: Conservative
   name: trait-conservative-name
   description: trait-conservative-desc
@@ -15,27 +15,27 @@
   thirstDecayMult: 0.8
   moralePenaltyReduction: 0.25
 
-- type: trait
+- type: perk
   id: Berserker
   name: trait-berserker-name
   description: trait-berserker-desc
   damageDealtMult: 1.15
   damageTakenMult: 1.15
 
-- type: trait
+- type: perk
   id: Frenzied
   name: trait-frenzied-name
   description: trait-frenzied-desc
   speedMult: 1.1
   staminaDrainMult: 0.9
 
-- type: trait
+- type: perk
   id: DeepWounds
   name: trait-deep-wounds-name
   description: trait-deep-wounds-desc
   damageDealtMult: 1.1
 
-- type: trait
+- type: perk
   id: Opportunist
   name: trait-opportunist-name
   description: trait-opportunist-desc
@@ -43,14 +43,14 @@
   hungerDecayMult: 0.9
   thirstDecayMult: 0.9
 
-- type: trait
+- type: perk
   id: LoneWolf
   name: trait-lone-wolf-name
   description: trait-lone-wolf-desc
   damageDealtMult: 1.1
   staminaDrainMult: 0.9
 
-- type: trait
+- type: perk
   id: Medic
   name: trait-medic-name
   description: trait-medic-desc

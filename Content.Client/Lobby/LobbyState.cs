@@ -124,6 +124,23 @@ namespace Content.Client.Lobby
 
         public override void FrameUpdate(FrameEventArgs e)
         {
+            if (Lobby!.NivalisLobby.Visible)
+            {
+                Lobby.NivalisLobby.UpdateDiagnostics(e.DeltaSeconds);
+                Lobby.NivalisLobby.UpdateMatchStats(
+                    _gameTicker.AreWeReady ? 1 : 0,
+                    0,
+                    _gameTicker.StartTime - _gameTiming.CurTime,
+                    0);
+
+                var level = Math.Max(1, (int) (_playtimeTracking.PlaytimeMinutesToday / 10));
+                Lobby.NivalisLobby.UpdatePlayerProgression(
+                    level: level,
+                    odens: level * 25,
+                    bonds: level * 40,
+                    tier: level / 5);
+            }
+
             if (_gameTicker.IsGameStarted)
             {
                 Lobby!.StartTime.Text = string.Empty;

@@ -1,0 +1,249 @@
+- type: entityTable # all placeholder so that its easier to put the actual entities here later when im tired
+  id: NivalisCommonFoodTable
+  table: !type:GroupSelector
+    children:
+    - id: FoodSnackBoritos
+    - id: FoodSnackCheesie
+    - id: FoodSnackChips
+    - id: FoodSnackChocolateBar
+    - id: FoodSnackRaisins
+    - id: FoodSnackPistachios
+    - id: FoodSnackNutribrick
+    - id: FoodSnackEnergy
+
+- type: entityTable
+  id: NivalisAllFoodTable
+  table: !type:GroupSelector
+    children:
+    - !type:NestedSelector
+      tableId: NivalisCommonFoodTable
+      weight: 0.85
+    - !type:GroupSelector
+      weight: 0.15
+      children:
+      - id: FoodSnackSyndi
+
+- type: entityTable
+  id: NivalisWaterTable
+  table: !type:GroupSelector
+    children:
+    - id: DrinkWaterBottleFull
+    - id: DrinkWaterCup
+    - id: DrinkSodaWaterCan
+
+- type: entityTable
+  id: NivalisMedicalTable
+  table: !type:GroupSelector
+    children:
+    - id: Ointment1
+      weight: 1.5
+    - id: Brutepack1
+      weight: 1.5
+    - id: Gauze1
+      weight: 1.5
+    - id: MedkitFilled
+      weight: 0.5
+
+- type: entityTable
+  id: NivalisAmmoTable
+  table: !type:GroupSelector
+    children:
+    - id: MagazinePistol
+    - id: MagazinePistolHighCapacity
+    - id: MagazineShotgun
+
+- type: entityTable
+  id: NivalisHardwareTable
+  table: !type:GroupSelector
+    children:
+    - id: CableApcStack
+    - id: CableMVStack
+    - id: SheetSteel
+    - id: SheetGlass
+    - id: ToolboxMechanicalFilled
+    - id: ToolboxElectricalFilled
+
+- type: entityTable
+  id: NivalisScavengeTable
+  table: !type:GroupSelector
+    children:
+    - !type:NestedSelector
+      tableId: NivalisAllFoodTable
+      weight: 0.45
+    - !type:NestedSelector
+      tableId: NivalisWaterTable
+      weight: 0.30
+    - !type:NestedSelector
+      tableId: NivalisMedicalTable
+      weight: 0.10
+    - !type:NestedSelector
+      tableId: NivalisAmmoTable
+      weight: 0.10
+    - !type:NestedSelector
+      tableId: NivalisHardwareTable
+      weight: 0.05
+
+# Container entities that hold the loot, spawned instead of dropping items on the ground.
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateNivalisScavenge
+  name: scavenged supply crate
+  suffix: Nivalis
+  description: A battered crate packed with whatever could be scavenged from Nivalis.
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: NivalisScavengeTable
+
+- type: entity
+  parent: CrateFreezer
+  id: CrateNivalisFood
+  name: food crate
+  suffix: Nivalis
+  description: A crate full of whatever stored snacks survived the storm.
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: NivalisAllFoodTable
+
+- type: entity
+  parent: CratePlastic
+  id: CrateNivalisWater
+  name: water crate
+  suffix: Nivalis
+  description: A crate of salvaged drinking water.
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: NivalisWaterTable
+
+- type: entity
+  parent: CrateMedical
+  id: CrateNivalisMedical
+  name: medical crate
+  suffix: Nivalis
+  description: A scavenged medical crate with basic supplies.
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: NivalisMedicalTable
+
+- type: entity
+  parent: CrateGenericSteel
+  id: CrateNivalisAmmo
+  name: ammunition crate
+  suffix: Nivalis
+  description: A sturdy crate of loose ammunition.
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: NivalisAmmoTable
+
+- type: entity
+  parent: CrateEngineering
+  id: CrateNivalisHardware
+  name: hardware crate
+  suffix: Nivalis
+  description: A crate of salvaged hardware and materials.
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      entity_storage: !type:NestedSelector
+        tableId: NivalisHardwareTable
+
+# Spawn markers that place the crates.
+- type: entity
+  parent: MarkerBase
+  id: SpawnNivalisScavenge
+  name: scavenge loot
+  suffix: Nivalis
+  description: A random scavenge loot spawn when a Nivalis survivor round runs.
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: Structures/Storage/Crates/generic.rsi
+      state: icon
+  - type: EntityTableSpawner
+    table: !type:GroupSelector
+      prob: 0.8
+      children:
+      - id: CrateNivalisScavenge
+    offset: 0.0
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnNivalisFood
+  name: food loot
+  suffix: Nivalis
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: Structures/Storage/Crates/freezer.rsi
+      state: icon
+  - type: EntityTableSpawner
+    table: !type:GroupSelector
+      prob: 0.9
+      children:
+      - id: CrateNivalisFood
+    offset: 0.0
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnNivalisWater
+  name: water loot
+  suffix: Nivalis
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: Structures/Storage/Crates/plastic.rsi
+      state: icon
+  - type: EntityTableSpawner
+    table: !type:GroupSelector
+      prob: 0.9
+      children:
+      - id: CrateNivalisWater
+    offset: 0.0
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnNivalisMedical
+  name: medical loot
+  suffix: Nivalis
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: Structures/Storage/Crates/medical.rsi
+      state: icon
+  - type: EntityTableSpawner
+    table: !type:GroupSelector
+      prob: 0.6
+      children:
+      - id: CrateNivalisMedical
+    offset: 0.0
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnNivalisAmmo
+  name: ammunition loot
+  suffix: Nivalis
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: Structures/Storage/Crates/generic.rsi
+      state: icon
+  - type: EntityTableSpawner
+    table: !type:GroupSelector
+      prob: 0.6
+      children:
+      - id: CrateNivalisAmmo
+    offset: 0.0

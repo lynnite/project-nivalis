@@ -5,37 +5,22 @@
     xmlns:lobby="clr-namespace:Content.Client.Lobby.UI.ProfileEditorControls"
     xmlns:nivalis="clr-namespace:Content.Client._Nivalis.UserInterface.Lobby">
 
-    <!-- ============================================================
-         Nivalis-232 custom lobby.
-         Layers (bottom -> top):
-           1) dark gradient backdrop,
-           2) center character dummy,
-           3) left action menu (buttons not wrapped in a box),
-           4) bottom-left stat stack,
-           5) right chat sidebar,
-           6) top header (title + metric row).
-         Thin CRT scanlines are applied only to UI panels (nav / chat /
-         stats) in the code-behind, not to the full screen.
-         ============================================================ -->
     <LayoutContainer Name="Root" HorizontalExpand="True" VerticalExpand="True">
 
-        <!-- 1. Fullscreen dark backdrop (gradient, no scanlines). -->
         <TextureRect Name="BackgroundViewport"
                      Stretch="KeepAspectCovered"
                      HorizontalExpand="True" VerticalExpand="True" />
 
-        <!-- 5. Right chat sidebar (darker / colder tone). -->
         <PanelContainer Name="ChatPanel" MinWidth="320" VerticalExpand="True">
             <PanelContainer.PanelOverride>
-                <gfx:StyleBoxFlat BackgroundColor="#0a111acc"
-                                  BorderColor="#2c4257" BorderThickness="1 1 1 1" />
+                <gfx:StyleBoxFlat BackgroundColor="#1a2a3acc"
+                                  BorderColor="#282B38" BorderThickness="1 1 1 1" />
             </PanelContainer.PanelOverride>
             <BoxContainer Name="ChatSlot" Orientation="Vertical"
                           HorizontalExpand="True" VerticalExpand="True"
                           Margin="2 2 2 2" />
         </PanelContainer>
 
-        <!-- 2. Center character dummy viewport (no dark bounding box). -->
         <BoxContainer Name="CharacterViewport"
                       Orientation="Vertical" MinSize="360 520" MaxSize="360 520">
             <Label Name="AgentTitleLabel" Text="— AGENT —" FontColorOverride="#58C6E8"
@@ -48,23 +33,18 @@
                    HorizontalAlignment="Center" Margin="0 2 0 10" />
         </BoxContainer>
 
-        <!-- 3. Left action menu: slim long buttons, kept close, NOT boxed.
-         A rightward slant (perspective) is applied per-button in code-behind. -->
         <BoxContainer Name="Navigation" Orientation="Vertical"
                       MinWidth="230" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button Name="ReadyButton" Text="NOT READY" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="LoadoutButton" Text="LOADOUT" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="ChallengesButton" Text="CHALLENGES" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="QuartermasterButton" Text="QUARTERMASTER" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
-            <!-- SERVO WORKSHOP: disabled until functionality is implemented.
-                 <Button Name="ServoWorkshopButton" Text="SERVO WORKSHOP" HorizontalExpand="True" MinHeight="34" /> -->
             <Button Name="PatreonButton" Text="PATREON" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="SettingsButton" Text="SETTINGS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Control MinSize="0 12" />
             <Button Name="QuitButton" Text="QUIT" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
         </BoxContainer>
 
-        <!-- 4. Bottom-left stat stack (capacity box removed). -->
         <BoxContainer Name="ProgressionBox" Orientation="Vertical"
                       SeparationOverride="8" MinSize="300 0"
                       HorizontalAlignment="Left" VerticalAlignment="Bottom">
@@ -86,7 +66,6 @@
             </BoxContainer>
         </BoxContainer>
 
-        <!-- 6. Top header (title, subtitle, metric row). -->
         <BoxContainer Name="Header" Orientation="Vertical" HorizontalExpand="True">
             <Label Name="TitleLabel" Text="PROJECT NIVALIS" FontColorOverride="#FFFFFF"
                    Margin="0 2 0 0" />

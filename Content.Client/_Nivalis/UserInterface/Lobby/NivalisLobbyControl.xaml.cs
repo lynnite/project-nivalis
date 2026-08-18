@@ -33,12 +33,26 @@ public sealed partial class NivalisLobbyControl : Control
     [Dependency] private readonly IResourceCache _resourceCache = default!;
     [Dependency] private readonly IUriOpener _uriOpener = default!;
 
-    private readonly Dictionary<Button, StyleBox> _navBase = new();
+    private readonly Dictionary<Button, ScrollingScanlineStyleBox> _navStyle = new();
     private readonly Dictionary<Button, Vector2> _navBaseSize = new();
+    private readonly Dictionary<Button, Vector2> _navCurrentSize = new();
+    private readonly Dictionary<Button, Vector2> _navTargetSize = new();
+    private readonly Dictionary<Button, bool> _navHover = new();
+    private readonly Dictionary<Button, float> _navHoverAmount = new();
     private readonly Dictionary<Button, int> _navIndex = new();
+
+    private Button[] _navButtons = Array.Empty<Button>();
 
     private bool _areWeReady;
     private Texture? _scanlineTexture;
+
+    private const float HoverScale = 1.08f;
+    private const float HoverLerpSpeed = 9f;
+
+    private const float IdleScrollSpeed = 9f;
+    private const float HoverScrollSpeed = 26f;
+
+    private const float NeighborShrinkScale = 0.96f;
 
     private Font _displayBold = null!;
     private Font _displayRegular = null!;
@@ -121,23 +135,29 @@ public sealed partial class NivalisLobbyControl : Control
 
     private static Texture GenerateScanlines()
     {
-        const int width = 256;
-        const int height = 24;
+        const int width = 64;
+        const int height = 6;
 
         using var image = new SixLabors.ImageSharp.Image<Rgba32>(
-            SixLabors.ImageSharp.Configuration.Default, width, height, new Rgba32(0x1b, 0x3a, 0x59, 0x99));
-
+            SixLabors.ImageSharp.Configuration.Default, width, height);
         for (var y = 0; y < height; y++)
         {
-            var lit = (y % 6) == 1;
+            var dark = (y == 1 || y == 3);
+            byte r = 20, g = 40, b = 70, a = 0;
+            if (dark)
+            {
+                a = 150;
+                r = 30; g = 45; b = 90;
+            }
+            else if (y == 2)
+            {
+                a = 70;
+                r = 160; g = 215; b = 255;
+            }
+
             for (var x = 0; x < width; x++)
             {
-                var tx = x / (float) (width - 1);
-                var fade = 1f - tx * 1.1f;
-                if (fade < 0f) fade = 0f;
-
-                if (lit)
-                    image[x, y] = new Rgba32(0x8f, 0xd8, 0xff, (byte) (235f * fade)); // light blue
+                image[x, y] = new Rgba32(r, g, b, a);
             }
         }
 
@@ -146,27 +166,28 @@ public sealed partial class NivalisLobbyControl : Control
 
     private void SetupNavButtons()
     {
-        var buttons = new[] { ReadyButton, LoadoutButton, ChallengesButton, QuartermasterButton, PatreonButton, SettingsButton, QuitButton };
-        for (var i = 0; i < buttons.Length; i++)
+        _navButtons = new[] { ReadyButton, LoadoutButton, ChallengesButton, QuartermasterButton, PatreonButton, SettingsButton, QuitButton };
+        for (var i = 0; i < _navButtons.Length; i++)
         {
-            var button = buttons[i];
+            var button = _navButtons[i];
             button.Margin = new Thickness(i * 5, 0, 0, 4);
             button.HorizontalExpand = false;
             button.HorizontalAlignment = HAlignment.Left;
-            _navIndex[button] = i;
-            _navBaseSize[button] = new Vector2(button.MinWidth, button.MinHeight);
 
-            var scanlineBox = new StyleBoxTexture
+            var baseSize = new Vector2(button.MinWidth, button.MinHeight);
+            _navBaseSize[button] = baseSize;
+            _navCurrentSize[button] = baseSize;
+            _navTargetSize[button] = baseSize;
+            _navHover[button] = false;
+            _navHoverAmount[button] = 0f;
+            _navIndex[button] = i;
+
+            var scanlineBox = new ScrollingScanlineStyleBox
             {
                 Texture = _scanlineTexture,
-                PatchMarginLeft = 0,
-                PatchMarginTop = 0,
-                PatchMarginRight = 0,
-                PatchMarginBottom = 0,
-                Mode = StyleBoxTexture.StretchMode.Stretch,
             };
 
-            _navBase[button] = scanlineBox;
+            _navStyle[button] = scanlineBox;
             button.StyleBoxOverride = scanlineBox;
 
             button.OnMouseEntered += _ => OnNavHover(button, true);
@@ -176,31 +197,64 @@ public sealed partial class NivalisLobbyControl : Control
 
     private void OnNavHover(Button button, bool hovering)
     {
-        if (!_navBaseSize.TryGetValue(button, out var baseSize))
-            return;
+        _navHover[button] = hovering;
+    }
 
-        var offset = _navIndex.GetValueOrDefault(button);
-        if (hovering)
+    private void UpdateNavAnimations(float frameTime)
+    {
+        var hoveredIndex = -1;
+        foreach (var kvp in _navHover)
         {
-            var grown = new Vector2(baseSize.X * 1.1f, baseSize.Y * 1.1f);
-            button.MinSize = grown;
-
-            var scanlineBox = new StyleBoxTexture
+            if (kvp.Value)
             {
-                Texture = _scanlineTexture,
-                PatchMarginLeft = 0,
-                PatchMarginTop = 0,
-                PatchMarginRight = 0,
-                PatchMarginBottom = 0,
-                Mode = StyleBoxTexture.StretchMode.Stretch,
-                Modulate = Color.FromHex("#CCFFFFFF"),
-            };
-            button.StyleBoxOverride = scanlineBox;
+                hoveredIndex = _navIndex[kvp.Key];
+                break;
+            }
         }
-        else
+
+        foreach (var button in _navButtons)
         {
-            button.MinSize = new Vector2(baseSize.X, baseSize.Y);
-            button.StyleBoxOverride = _navBase[button];
+            var baseSize = _navBaseSize[button];
+            var idx = _navIndex[button];
+            var isHovered = idx == hoveredIndex;
+            var isNeighbor = hoveredIndex >= 0 && Math.Abs(idx - hoveredIndex) == 1;
+
+            if (isHovered)
+            {
+                _navTargetSize[button] = new Vector2(baseSize.X * HoverScale, baseSize.Y * HoverScale);
+            }
+            else if (isNeighbor)
+            {
+                _navTargetSize[button] = new Vector2(baseSize.X, baseSize.Y * NeighborShrinkScale);
+            }
+            else
+            {
+                _navTargetSize[button] = baseSize;
+            }
+        }
+
+        foreach (var (button, style) in _navStyle)
+        {
+            var current = _navCurrentSize[button];
+            var target = _navTargetSize[button];
+            var hoverAmount = _navHoverAmount[button];
+
+            var amountTarget = _navHover[button] ? 1f : 0f;
+            var lerp = 1f - MathF.Exp(-HoverLerpSpeed * frameTime);
+            var amount = hoverAmount + (amountTarget - hoverAmount) * lerp;
+            _navHoverAmount[button] = amount;
+
+            var newSize = new Vector2(
+                current.X + (target.X - current.X) * lerp,
+                current.Y + (target.Y - current.Y) * lerp);
+            _navCurrentSize[button] = newSize;
+            button.MinSize = newSize;
+
+            var speed = _navHover[button] ? HoverScrollSpeed : IdleScrollSpeed;
+            style.ScrollOffset += frameTime * speed;
+
+            var bright = 0.82f + 0.15f * amount;
+            style.Modulate = new Color(bright, bright, bright, 1f);
         }
     }
 
@@ -260,6 +314,8 @@ public sealed partial class NivalisLobbyControl : Control
         var ticker = _entityManager.System<ClientGameTicker>();
         if (ticker.AreWeReady != _areWeReady)
             SetReadyState(ticker.AreWeReady);
+
+        UpdateNavAnimations(frameTime);
     }
 
     protected override void Dispose(bool disposing)

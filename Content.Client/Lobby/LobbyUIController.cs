@@ -1,3 +1,4 @@
+using Content.Client._Nivalis.UserInterface.Lobby;
 using Content.Client.Guidebook;
 using Content.Client.Lobby.UI;
 using Content.Client.Players.PlayTimeTracking;
@@ -74,6 +75,22 @@ public sealed partial class LobbyUIController : UIController, IOnStateEntered<Lo
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// The Nivalis lobby's character dummy preview. Refreshed whenever the selected character changes.
+    /// </summary>
+    private NivalisLobbyControl? NivalisLobby
+    {
+        get
+        {
+            if (_stateManager.CurrentState is LobbyState lobby)
+            {
+                return lobby.Lobby?.NivalisLobby;
+            }
+
+            return null;
+        }
     }
 
     private void OnRequirementsUpdated()
@@ -163,21 +180,28 @@ public sealed partial class LobbyUIController : UIController, IOnStateEntered<Lo
     /// </summary>
     private void RefreshLobbyPreview()
     {
-        if (PreviewPanel == null)
-            return;
-
         // Get selected character, load it, then set it
         var character = _preferencesManager.Preferences?.SelectedCharacter;
 
         if (character is not HumanoidCharacterProfile humanoid)
         {
-            PreviewPanel.ProfilePreviewSpriteView.ClearPreview();
-            PreviewPanel.SetSummaryText(string.Empty);
+            if (PreviewPanel != null)
+            {
+                PreviewPanel.ProfilePreviewSpriteView.ClearPreview();
+                PreviewPanel.SetSummaryText(string.Empty);
+            }
+
+            NivalisLobby?.LoadCharacterPreview();
             return;
         }
 
-        PreviewPanel.ProfilePreviewSpriteView.LoadPreview(humanoid);
-        PreviewPanel.SetSummaryText(humanoid.Summary);
+        if (PreviewPanel != null)
+        {
+            PreviewPanel.ProfilePreviewSpriteView.LoadPreview(humanoid);
+            PreviewPanel.SetSummaryText(humanoid.Summary);
+        }
+
+        NivalisLobby?.LoadCharacterPreview();
     }
 
     private void RefreshProfileEditor()

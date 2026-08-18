@@ -5,7 +5,7 @@ meta:
   forkId: ""
   forkVersion: ""
   time: 08/17/2026 15:44:29
-  entityCount: 15
+  entityCount: 16
 maps:
 - 1
 grids:
@@ -151,4 +151,11 @@ entities:
     - type: Transform
       parent: 2
       pos: 3.5,-2.5
+- proto: SpawnNivalisHardware
+  entities:
+  - uid: 16
+    components:
+    - type: Transform
+      parent: 2
+      pos: 5.5,-0.5
 ...

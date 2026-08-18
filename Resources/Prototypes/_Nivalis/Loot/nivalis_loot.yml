@@ -156,7 +156,6 @@
       entity_storage: !type:NestedSelector
         tableId: NivalisHardwareTable
 
-# Spawn markers that place the crates.
 - type: entity
   parent: MarkerBase
   id: SpawnNivalisScavenge
@@ -246,4 +245,23 @@
       prob: 0.6
       children:
       - id: CrateNivalisAmmo
+    offset: 0.0
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnNivalisHardware
+  name: hardware loot
+  suffix: Nivalis
+  description: A random hardware loot
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: Structures/Storage/Crates/engineering.rsi
+      state: icon
+  - type: EntityTableSpawner
+    table: !type:GroupSelector
+      prob: 0.6
+      children:
+      - id: CrateNivalisHardware
     offset: 0.0

@@ -22,19 +22,9 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace Content.Client._Nivalis.UserInterface.Lobby;
 
-/// <summary>
-///     Custom apocalyptic / cyberpunk lobby overlay for Nivalis-232.
-///     Long slim Orbitron nav buttons with a continuous light-blue scanline and
-///     faint blue backing, a slight rightward slant, a 1.3x hover pop, a
-///     full-height chat sidebar and a banked Quit button.
-/// </summary>
 [GenerateTypedNameReferences]
 public sealed partial class NivalisLobbyControl : Control
 {
-    /// <summary>
-    ///     Raised when a nav button needs the host lobby to act. Values: loadout,
-    ///     challenges, quartermaster, settings.
-    /// </summary>
     public event Action<string>? NavigationPressed;
 
     [Dependency] private readonly IClientPreferencesManager _preferences = default!;
@@ -50,7 +40,6 @@ public sealed partial class NivalisLobbyControl : Control
     private bool _areWeReady;
     private Texture? _scanlineTexture;
 
-    // Orbitron (bundled from the provided distribution).
     private Font _displayBold = null!;
     private Font _displayRegular = null!;
 
@@ -62,7 +51,6 @@ public sealed partial class NivalisLobbyControl : Control
         _displayBold = _resourceCache.GetFont("/Fonts/Orbitron/Orbitron-Bold.ttf", 28);
         _displayRegular = _resourceCache.GetFont("/Fonts/Orbitron/Orbitron-Regular.ttf", 15);
 
-        // Position anchored regions on the fullscreen LayoutContainer root.
         LayoutContainer.SetAnchorPreset(BackgroundViewport, LayoutContainer.LayoutPreset.Wide);
         LayoutContainer.SetAnchorAndMarginPreset(Header, LayoutContainer.LayoutPreset.TopWide, margin: 20);
         LayoutContainer.SetAnchorAndMarginPreset(ChatPanel, LayoutContainer.LayoutPreset.RightWide, margin: 18);
@@ -70,20 +58,15 @@ public sealed partial class NivalisLobbyControl : Control
         LayoutContainer.SetAnchorAndMarginPreset(Navigation, LayoutContainer.LayoutPreset.CenterLeft, margin: 30);
         LayoutContainer.SetAnchorAndMarginPreset(ProgressionBox, LayoutContainer.LayoutPreset.BottomLeft, margin: 24);
 
-        // Thin continuous light-blue scanline texture (fades on the right).
         _scanlineTexture = GenerateScanlines();
 
-        // No backdrop gradient: the scanline chrome is applied directly to the
-        // UI panels, and the full-screen sits on the vanilla background.
         BackgroundViewport.Texture = null;
 
-        // Apply the Orbitron font to the header chrome.
         TitleLabel.FontOverride = _displayBold;
         TitleLabel.Margin = new Thickness(0, 0, 0, 4);
         foreach (var label in HeaderLabels())
             label.FontOverride = _displayRegular;
 
-        // Wire the interactive menu buttons.
         ReadyButton.OnPressed += OnReadyPressed;
         LoadoutButton.OnPressed += _ => NavigationPressed?.Invoke("loadout");
         ChallengesButton.OnPressed += _ => NavigationPressed?.Invoke("challenges");
@@ -110,10 +93,6 @@ public sealed partial class NivalisLobbyControl : Control
         yield return TierValue;
     }
 
-    /// <summary>
-    ///     Moves the vanilla lobby chat into the full-height Nivalis right sidebar
-    ///     and restyles it in a lighter, colder tone (OOC posts through as normal).
-    /// </summary>
     public void AttachChat(ChatBox chat)
     {
         chat.Orphan();
@@ -127,15 +106,10 @@ public sealed partial class NivalisLobbyControl : Control
         chat.ChatWindowPanel.PanelOverride = new StyleBoxFlat
         {
             BackgroundColor = Color.FromHex("#1a2a3acc"),
-            BorderColor = Color.FromHex("#3a8fd8"),
+            BorderColor = Color.FromHex("#0a162223"),
             BorderThickness = new Thickness(1, 1, 1, 1),
         };
     }
-
-    /// <summary>
-    ///     Hides the standard SS14 lobby widgets (right panel, music credits).
-    ///     Chat is moved into this overlay via <see cref="AttachChat"/>.
-    /// </summary>
     public void HideDefaultLobby(LobbyGui lobby, ChatBox chat)
     {
         lobby.RightSide.Visible = false;
@@ -145,10 +119,6 @@ public sealed partial class NivalisLobbyControl : Control
             songParent.Visible = false;
     }
 
-    /// <summary>
-    ///     Thin, continuous light-blue scanlines that fade to the right. Each row
-    ///     draws one unbroken line (used as button backing).
-    /// </summary>
     private static Texture GenerateScanlines()
     {
         const int width = 256;
@@ -159,7 +129,7 @@ public sealed partial class NivalisLobbyControl : Control
 
         for (var y = 0; y < height; y++)
         {
-            var lit = (y % 6) == 1; // one continuous light line per group
+            var lit = (y % 6) == 1;
             for (var x = 0; x < width; x++)
             {
                 var tx = x / (float) (width - 1);
@@ -174,17 +144,12 @@ public sealed partial class NivalisLobbyControl : Control
         return Texture.LoadFromImage(image, "NivalisScanlines");
     }
 
-    /// <summary>
-    ///     Styles the long slim nav buttons with a continuous light-blue scanline
-    ///     and faint blue backing, a rightward slant, and a lighter 1.3x hover pop.
-    /// </summary>
     private void SetupNavButtons()
     {
         var buttons = new[] { ReadyButton, LoadoutButton, ChallengesButton, QuartermasterButton, PatreonButton, SettingsButton, QuitButton };
         for (var i = 0; i < buttons.Length; i++)
         {
             var button = buttons[i];
-            // Rightward perspective slant: each successive button nudges right.
             button.Margin = new Thickness(i * 5, 0, 0, 4);
             button.HorizontalExpand = false;
             button.HorizontalAlignment = HAlignment.Left;
@@ -217,8 +182,7 @@ public sealed partial class NivalisLobbyControl : Control
         var offset = _navIndex.GetValueOrDefault(button);
         if (hovering)
         {
-            // Slightly lighter color scheme + 1.3x larger.
-            var grown = new Vector2(baseSize.X * 1.3f, baseSize.Y * 1.3f);
+            var grown = new Vector2(baseSize.X * 1.15f, baseSize.Y * 1.15f);
             button.MinSize = grown;
 
             var scanlineBox = new StyleBoxTexture
@@ -240,10 +204,6 @@ public sealed partial class NivalisLobbyControl : Control
         }
     }
 
-    /// <summary>
-    ///     READY button: toggles the player's ready state via the standard
-    ///     <c>toggleready</c> command and updates the label immediately.
-    /// </summary>
     private void OnReadyPressed(BaseButton.ButtonEventArgs args)
     {
         var ticker = _entityManager.System<ClientGameTicker>();
@@ -252,18 +212,12 @@ public sealed partial class NivalisLobbyControl : Control
         SetReadyState(newState);
     }
 
-    /// <summary>
-    ///     Updates the READY button text to match the current ready state.
-    /// </summary>
     public void SetReadyState(bool ready)
     {
         _areWeReady = ready;
         ReadyButton.Text = ready ? "READY" : "NOT READY";
     }
 
-    /// <summary>
-    ///     Loads the player's selected character for the center dummy.
-    /// </summary>
     public void LoadCharacterPreview()
     {
         if (_preferences.Preferences?.SelectedCharacter is not HumanoidCharacterProfile humanoid)
@@ -281,9 +235,6 @@ public sealed partial class NivalisLobbyControl : Control
         AgentNameLabel.FontOverride = _displayRegular;
     }
 
-    /// <summary>
-    ///     Updates the bottom-left stat stack (LEVEL / ODENS / BONDS / TIER).
-    /// </summary>
     public void UpdatePlayerProgression(int level, int odens, int bonds, int tier)
     {
         LevelValue.Text = level.ToString();
@@ -292,9 +243,6 @@ public sealed partial class NivalisLobbyControl : Control
         TierValue.Text = tier.ToString();
     }
 
-    /// <summary>
-    ///     Syncs the top header metric row (AGENTS READY / ALIVE / RESPAWN IN / NIGHT).
-    /// </summary>
     public void UpdateMatchStats(int readyCount, int activeCount, TimeSpan respawnRemaining, int cycle)
     {
         ReadyCountValue.Text = readyCount.ToString();
@@ -307,9 +255,6 @@ public sealed partial class NivalisLobbyControl : Control
         CycleValue.Text = cycle.ToString();
     }
 
-    /// <summary>
-    ///     Reconciles the READY button label with the authoritative ready state.
-    /// </summary>
     public void UpdateDiagnostics(float frameTime)
     {
         var ticker = _entityManager.System<ClientGameTicker>();

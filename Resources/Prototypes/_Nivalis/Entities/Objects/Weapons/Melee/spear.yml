@@ -54,6 +54,11 @@
     wideAnimation: WeaponArcThrust
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
+  - type: NivalisMeleeParry
+    parryCooldown: 1.0
+    parryWindow: 1.0
+    failedParryPenalty: 0.5
+    stunDuration: 1.5
   - type: DamageOtherOnHit
     damage:
       types:

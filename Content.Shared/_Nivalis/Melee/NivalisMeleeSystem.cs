@@ -39,6 +39,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
     [Dependency] protected SharedPhysicsSystem Physics = default!;
     [Dependency] protected SharedPopupSystem PopupSystem = default!;
     [Dependency] protected SharedTransformSystem TransformSystem = default!;
+    [Dependency] private readonly SharedNivalisMeleeParrySystem _parry = default!;
 
     private EntityQuery<DamageableComponent> _damageQuery = default!;
 
@@ -291,6 +292,9 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         var attackedEvent = new NivalisAttackedEvent(meleeUid, user, targetXform.Coordinates);
         RaiseLocalEvent(target.Value, attackedEvent);
 
+        if (_parry.TryParry(target.Value, user, meleeUid))
+            return;
+
         var modifiedDamage = DamageSpecifier.ApplyModifierSets(damage + hitEvent.BonusDamage + attackedEvent.BonusDamage, hitEvent.ModifiersList);
 
         if (Damageable.TryChangeDamage(target.Value, modifiedDamage, out _, origin: user, ignoreResistances: resistanceBypass))
@@ -377,6 +381,12 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
 
             var attackedEvent = new NivalisAttackedEvent(meleeUid, user, GetCoordinates(ev.Coordinates));
             RaiseLocalEvent(entity, attackedEvent);
+
+            if (_parry.TryParry(entity, user, meleeUid))
+            {
+                targets.RemoveAt(i);
+                continue;
+            }
 
             var modifiedDamage = DamageSpecifier.ApplyModifierSets(damage + hitEvent.BonusDamage + attackedEvent.BonusDamage, hitEvent.ModifiersList);
             var damageResult = Damageable.ChangeDamage(entity, modifiedDamage, origin: user);

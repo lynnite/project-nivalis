@@ -182,7 +182,7 @@ public sealed partial class NivalisLobbyControl : Control
         var offset = _navIndex.GetValueOrDefault(button);
         if (hovering)
         {
-            var grown = new Vector2(baseSize.X * 1.15f, baseSize.Y * 1.15f);
+            var grown = new Vector2(baseSize.X * 1.1f, baseSize.Y * 1.1f);
             button.MinSize = grown;
 
             var scanlineBox = new StyleBoxTexture

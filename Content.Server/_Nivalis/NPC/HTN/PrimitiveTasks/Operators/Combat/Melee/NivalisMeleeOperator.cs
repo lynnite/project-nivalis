@@ -10,11 +10,6 @@ using Content.Shared.Mobs.Components;
 
 namespace Content.Server._Nivalis.NPC.HTN.PrimitiveTasks.Operators.Combat.Melee;
 
-/// <summary>
-///     Attacks the specified blackboard target in Nivalis melee combat, delegating the actual
-///     light/heavy swings to <see cref="NivalisNPCCombatSystem"/>.
-///     Mirrors the classic <c>MeleeOperator</c> but works with Nivalis melee weapons.
-/// </summary>
 public sealed partial class NivalisMeleeOperator : HTNOperator, IHtnConditionalShutdown
 {
     [Dependency] private IEntityManager _entManager = default!;
@@ -39,8 +34,6 @@ public sealed partial class NivalisMeleeOperator : HTNOperator, IHtnConditionalS
         base.Startup(blackboard);
 
         var owner = blackboard.GetValue<EntityUid>(NPCBlackboard.Owner);
-        // HeavyChance/CanParry are configured on the entity's prototype NivalisMeleeCombat
-        // component, so (re)creating the component restores them. We only set the target here.
         var combat = _entManager.EnsureComponent<NivalisMeleeCombatComponent>(owner);
         combat.Target = blackboard.GetValue<EntityUid>(TargetKey);
     }

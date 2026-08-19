@@ -128,9 +128,6 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         return false;
     }
 
-    /// <summary>
-    /// Attempts a light attack on the given target for NPCs / non-session callers.
-    /// </summary>
     public bool TryLightAttack(EntityUid user, EntityUid weaponUid, NivalisMeleeComponent weapon, EntityUid target)
     {
         if (!TryComp(target, out TransformComponent? targetXform))
@@ -141,9 +138,6 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             null);
     }
 
-    /// <summary>
-    /// Attempts a light attack that misses towards the given coordinates for NPCs.
-    /// </summary>
     public void TryLightAttackMiss(EntityUid user, EntityUid weaponUid, NivalisMeleeComponent weapon, EntityCoordinates coordinates)
     {
         AttemptAttack(user, weaponUid, weapon,
@@ -151,9 +145,6 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             null);
     }
 
-    /// <summary>
-    /// Attempts a heavy/wide attack from the user towards the given coordinates for NPCs.
-    /// </summary>
     public bool TryHeavyAttack(EntityUid user, EntityUid weaponUid, NivalisMeleeComponent weapon, EntityCoordinates coordinates)
     {
         if (!TryComp(user, out TransformComponent? userXform))
@@ -181,9 +172,6 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             null);
     }
 
-    /// <summary>
-    /// Whether the user is in combat mode and the given weapon is off cooldown.
-    /// </summary>
     public bool CanStartAttack(EntityUid user, NivalisMeleeComponent weapon)
     {
         return weapon.NextAttack <= Timing.CurTime && CombatMode.IsInCombatMode(user);

@@ -37,12 +37,12 @@
         - !type:HTNCompoundTask
           task: EscapeCompound
 
-    # Nivalis melee attack toward target.
+
     - tasks:
         - !type:HTNCompoundTask
           task: NivalisMeleeAttackTargetCompound
 
-# Tries to Nivalis melee attack our target.
+
 - type: htnCompound
   id: NivalisMeleeAttackTargetCompound
   branches:
@@ -73,13 +73,9 @@
               proto: NearbyMeleeTargets
               key: Target
 
-# Ranged combat for scavenger gunners. Like RangedCombatCompound but WITHOUT the branch that
-# drops the gun when empty: the scavenger pistol recharges its own ammo, so the gunner holds onto
-# it and simply waits a couple of seconds to fire again.
 - type: htnCompound
   id: NivalisGunnerCombatCompound
   branches:
-    # Rack the bolt if the gun needs it.
     - preconditions:
         - !type:ActiveHandComponentPrecondition
           components:
@@ -89,7 +85,6 @@
         - !type:HTNPrimitiveTask
           operator: !type:RackBoltOperator
 
-    # Wield gun.
     - preconditions:
         - !type:ActiveHandComponentPrecondition
           components:
@@ -100,7 +95,6 @@
         - !type:HTNPrimitiveTask
           operator: !type:WieldOperator
 
-    # Move to the target and shoot if we have charge.
     - preconditions:
         - !type:GunAmmoPrecondition
           minPercent: 0.001
@@ -108,7 +102,6 @@
         - !type:HTNCompoundTask
           task: GunCombatCompound
 
-    # Pick up a gun if we have no gun in hand.
     - preconditions:
         - !type:ActiveHandComponentPrecondition
           components:
@@ -118,8 +111,6 @@
         - !type:HTNCompoundTask
           task: PickupGunCompound
 
-# Root task for Nivalis melee scavengers. Keeps the gunner combat branch available so
-# scavengers that are given a firearm can fall back to shooting.
 - type: htnCompound
   id: NivalisScavengerHostileCompound
   branches:

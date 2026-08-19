@@ -12,11 +12,6 @@ using Robust.Shared.Timing;
 
 namespace Content.Server._Nivalis.Status;
 
-/// <summary>
-///     Handles the reworked Nivalis bleeding. Weapons with
-///     <see cref="NivalisBleedComponent"/> apply a constant status-effect-based bleed to
-///     their victims which deals a flat amount of brute per second without stacking.
-/// </summary>
 public sealed partial class NivalisBleedSystem : EntitySystem
 {
     public static readonly EntProtoId BleedEffect = "StatusEffectNivalisBleed";
@@ -36,9 +31,6 @@ public sealed partial class NivalisBleedSystem : EntitySystem
         _damageQuery = GetEntityQuery<DamageableComponent>();
         _mobStateQuery = GetEntityQuery<MobStateComponent>();
 
-        // Broadcast: catches every scavenger melee hit and applies the constant bleed for
-        // weapons that carry NivalisBleedComponent. Standard bloodstream bleed suppression is
-        // handled separately by NivalisBleedSuppressionSystem.
         SubscribeLocalEvent<NivalisMeleeHitEvent>(OnMeleeHit);
     }
 
@@ -56,16 +48,11 @@ public sealed partial class NivalisBleedSystem : EntitySystem
         }
     }
 
-    /// <summary>
-    ///     Applies the Nivalis bleed to a target. Does nothing if the target is already bleeding
-    ///     (no stacking) or if it can't bleed.
-    /// </summary>
     public void TryApplyBleed(EntityUid target, EntityUid source, float damagePerSecond)
     {
         if (!_mobStateQuery.HasComp(target) || !_damageQuery.HasComp(target))
             return;
 
-        // No stacking: only apply the effect if the target isn't already bleeding.
         if (_status.HasStatusEffect(target, BleedEffect))
             return;
 
@@ -85,7 +72,6 @@ public sealed partial class NivalisBleedSystem : EntitySystem
         var query = EntityQueryEnumerator<NivalisBleedActiveComponent>();
         while (query.MoveNext(out var uid, out var bleed))
         {
-            // Cleanup once the underlying status effect has expired or been removed.
             if (!_status.HasStatusEffect(uid, BleedEffect))
             {
                 RemComp<NivalisBleedActiveComponent>(uid);

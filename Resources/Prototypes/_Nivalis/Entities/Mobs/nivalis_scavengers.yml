@@ -1,6 +1,9 @@
 # Nivalis scavenger NPCs. Each variant is spear/knife/pipe/ice-axe/cleaver melee, or a gunner.
 # They never enter critical (no state), increasing their threat on Nivalis.
 
+
+
+
 # Shared behaviours for all scavengers.
 - type: entity
   parent: MobHuman
@@ -20,7 +23,7 @@
     rootTask:
       task: NivalisScavengerHostileCompound
 
-# Chaser - fast, light (combat knife), no backtracking off cooldown.
+
 - type: entity
   parent: MobNivalisScavengerBase
   id: MobNivalisScavChaser
@@ -59,6 +62,7 @@
     prototypes:
       - NivalisScavFreezieGear
 
+
 # Leaper - cleaver wielder, grapples and parries.
 - type: entity
   parent: MobNivalisScavengerBase
@@ -89,7 +93,7 @@
     prototypes:
       - NivalisScavGunnerGear
 
-# ---------------- Storm variants (stronger, storm-spawned) ----------------
+
 
 - type: entity
   parent: MobNivalisScavChaser

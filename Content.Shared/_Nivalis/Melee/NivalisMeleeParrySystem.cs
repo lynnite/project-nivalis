@@ -5,6 +5,7 @@ using Content.Shared.Effects;
 using Content.Shared.FixedPoint;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Popups;
+using Content.Shared.StatusEffectNew;
 using Content.Shared.Stunnable;
 using Content.Shared.Weapons.Melee.Events;
 using Robust.Shared.Audio;
@@ -23,12 +24,14 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] protected SharedAudioSystem Audio = default!;
     [Dependency] protected SharedHandsSystem Hands = default!;
-    [Dependency] protected SharedStunSystem Stun = default!;
     [Dependency] protected SharedPopupSystem Popup = default!;
+    [Dependency] protected StatusEffectsSystem Status = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
 
     private EntityQuery<NivalisMeleeComponent> _meleeQuery = default!;
+
+    private readonly Stack<ParryHit> _pendingParries = new();
 
     protected IGameTiming Timing => _timing;
 
@@ -47,6 +50,15 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
+
+        if (_pendingParries.Count > 0)
+        {
+            ParryHit hit;
+            while (_pendingParries.TryPop(out hit))
+            {
+                ApplyParrySuccess(hit.Owner, hit.Attacker, hit.Victim);
+            }
+        }
 
         if (!_net.IsServer)
             return;
@@ -68,7 +80,6 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 
     public bool IsActivelyParrying(EntityUid uid, NivalisMeleeParryComponent? parry = null)
     {
-        // Use the resolved instance when the caller already found it, otherwise re-query.
         if (parry == null && !TryGetParryComp(uid, out parry))
             return false;
 
@@ -122,7 +133,7 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 
         args.Parried = true;
 
-        ApplyParrySuccess(parryOwner, parry, args.Attacker, victim);
+        ApplyParrySuccess(parryOwner, args.Attacker, victim);
     }
 
     private void OnBeforeDamageChanged(Entity<DamageableComponent> ent, ref BeforeDamageChangedEvent args)
@@ -140,11 +151,14 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
             return;
 
         args.Cancelled = true;
-        ApplyParrySuccess(parryOwner, parry, args.Origin ?? EntityUid.Invalid, ent);
+        _pendingParries.Push(new ParryHit(parryOwner, args.Origin ?? EntityUid.Invalid, ent));
     }
 
-    private void ApplyParrySuccess(EntityUid parryOwner, NivalisMeleeParryComponent parry, EntityUid attacker, EntityUid victim)
+    private void ApplyParrySuccess(EntityUid parryOwner, EntityUid attacker, EntityUid victim)
     {
+        if (!TryComp<NivalisMeleeParryComponent>(parryOwner, out var parry))
+            return;
+
         parry.ParriedThisStance = true;
         parry.NextParry = TimeSpan.Zero;
         parry.Protecting = false;
@@ -152,7 +166,7 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 
         if (attacker.IsValid() && parry.StunDuration > 0f)
         {
-            Stun.TryAddParalyzeDuration(attacker, TimeSpan.FromSeconds(parry.StunDuration), visualized: true);
+            Status.TryAddStatusEffectDuration(attacker, SharedStunSystem.StunId, TimeSpan.FromSeconds(parry.StunDuration));
         }
 
         if (_net.IsServer)
@@ -325,4 +339,6 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
     {
         return CanParry(uid);
     }
+
+    private readonly record struct ParryHit(EntityUid Owner, EntityUid Attacker, EntityUid Victim);
 }

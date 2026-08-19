@@ -146,7 +146,6 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
 
-# Cleaver - heavy chopping, parry-capable.
 - type: entity
   name: bone cleaver
   parent: [BaseItem, BaseMinorContraband]
@@ -230,7 +229,6 @@
       path: /Audio/Weapons/Guns/Gunshots/pistol.ogg
     soundEmpty:
       path: /Audio/Weapons/Guns/Empty/empty.ogg
-  # The gun reloads its whole magazine on its own after a short delay (configurable).
   - type: NivalisAutoReload
     reloadDelay: 2.0
     soundMagOut:
@@ -245,3 +243,38 @@
   - type: Tag
     tags:
     - Sidearm
+
+- type: entity
+  parent: NivalisScavengerCombatKnife
+  id: NivalisStormCombatKnife
+  name: storm combat knife
+  components:
+  - type: NivalisDeleteOnDrop
+
+- type: entity
+  parent: NivalisScavengerLeadPipe
+  id: NivalisStormLeadPipe
+  name: storm lead pipe
+  components:
+  - type: NivalisDeleteOnDrop
+
+- type: entity
+  parent: NivalisScavengerIceAxe
+  id: NivalisStormIceAxe
+  name: storm ice axe
+  components:
+  - type: NivalisDeleteOnDrop
+
+- type: entity
+  parent: NivalisScavengerCleaver
+  id: NivalisStormCleaver
+  name: storm bone cleaver
+  components:
+  - type: NivalisDeleteOnDrop
+
+- type: entity
+  parent: NivalisScavengerGun
+  id: NivalisStormGun
+  name: storm scavenger pistol
+  components:
+  - type: NivalisDeleteOnDrop

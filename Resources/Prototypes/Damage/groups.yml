@@ -5,6 +5,7 @@
     - Blunt
     - Slash
     - Piercing
+    - Melee
 
 - type: damageGroup
   id: Burn

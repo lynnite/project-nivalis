@@ -77,6 +77,14 @@
   armorCoefficientPrice: 2
   armorFlatPrice: 10
 
+# Physical damage dealt by melee weapons. Falls under the Brute group but is kept as its
+# own type so parries and other melee-tuned systems can recognise and interact with it.
+- type: damageType
+  id: Melee
+  name: damage-type-melee
+  armorCoefficientPrice: 2
+  armorFlatPrice: 10
+
 # Damage represent structures internal integrity.
 # Exclusive for structures such as walls, airlocks and others.
 - type: damageType

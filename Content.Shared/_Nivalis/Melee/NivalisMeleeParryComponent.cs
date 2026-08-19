@@ -12,7 +12,7 @@ public sealed partial class NivalisMeleeParryComponent : Component
     public float ParryCooldown = 1f;
 
     [DataField, AutoNetworkedField]
-    public float ParryWindow = 0.5f;
+    public float ParryWindow = 1f;
 
     [DataField, AutoNetworkedField]
     public float StunDuration = 1.5f;

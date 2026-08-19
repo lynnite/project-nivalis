@@ -1,6 +1,8 @@
 using Content.Shared._Nivalis.Melee.Events;
+using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Effects;
+using Content.Shared.FixedPoint;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.Stunnable;
@@ -38,9 +40,8 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 
         SubscribeAllEvent<NivalisMeleeParryEvent>(OnParryInput);
         SubscribeLocalEvent<NivalisMeleeParryAttemptEvent>(OnParryAttempt);
-        // Integrate with the standard melee system so a Nivalis parry also negates regular
-        // melee weapons (e.g. a player hitting a parrying scavenger with a normal weapon).
         SubscribeLocalEvent<MeleeHitEvent>(OnMeleeHit);
+        SubscribeLocalEvent<DamageableComponent, BeforeDamageChangedEvent>(OnBeforeDamageChanged);
     }
 
     public override void Update(float frameTime)
@@ -67,11 +68,11 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 
     public bool IsActivelyParrying(EntityUid uid, NivalisMeleeParryComponent? parry = null)
     {
-        if (!TryGetParryComp(uid, out parry))
+        // Use the resolved instance when the caller already found it, otherwise re-query.
+        if (parry == null && !TryGetParryComp(uid, out parry))
             return false;
 
         return parry.Protecting
-               && parry.NextParry <= _timing.CurTime
                && _timing.CurTime <= parry.ParryWindowEnd;
     }
 
@@ -82,9 +83,6 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 
     private bool TryGetParryComp(EntityUid uid, [NotNullWhen(true)] out NivalisMeleeParryComponent? parry)
     {
-        // Check the active hand first, then every held item. NPCs (and wielded or off-hand
-        // setups) don't always expose the parry weapon through the active hand, so we must
-        // scan all held items or parrying never registers for them.
         if (Hands.TryGetActiveItem(uid, out var held) &&
             _meleeQuery.HasComponent(held) &&
             TryComp<NivalisMeleeParryComponent>(held, out parry))
@@ -124,14 +122,38 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 
         args.Parried = true;
 
+        ApplyParrySuccess(parryOwner, parry, args.Attacker, victim);
+    }
+
+    private void OnBeforeDamageChanged(Entity<DamageableComponent> ent, ref BeforeDamageChangedEvent args)
+    {
+        if (args.Cancelled)
+            return;
+
+        if (!args.Damage.DamageDict.TryGetValue("Melee", out var amount) || amount <= FixedPoint2.Zero)
+            return;
+
+        if (!TryGetParryOwner(ent, out var parryOwner, out var parry))
+            return;
+
+        if (!IsActivelyParrying(ent, parry))
+            return;
+
+        args.Cancelled = true;
+        ApplyParrySuccess(parryOwner, parry, args.Origin ?? EntityUid.Invalid, ent);
+    }
+
+    private void ApplyParrySuccess(EntityUid parryOwner, NivalisMeleeParryComponent parry, EntityUid attacker, EntityUid victim)
+    {
         parry.ParriedThisStance = true;
-
         parry.NextParry = TimeSpan.Zero;
-
         parry.Protecting = false;
         Dirty(parryOwner, parry);
 
-        Stun.TryAddParalyzeDuration(args.Attacker, TimeSpan.FromSeconds(parry.StunDuration), visualized: true);
+        if (attacker.IsValid() && parry.StunDuration > 0f)
+        {
+            Stun.TryAddParalyzeDuration(attacker, TimeSpan.FromSeconds(parry.StunDuration), visualized: true);
+        }
 
         if (_net.IsServer)
         {
@@ -151,7 +173,6 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 
         foreach (var hit in args.HitEntities)
         {
-            // Block the whole swing if any hit target is actively parrying with a Nivalis weapon.
             if (TryParry(hit, args.User, args.Weapon))
             {
                 args.Handled = true;
@@ -188,8 +209,6 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 
     private bool TryGetParryOwner(EntityUid uid, out EntityUid owner, [NotNullWhen(true)] out NivalisMeleeParryComponent? parry)
     {
-        // Prefer the active held weapon, but also scan every held item so NPCs and wielded
-        // setups work even when the parry-capable weapon isn't the active hand.
         if (Hands.TryGetActiveItem(uid, out var held) &&
             _meleeQuery.HasComponent(held) &&
             TryComp<NivalisMeleeParryComponent>(held, out parry))
@@ -283,11 +302,6 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
         return ev.Parried;
     }
 
-    /// <summary>
-    ///     Programmatically starts a parry for an entity (e.g. an NPC raising its guard).
-    ///     Returns false if the entity isn't holding a parry-capable weapon, the parry is on
-    ///     cooldown, or the entity is already parrying.
-    /// </summary>
     public bool TryStartParry(EntityUid uid)
     {
         if (!TryGetParryOwner(uid, out var parryOwner, out var parry))
@@ -307,9 +321,6 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
         return true;
     }
 
-    /// <summary>
-    ///     Whether the entity currently holds a parry-capable Nivalis melee weapon.
-    /// </summary>
     public bool HasParryWeapon(EntityUid uid)
     {
         return CanParry(uid);

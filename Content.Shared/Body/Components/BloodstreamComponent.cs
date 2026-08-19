@@ -1,3 +1,4 @@
+using Content.Shared._Nivalis.Status;
 using Content.Shared.Alert;
 using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.Components;
@@ -17,7 +18,7 @@ namespace Content.Shared.Body.Components;
 /// </summary>
 [RegisterComponent, NetworkedComponent,]
 [AutoGenerateComponentState(fieldDeltas: true), AutoGenerateComponentPause]
-[Access(typeof(BloodstreamSystem))]
+[Access(typeof(BloodstreamSystem), typeof(NivalisBleedSuppressionSystem))]
 public sealed partial class BloodstreamComponent : Component
 {
     public const string DefaultBloodSolutionName = "bloodstream";

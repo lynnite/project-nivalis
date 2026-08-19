@@ -128,6 +128,67 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         return false;
     }
 
+    /// <summary>
+    /// Attempts a light attack on the given target for NPCs / non-session callers.
+    /// </summary>
+    public bool TryLightAttack(EntityUid user, EntityUid weaponUid, NivalisMeleeComponent weapon, EntityUid target)
+    {
+        if (!TryComp(target, out TransformComponent? targetXform))
+            return false;
+
+        return AttemptAttack(user, weaponUid, weapon,
+            new NivalisLightAttackEvent(GetNetEntity(target), GetNetEntity(weaponUid), GetNetCoordinates(targetXform.Coordinates)),
+            null);
+    }
+
+    /// <summary>
+    /// Attempts a light attack that misses towards the given coordinates for NPCs.
+    /// </summary>
+    public void TryLightAttackMiss(EntityUid user, EntityUid weaponUid, NivalisMeleeComponent weapon, EntityCoordinates coordinates)
+    {
+        AttemptAttack(user, weaponUid, weapon,
+            new NivalisLightAttackEvent(null, GetNetEntity(weaponUid), GetNetCoordinates(coordinates)),
+            null);
+    }
+
+    /// <summary>
+    /// Attempts a heavy/wide attack from the user towards the given coordinates for NPCs.
+    /// </summary>
+    public bool TryHeavyAttack(EntityUid user, EntityUid weaponUid, NivalisMeleeComponent weapon, EntityCoordinates coordinates)
+    {
+        if (!TryComp(user, out TransformComponent? userXform))
+            return false;
+
+        var targetMap = TransformSystem.ToMapCoordinates(coordinates);
+        if (targetMap.MapId != userXform.MapID)
+            return false;
+
+        var userPos = TransformSystem.GetWorldPosition(userXform);
+        var direction = targetMap.Position - userPos;
+        var distance = MathF.Min(weapon.Range, direction.Length());
+
+        var entities = ArcRayCast(userPos, direction.ToWorldAngle(), weapon.Angle, distance, userXform.MapID, user).ToList();
+
+        if (entities.Count > MaxTargets)
+            entities.RemoveRange(MaxTargets, entities.Count - MaxTargets);
+
+        var netEnts = new List<NetEntity>(entities.Count);
+        foreach (var ent in entities)
+            netEnts.Add(GetNetEntity(ent));
+
+        return AttemptAttack(user, weaponUid, weapon,
+            new NivalisHeavyAttackEvent(GetNetEntity(weaponUid), netEnts, GetNetCoordinates(coordinates)),
+            null);
+    }
+
+    /// <summary>
+    /// Whether the user is in combat mode and the given weapon is off cooldown.
+    /// </summary>
+    public bool CanStartAttack(EntityUid user, NivalisMeleeComponent weapon)
+    {
+        return weapon.NextAttack <= Timing.CurTime && CombatMode.IsInCombatMode(user);
+    }
+
     private bool AttemptAttack(EntityUid user, EntityUid weaponUid, NivalisMeleeComponent weapon, NivalisAttackEvent attack, ICommonSession? session)
     {
         var curTime = Timing.CurTime;

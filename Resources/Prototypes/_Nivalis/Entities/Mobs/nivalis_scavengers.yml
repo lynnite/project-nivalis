@@ -1,0 +1,197 @@
+# Nivalis scavenger NPCs. Each variant is spear/knife/pipe/ice-axe/cleaver melee, or a gunner.
+# They never enter critical (no state), increasing their threat on Nivalis.
+
+# Shared behaviours for all scavengers.
+- type: entity
+  parent: MobHuman
+  id: MobNivalisScavengerBase
+  abstract: true
+  name: scavenger
+  description: A desperate, hostile scavenger clawing for what's left on Nivalis-232.
+  components:
+  - type: NpcFactionMember
+    factions:
+      - Syndicate
+  - type: NivalisStormEnemy
+  - type: NivalisNoCritical
+  - type: InputMover
+  - type: MobMover
+  - type: HTN
+    rootTask:
+      task: NivalisScavengerHostileCompound
+
+# Chaser - fast, light (combat knife), no backtracking off cooldown.
+- type: entity
+  parent: MobNivalisScavengerBase
+  id: MobNivalisScavChaser
+  name: scavenger chaser
+  description: A lean scavenger wielding a combat knife. Fast and relentless.
+  components:
+  - type: NivalisMeleeCombat
+    heavyChance: 0.1
+  - type: Loadout
+    prototypes:
+      - NivalisScavChaserGear
+
+# Rusher - blunt pressure (lead pipe).
+- type: entity
+  parent: MobNivalisScavengerBase
+  id: MobNivalisScavRusher
+  name: scavenger rusher
+  description: A bruiser swinging a heavy lead pipe.
+  components:
+  - type: NivalisMeleeCombat
+    heavyChance: 0.35
+  - type: Loadout
+    prototypes:
+      - NivalisScavRusherGear
+
+# Freezie - cold-flavoured ice-axe user.
+- type: entity
+  parent: MobNivalisScavengerBase
+  id: MobNivalisScavFreezie
+  name: scavenger freezie
+  description: A snow-baked scavenger with an ice axe and nothing to lose.
+  components:
+  - type: NivalisMeleeCombat
+    heavyChance: 0.25
+  - type: Loadout
+    prototypes:
+      - NivalisScavFreezieGear
+
+# Leaper - cleaver wielder, grapples and parries.
+- type: entity
+  parent: MobNivalisScavengerBase
+  id: MobNivalisScavLeaper
+  name: scavenger leaper
+  description: A cleaver-carrying brute that grapples its prey and parries blows.
+  components:
+  - type: NivalisMeleeCombat
+    heavyChance: 0.25
+    canParry: true
+  - type: NivalisGrapple
+    range: 2.25
+    grappleTime: 1.0
+    stunTime: 1.0
+    cooldown: 8.0
+  - type: Loadout
+    prototypes:
+      - NivalisScavLeaperGear
+
+# Gunner - ranged, never backtracks (no juke in its HTN branch).
+- type: entity
+  parent: MobNivalisScavengerBase
+  id: MobNivalisScavGunner
+  name: scavenger gunner
+  description: A scavenger carrying a salvaged pistol. Does not retreat.
+  components:
+  - type: Loadout
+    prototypes:
+      - NivalisScavGunnerGear
+
+# ---------------- Storm variants (stronger, storm-spawned) ----------------
+
+- type: entity
+  parent: MobNivalisScavChaser
+  id: MobNivalisScavChaserStorm
+  name: storm chaser
+  description: A storm-amped scavenger, faster and meaner.
+  components:
+  - type: NivalisStormEnemy
+
+- type: entity
+  parent: MobNivalisScavRusher
+  id: MobNivalisScavRusherStorm
+  name: storm rusher
+  description: A storm-amped bruiser.
+  components:
+  - type: NivalisStormEnemy
+
+- type: entity
+  parent: MobNivalisScavFreezie
+  id: MobNivalisScavFreezieStorm
+  name: storm freezie
+  description: A storm-amped ice-axe killer.
+  components:
+  - type: NivalisStormEnemy
+
+- type: entity
+  parent: MobNivalisScavLeaper
+  id: MobNivalisScavLeaperStorm
+  name: storm leaper
+  description: A storm-amped grappling brute.
+  components:
+  - type: NivalisStormEnemy
+
+- type: entity
+  parent: MobNivalisScavGunner
+  id: MobNivalisScavGunnerStorm
+  name: storm gunner
+  description: A storm-amped gunner.
+  components:
+  - type: NivalisStormEnemy
+
+# ---------------- Starting gear ----------------
+
+- type: startingGear
+  id: NivalisScavChaserGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    shoes: ClothingShoesBootsCombat
+  inhand:
+    - NivalisScavengerCombatKnife
+
+- type: startingGear
+  id: NivalisScavRusherGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    shoes: ClothingShoesBootsCombat
+  inhand:
+    - NivalisScavengerLeadPipe
+
+- type: startingGear
+  id: NivalisScavFreezieGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    shoes: ClothingShoesBootsCombat
+  inhand:
+    - NivalisScavengerIceAxe
+
+- type: startingGear
+  id: NivalisScavLeaperGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    shoes: ClothingShoesBootsCombat
+  inhand:
+    - NivalisScavengerCleaver
+
+- type: startingGear
+  id: NivalisScavGunnerGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    back: ClothingBackpack
+    shoes: ClothingShoesBootsCombat
+  storage:
+    back:
+    - BoxSurvival
+  inhand:
+    - NivalisScavengerGun

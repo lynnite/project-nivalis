@@ -13,11 +13,6 @@ using Robust.Shared.Timing;
 
 namespace Content.Server._Nivalis.NPC;
 
-/// <summary>
-///     Drives Nivalis-melee combat for NPCs. Mirrors the classic
-///     <see cref="NPCCombatSystem"/> melee loop but works against weapons using
-///     <see cref="NivalisMeleeComponent"/> (light combos, heavy sweeps, parry).
-/// </summary>
 public sealed partial class NivalisNPCCombatSystem : EntitySystem
 {
     private const float TargetMeleeLostRange = 16f;
@@ -35,9 +30,7 @@ public sealed partial class NivalisNPCCombatSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-
         _combatQuery = GetEntityQuery<CombatModeComponent>();
-
         SubscribeLocalEvent<NivalisMeleeCombatComponent, ComponentStartup>(OnStartup);
         SubscribeLocalEvent<NivalisMeleeCombatComponent, ComponentShutdown>(OnShutdown);
     }
@@ -123,29 +116,23 @@ public sealed partial class NivalisNPCCombatSystem : EntitySystem
 
         _steering.Register(uid, new EntityCoordinates(component.Target, Vector2.Zero), steering);
 
-        // Give the target a chance to react before swinging whenever the NPC is
-        // physically able to reach them.
         if (distance > weapon.Range)
         {
             component.Status = NivalisCombatStatus.TargetOutOfRange;
             return;
         }
 
-        // Parry handling: a parry-capable enemy will raise its guard when the
-        // target closes into melee range.
         if (component.CanParry)
         {
             TryParry(uid, weaponUid, weapon, component, curTime);
         }
 
-        // Grapple handling: a grapple-capable enemy locks onto the target.
         if (HasComp<NivalisGrappleComponent>(uid) && _grapple.TryStartGrapple(uid, component.Target))
             return;
 
         if (weapon.NextAttack > curTime)
             return;
 
-        // Randomly perform a heavy sweeping attack.
         if (component.HeavyChance > 0f && _random.Prob(component.HeavyChance))
         {
             if (_melee.CanStartAttack(uid, weapon))
@@ -161,7 +148,6 @@ public sealed partial class NivalisNPCCombatSystem : EntitySystem
     private void TryParry(EntityUid uid, EntityUid weaponUid, NivalisMeleeComponent weapon,
         NivalisMeleeCombatComponent comp, TimeSpan curTime)
     {
-        // Only parry if the weapon supports it and the parry is off cooldown.
         if (!_parry.HasParryWeapon(uid))
             return;
 

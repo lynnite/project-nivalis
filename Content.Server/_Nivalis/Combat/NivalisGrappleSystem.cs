@@ -2,6 +2,7 @@ using Content.Shared._Nivalis.Combat;
 using Content.Shared.DoAfter;
 using Content.Shared.Effects;
 using Content.Shared.Popups;
+using Content.Shared.StatusEffectNew;
 using Content.Shared.Stunnable;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
@@ -11,15 +12,11 @@ using Robust.Shared.Timing;
 
 namespace Content.Server._Nivalis.Combat;
 
-/// <summary>
-///     Server-side grappling for NPCs. The NPC initiates a short do-after (during which the
-///     victim sees a ramping red warning hue) and, if it completes, stuns the victim.
-/// </summary>
 public sealed partial class NivalisGrappleSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
-    [Dependency] private readonly SharedStunSystem _stun = default!;
+    [Dependency] private readonly StatusEffectsSystem _status = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
@@ -29,13 +26,9 @@ public sealed partial class NivalisGrappleSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-
         SubscribeLocalEvent<NivalisGrappleComponent, NivalisGrappleDoAfterEvent>(OnGrappleComplete);
     }
 
-    /// <summary>
-    ///     Attempts to have <paramref name="user"/> begin grappling <paramref name="target"/>.
-    /// </summary>
     public bool TryStartGrapple(EntityUid user, EntityUid target)
     {
         if (!TryComp<NivalisGrappleComponent>(user, out var grapple) ||
@@ -62,8 +55,6 @@ public sealed partial class NivalisGrappleSystem : EntitySystem
         var args = new DoAfterArgs(EntityManager, user, TimeSpan.FromSeconds(grapple.GrappleTime),
             new NivalisGrappleDoAfterEvent(), target: target, used: user, eventTarget: user)
         {
-            // The grapple "locks on": walking away (or the NPC moving in) does not cancel it,
-            // and neither does taking damage once started.
             BreakOnMove = false,
             BreakOnDamage = false,
             RequireCanInteract = false,
@@ -76,7 +67,6 @@ public sealed partial class NivalisGrappleSystem : EntitySystem
             return false;
         }
 
-        // Warning feedback for the victim.
         if (TryComp<ActorComponent>(target, out _))
         {
             _popup.PopupEntity(Loc.GetString("nivalis-grapple-start"), target, target, PopupType.LargeCaution);
@@ -93,10 +83,8 @@ public sealed partial class NivalisGrappleSystem : EntitySystem
 
         ev.Handled = true;
 
-        // Stun the victim.
-        _stun.TryAddParalyzeDuration(target, TimeSpan.FromSeconds(comp.StunTime), visualized: true);
+        _status.TryAddStatusEffectDuration(target, SharedStunSystem.StunId, TimeSpan.FromSeconds(comp.StunTime));
 
-        // Red flash to accompany the catch.
         if (TryComp<ActorComponent>(target, out _))
         {
             var filter = Filter.Pvs(target, entityManager: EntityManager);

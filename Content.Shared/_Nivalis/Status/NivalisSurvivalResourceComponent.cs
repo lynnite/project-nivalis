@@ -34,7 +34,7 @@ public sealed partial class NivalisSurvivalResourceComponent : Component
     [DataField]
     public DamageSpecifier StarvationDamage = new()
     {
-        DamageDict = { ["Heat"] = 0f }, // disabled for now
+        DamageDict = { ["Heat"] = 0f },
     };
 
     [DataField]

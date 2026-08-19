@@ -5,12 +5,6 @@ using Robust.Shared.Timing;
 
 namespace Content.Shared._Nivalis.Status;
 
-/// <summary>
-///     Suppresses the standard SS14 bloodstream bleed on scavenger melee hits. Scavenger
-///     weapons are meant to bleed through the constant Nivalis status-effect instead of the
-///     regular blood-pool blood loss, so for a short window after each hit the victim's
-///     damage-to-bleed modifiers are blanked (so the hitt's blunt/slash damage adds no bleed).
-/// </summary>
 public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
@@ -47,7 +41,7 @@ public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
 
         var comp = EnsureComp<NivalisNoBleedComponent>(target);
         comp.OriginalBleedModifiers = blood.DamageBleedModifiers;
-        blood.DamageBleedModifiers = "NivalisNoBleed"; // non-existent -> bloodstream ignores damage
+        blood.DamageBleedModifiers = "NivalisNoBleed";
         comp.RemoveAt = _timing.CurTime + TimeSpan.FromSeconds(0.6);
         Dirty(target, blood);
         Dirty(target, comp);

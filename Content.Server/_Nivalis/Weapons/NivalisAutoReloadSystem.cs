@@ -7,10 +7,6 @@ using Robust.Shared.Timing;
 
 namespace Content.Server._Nivalis.Weapons;
 
-/// <summary>
-///     Handles whole-magazine self-reload for scavenger guns carrying
-///     <see cref="NivalisAutoReloadComponent"/>. Only runs server-side.
-/// </summary>
 public sealed partial class NivalisAutoReloadSystem : EntitySystem
 {
     [Dependency] private readonly SharedGunSystem _gun = default!;
@@ -24,7 +20,6 @@ public sealed partial class NivalisAutoReloadSystem : EntitySystem
         var query = EntityQueryEnumerator<NivalisAutoReloadComponent, BasicEntityAmmoProviderComponent>();
         while (query.MoveNext(out var uid, out var reload, out var ammo))
         {
-            // Already full: nothing to do.
             if (ammo.Count >= ammo.Capacity)
             {
                 if (reload.Reloading)
@@ -35,12 +30,10 @@ public sealed partial class NivalisAutoReloadSystem : EntitySystem
                 continue;
             }
 
-            // Not empty yet: wait until the magazine is fully spent before reloading.
             if (ammo.Count > 0 || reload.Reloading == false)
             {
                 if (ammo.Count == 0 && !reload.Reloading)
                 {
-                    // Magazine just ran dry - start the reload.
                     reload.Reloading = true;
                     reload.NextReload = _timing.CurTime + TimeSpan.FromSeconds(reload.ReloadDelay);
                     Dirty(uid, reload);
@@ -51,7 +44,6 @@ public sealed partial class NivalisAutoReloadSystem : EntitySystem
                 continue;
             }
 
-            // Reloading and the delay has elapsed: refill the whole magazine.
             if (_timing.CurTime < reload.NextReload)
                 continue;
 

@@ -43,10 +43,10 @@
     lightComboInterval: 0.13
     lightComboRecovery: 0.5
     lightDamage:
-      types: { Brute: 5, Blunt: 2 }
+      types: { Melee: 7 }
     lightStaminaDamage: 4
     heavyDamage:
-      types: { Brute: 12, Blunt: 4 }
+      types: { Melee: 16 }
     heavyStaminaDamage: 8
     angle: 0
     range: 1.5

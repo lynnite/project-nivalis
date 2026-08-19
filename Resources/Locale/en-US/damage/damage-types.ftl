@@ -5,6 +5,7 @@ damage-type-cellular = Cellular
 damage-type-caustic = Caustic
 damage-type-cold = Cold
 damage-type-heat = Heat
+damage-type-melee = Melee
 damage-type-piercing = Piercing
 damage-type-poison = Poison
 damage-type-radiation = Radiation

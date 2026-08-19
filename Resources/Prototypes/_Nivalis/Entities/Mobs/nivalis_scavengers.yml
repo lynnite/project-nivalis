@@ -1,10 +1,3 @@
-# Nivalis scavenger NPCs. Each variant is spear/knife/pipe/ice-axe/cleaver melee, or a gunner.
-# They never enter critical (no state), increasing their threat on Nivalis.
-
-
-
-
-# Shared behaviours for all scavengers.
 - type: entity
   parent: MobHuman
   id: MobNivalisScavengerBase
@@ -36,7 +29,6 @@
     prototypes:
       - NivalisScavChaserGear
 
-# Rusher - blunt pressure (lead pipe).
 - type: entity
   parent: MobNivalisScavengerBase
   id: MobNivalisScavRusher
@@ -49,7 +41,7 @@
     prototypes:
       - NivalisScavRusherGear
 
-# Freezie - cold-flavoured ice-axe user.
+
 - type: entity
   parent: MobNivalisScavengerBase
   id: MobNivalisScavFreezie
@@ -63,7 +55,6 @@
       - NivalisScavFreezieGear
 
 
-# Leaper - cleaver wielder, grapples and parries.
 - type: entity
   parent: MobNivalisScavengerBase
   id: MobNivalisScavLeaper
@@ -82,7 +73,6 @@
     prototypes:
       - NivalisScavLeaperGear
 
-# Gunner - ranged, never backtracks (no juke in its HTN branch).
 - type: entity
   parent: MobNivalisScavengerBase
   id: MobNivalisScavGunner
@@ -102,6 +92,9 @@
   description: A storm-amped scavenger, faster and meaner.
   components:
   - type: NivalisStormEnemy
+  - type: Loadout
+    prototypes:
+      - NivalisScavChaserStormGear
 
 - type: entity
   parent: MobNivalisScavRusher
@@ -110,6 +103,9 @@
   description: A storm-amped bruiser.
   components:
   - type: NivalisStormEnemy
+  - type: Loadout
+    prototypes:
+      - NivalisScavRusherStormGear
 
 - type: entity
   parent: MobNivalisScavFreezie
@@ -118,6 +114,9 @@
   description: A storm-amped ice-axe killer.
   components:
   - type: NivalisStormEnemy
+  - type: Loadout
+    prototypes:
+      - NivalisScavFreezieStormGear
 
 - type: entity
   parent: MobNivalisScavLeaper
@@ -126,6 +125,9 @@
   description: A storm-amped grappling brute.
   components:
   - type: NivalisStormEnemy
+  - type: Loadout
+    prototypes:
+      - NivalisScavLeaperStormGear
 
 - type: entity
   parent: MobNivalisScavGunner
@@ -134,8 +136,9 @@
   description: A storm-amped gunner.
   components:
   - type: NivalisStormEnemy
-
-# ---------------- Starting gear ----------------
+  - type: Loadout
+    prototypes:
+      - NivalisScavGunnerStormGear
 
 - type: startingGear
   id: NivalisScavChaserGear
@@ -199,3 +202,66 @@
     - BoxSurvival
   inhand:
     - NivalisScavengerGun
+
+- type: startingGear
+  id: NivalisScavChaserStormGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    shoes: ClothingShoesBootsCombat
+  inhand:
+    - NivalisStormCombatKnife
+
+- type: startingGear
+  id: NivalisScavRusherStormGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    shoes: ClothingShoesBootsCombat
+  inhand:
+    - NivalisStormLeadPipe
+
+- type: startingGear
+  id: NivalisScavFreezieStormGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    shoes: ClothingShoesBootsCombat
+  inhand:
+    - NivalisStormIceAxe
+
+- type: startingGear
+  id: NivalisScavLeaperStormGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    shoes: ClothingShoesBootsCombat
+  inhand:
+    - NivalisStormCleaver
+
+- type: startingGear
+  id: NivalisScavGunnerStormGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    back: ClothingBackpack
+    shoes: ClothingShoesBootsCombat
+  storage:
+    back:
+    - BoxSurvival
+  inhand:
+    - NivalisStormGun

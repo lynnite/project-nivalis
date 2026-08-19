@@ -1,4 +1,5 @@
 using Content.Server.NPC.Components;
+using Content.Shared._Nivalis.Weapons;
 using Content.Shared.CombatMode;
 using Content.Shared.Interaction;
 using Content.Shared.Physics;
@@ -17,6 +18,7 @@ public sealed partial class NPCCombatSystem
     [Dependency] private EntityQuery<CombatModeComponent> _combatQuery = default!;
     [Dependency] private EntityQuery<NPCSteeringComponent> _steeringQuery = default!;
     [Dependency] private EntityQuery<RechargeBasicEntityAmmoComponent> _rechargeQuery = default!;
+    [Dependency] private EntityQuery<NivalisAutoReloadComponent> _autoReloadQuery = default!;
     [Dependency] private EntityQuery<PhysicsComponent> _physicsQuery = default!;
     [Dependency] private EntityQuery<TransformComponent> _xformQuery = default!;
 
@@ -103,7 +105,7 @@ public sealed partial class NPCCombatSystem
             if (ammoEv.Count == 0)
             {
                 // Recharging then?
-                if (_rechargeQuery.HasComponent(gun))
+                if (_rechargeQuery.HasComponent(gun) || _autoReloadQuery.HasComponent(gun))
                 {
                     continue;
                 }

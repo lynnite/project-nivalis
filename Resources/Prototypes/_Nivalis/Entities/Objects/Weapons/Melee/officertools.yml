@@ -1,0 +1,252 @@
+# Nivalis scavenger melee weapons. All are Nivalis melee weapons (NivalisMeleeComponent) so
+# they're driven by the Nivalis melee system rather than the classic MeleeWeapon system.
+
+# Combat knife - fast, low damage, bleeds.
+- type: entity
+  name: combat knife
+  parent: [BaseItem, BaseSecurityContraband]
+  id: NivalisScavengerCombatKnife
+  description: A deadly knife intended for melee confrontations. Leaves its victims bleeding.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/combat_knife.rsi
+    state: icon
+  - type: Tag
+    tags:
+    - CombatKnife
+    - Knife
+  - type: NivalisMelee
+    lightComboCount: 4
+    lightComboInterval: 0.11
+    lightComboRecovery: 0.45
+    lightDamage:
+      types: { Slash: 4, Piercing: 2 }
+    lightStaminaDamage: 2
+    heavyDamage:
+      types: { Slash: 8, Piercing: 4 }
+    heavyStaminaDamage: 4
+    angle: 40
+    range: 1.1
+    animation: WeaponArcThrust
+    wideAnimation: WeaponArcSlash
+    soundHit:
+      path: /Audio/Weapons/bladeslice.ogg
+  - type: NivalisBleed
+    damagePerSecond: 1
+    duration: 40
+  - type: MeleeChemicalInjector
+    solution: melee
+  - type: RefillableSolution
+    solution: melee
+  - type: InjectableSolution
+    solution: melee
+  - type: Item
+    size: Small
+    sprite: Objects/Weapons/Melee/combat_knife.rsi
+  - type: Damageable
+  - type: Injurable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 20
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+
+# Lead pipe - slow, high blunt.
+- type: entity
+  name: lead pipe
+  parent: BaseItem
+  id: NivalisScavengerLeadPipe
+  description: A heavy length of plumbing. Smashing, not subtle.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/truncheon.rsi
+    state: icon
+  - type: NivalisMelee
+    lightComboCount: 2
+    lightComboInterval: 0.22
+    lightComboRecovery: 0.6
+    lightDamage:
+      types: { Blunt: 8 }
+    lightStaminaDamage: 8
+    heavyDamage:
+      types: { Blunt: 16 }
+    heavyStaminaDamage: 14
+    angle: 50
+    range: 1.3
+    animation: WeaponArcThrust
+    wideAnimation: WeaponArcSlash
+    soundHit:
+      path: /Audio/Weapons/smash.ogg
+  - type: Item
+    sprite: Objects/Weapons/Melee/truncheon.rsi
+  - type: Tag
+    tags:
+    - Pipe
+  - type: Damageable
+  - type: Injurable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 40
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+
+# Ice axe - moderate damage, pierces.
+- type: entity
+  name: ice axe
+  parent: [BaseItem, BaseMinorContraband]
+  id: NivalisScavengerIceAxe
+  description: A snowfield implement repurposed as a terrible, terrible weapon.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/pickaxe.rsi
+    state: pickaxe
+  - type: NivalisMelee
+    lightComboCount: 3
+    lightComboInterval: 0.16
+    lightComboRecovery: 0.5
+    lightDamage:
+      types: { Blunt: 5, Piercing: 3 }
+    lightStaminaDamage: 5
+    heavyDamage:
+      types: { Blunt: 10, Piercing: 6 }
+    heavyStaminaDamage: 10
+    angle: 45
+    range: 1.4
+    animation: WeaponArcThrust
+    wideAnimation: WeaponArcThrust
+    soundHit:
+      path: /Audio/Weapons/smash.ogg
+  - type: NivalisBleed
+    damagePerSecond: 1
+    duration: 40
+  - type: MeleeChemicalInjector
+    solution: melee
+  - type: RefillableSolution
+    solution: melee
+  - type: InjectableSolution
+    solution: melee
+  - type: Item
+    size: Normal
+    sprite: Objects/Weapons/Melee/pickaxe.rsi
+  - type: Tag
+    tags:
+    - Pickaxe
+  - type: Damageable
+  - type: Injurable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 30
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+
+# Cleaver - heavy chopping, parry-capable.
+- type: entity
+  name: bone cleaver
+  parent: [BaseItem, BaseMinorContraband]
+  id: NivalisScavengerCleaver
+  description: A butcher's cleaver, still not fully cleaned. Parries well.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/cleaver.rsi
+    state: butch
+  - type: Tag
+    tags:
+    - Cleaver
+    - Knife
+  - type: NivalisMelee
+    lightComboCount: 3
+    lightComboInterval: 0.18
+    lightComboRecovery: 0.55
+    lightDamage:
+      types: { Slash: 7 }
+    lightStaminaDamage: 6
+    heavyDamage:
+      types: { Slash: 15 }
+    heavyStaminaDamage: 12
+    angle: 50
+    range: 1.2
+    animation: WeaponArcSlash
+    wideAnimation: WeaponArcSlash
+    soundHit:
+      path: /Audio/Weapons/bladeslice.ogg
+  - type: NivalisMeleeParry
+    parryCooldown: 1.0
+    parryWindow: 1.0
+    failedParryPenalty: 0.5
+    stunDuration: 1.5
+  - type: NivalisBleed
+    damagePerSecond: 1
+    duration: 40
+  - type: MeleeChemicalInjector
+    solution: melee
+  - type: RefillableSolution
+    solution: melee
+  - type: InjectableSolution
+    solution: melee
+  - type: Item
+    size: Normal
+    sprite: Objects/Weapons/Melee/cleaver.rsi
+  - type: Damageable
+  - type: Injurable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 30
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+
+# Scavenger pistol - a salvaged energy sidearm with an internal power source that reloads its
+# whole magazine on its own. Gunners never need to find magazines or drop it; it just waits a
+# short delay (which plays the mag eject/insert sounds) and refills the entire magazine at once.
+# Reload delay is configurable via reloadDelay on NivalisAutoReload.
+- type: entity
+  name: scavenger pistol
+  parent: BaseItem
+  id: NivalisScavengerGun
+  description: A battered energy pistol that drains charge as it fires and reloads its magazine on its own.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Pistols/viper.rsi
+    layers:
+      - state: base
+  - type: Item
+    sprite: Objects/Weapons/Guns/Pistols/viper.rsi
+    size: Small
+  - type: Gun
+    fireRate: 4
+    selectedMode: SemiAuto
+    availableModes: [ SemiAuto ]
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/pistol.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/empty.ogg
+  # The gun reloads its whole magazine on its own after a short delay (configurable).
+  - type: NivalisAutoReload
+    reloadDelay: 2.0
+    soundMagOut:
+      path: /Audio/Weapons/Guns/MagOut/pistol_magout.ogg
+    soundMagIn:
+      path: /Audio/Weapons/Guns/MagIn/pistol_magin.ogg
+  - type: BasicEntityAmmoProvider
+    proto: BulletPistol
+    capacity: 8
+    count: 8
+  - type: AmmoCounter
+  - type: Tag
+    tags:
+    - Sidearm

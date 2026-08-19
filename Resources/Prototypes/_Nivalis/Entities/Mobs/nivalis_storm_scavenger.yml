@@ -10,7 +10,7 @@
   - type: NivalisStormEnemy
   - type: Loadout
     prototypes:
-      - SyndicateFootsoldierGearRuin
+      - SyndicateFootsoldierGearRuinNivalis
   - type: InputMover
   - type: MobMover
   - type: HTN
@@ -32,4 +32,21 @@
   - type: Sprite
     sprite: Markers/jobs.rsi
     layers:
-      - state: red
+      - state: green
+
+- type: startingGear
+  id: SyndicateFootsoldierGearRuinNivalis
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    head: ClothingHeadHelmetSwatSyndicate
+    mask: ClothingMaskGasSyndicate
+    outerClothing: ClothingOuterArmorBasic
+    gloves: ClothingHandsGlovesCombat
+    back: ClothingBackpack
+    shoes: ClothingShoesBootsCombat
+    id: SyndiPDA
+  storage:
+    back:
+    - BoxSurvival
+  inhand:
+    - NivalisBaseSpear

@@ -1,0 +1,29 @@
+# Nivalis bleed status effect. A constant per-second brute bleed applied by scavenger weapons.
+# Does not stack: re-applying while already bleeding simply leaves the existing effect alone
+# (handled by NivalisBleedSystem). Shows the standard bleed alert at its base icon.
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectNivalisBleed
+  name: nivalis bleed
+  description: You are bleeding.
+  components:
+  - type: StatusEffect
+    whitelist:
+      components:
+      - MobState
+      - Damageable
+      requireAll: true
+  - type: StatusEffectAlert
+    alert: NivalisBleed
+  - type: ExaminableStatusEffect
+    messageId: status-effect-examine-bleeding
+
+# Dedicated base icon for the Nivalis bleed alert. Uses the lowest bleed icon and, crucially, does
+# NOT support severity (maxSeverity left at -1) so it can be shown without a severity value.
+- type: alert
+  id: NivalisBleed
+  name: nivalis-bleed-alert-name
+  description: nivalis-bleed-alert-desc
+  icons:
+  - sprite: /Textures/Interface/Alerts/bleed.rsi
+    state: bleed0

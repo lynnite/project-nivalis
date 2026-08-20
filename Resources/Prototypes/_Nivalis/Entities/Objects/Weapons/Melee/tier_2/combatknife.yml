@@ -1,0 +1,10 @@
+- type: entity
+  name: Combat Knife
+  parent: NivalisBaseSpear
+  id: NivalisCombatKnifeT2
+  description: Tier 2
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/cknife.rsi
+    layers:
+    - state: icon

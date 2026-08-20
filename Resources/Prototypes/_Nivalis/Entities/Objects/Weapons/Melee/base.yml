@@ -59,10 +59,6 @@
     parryWindow: 1.0
     failedParryPenalty: 0.5
     stunDuration: 1.5
-  - type: DamageOtherOnHit
-    damage:
-      types:
-        Piercing: 15
   - type: Item
     size: Ginormous
     shape:
@@ -87,11 +83,6 @@
     solution: melee
   - type: SolutionTransfer
     maxTransferAmount: 2
-  - type: Wieldable
-  - type: IncreaseDamageOnWield
-    damage:
-      types:
-        Piercing: 4
   - type: Damageable
   - type: Injurable
     damageContainer: Inorganic
@@ -126,14 +117,3 @@
     inHandsMaxFillLevels: 1
     equippedFillBaseName: -fill-
     equippedMaxFillLevels: 1
-
-- type: entity
-  name: Military fork
-  parent: NivalisBaseSpear
-  id: NivalisMilSpear
-  description: Common spear
-  components:
-  - type: Sprite
-    sprite: _Nivalis/Objects/Weapons/Melee/milspear.rsi
-    layers:
-    - state: spear

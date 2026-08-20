@@ -11,11 +11,11 @@
         "name": "spear"
     },
     {
-        "name": "wielded-inhand-left",
+        "name": "inhand-left",
         "directions": 4
     },
     {
-        "name": "wielded-inhand-right",
+        "name": "inhand-right",
         "directions": 4
     }
   ]

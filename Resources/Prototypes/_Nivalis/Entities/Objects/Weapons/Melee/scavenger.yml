@@ -130,7 +130,7 @@
     solution: melee
   - type: Item
     size: Normal
-    sprite: Objects/Weapons/Melee/pickaxe.rsi
+    sprite: _Nivalis/Objects/Weapons/Melee/icepick.rsi
   - type: Tag
     tags:
     - Pickaxe

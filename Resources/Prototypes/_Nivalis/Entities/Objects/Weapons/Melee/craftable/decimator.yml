@@ -1,0 +1,11 @@
+- type: entity
+  name: Decimator
+  parent: NivalisBaseSpear
+  id: NivalisDecimator
+  description: Crafted
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/decimator/inhands.rsi
+    layers:
+    - state: icon
+      sprite: _Nivalis/Objects/Weapons/Melee/decimator/icon.rsi # todo explosion

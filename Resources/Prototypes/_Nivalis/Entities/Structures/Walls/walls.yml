@@ -1,0 +1,67 @@
+- type: entity
+  abstract: true
+  id: NivalisBaseWallInvincible
+  description: A huge chunk of metal used to separate rooms.
+  placement:
+    state: full
+    mode: SnapgridCenter
+    snap:
+    - Wall
+  components:
+  - type: Transform
+    anchored: true
+  - type: Physics
+    bodyType: Static
+  - type: Sprite
+    drawdepth: Walls
+  - type: PlacementReplacement
+    key: walls
+  - type: Occluder
+  - type: Airtight
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.5,-0.5,0.5,0.5"
+        mask:
+        - FullTileMask
+        layer:
+        - WallLayer
+        density: 1000
+  - type: SunShadowCast
+  - type: Tag
+    tags:
+    - Wall
+  - type: Clickable
+
+- type: entity
+  parent: NivalisBaseWallInvincible
+  id: NivalisWallRockBase
+  name: rock wall
+  description: A rough wall of hardened rock.
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Structures/Walls/cave.rsi
+  - type: Icon
+    sprite: _Nivalis/Structures/Walls/cave.rsi
+    state: cavewall
+  - type: IconSmooth
+    key: walls
+    additionalKeys:
+    - windows
+    - doors
+    base: cavewall
+
+- type: entity
+  parent: NivalisWallRockBase
+  id: NivalisWallRock
+  name: rock wall
+  description: A rough wall of hardened rock.
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Structures/Walls/cave.rsi
+    color: "#826161"
+
+- type: Tag
+  id: Wall

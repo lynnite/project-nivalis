@@ -1,0 +1,23 @@
+- type: emoteSounds
+  id: NivalisUnisexFelinid
+  sounds:
+    Scream:
+      collection: FelinidScreams
+    Hiss:
+      collection: FelinidHisses
+    Meow:
+      collection: FelinidMeows
+    Mew:
+      collection: FelinidMews
+    Growl:
+      collection: FelinidGrowls
+    Purr:
+      collection: FelinidPurrs
+
+- type: emoteSounds
+  parent: [NivalisUnisexFelinid, MaleHuman]
+  id: NivalisMaleFelinid
+
+- type: emoteSounds
+  parent: [NivalisUnisexFelinid, FemaleHuman]
+  id: NivalisFemaleFelinid

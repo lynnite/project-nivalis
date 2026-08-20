@@ -1,0 +1,18 @@
+- type: entity
+  save: false
+  parent:
+  - AppearanceFelinid
+  - BaseSpeciesMobOrganic
+  id: NivalisMobFelinid
+  name: Urist McLynn
+  suffix: Nivalis
+  components:
+  - type: HumanoidProfile
+    species: Felinid
+  - type: Wagging
+    action: ActionToggleFelinidWagging
+  - type: Vocal
+    sounds:
+      Male: NivalisMaleFelinid
+      Unsexed: NivalisUnisexFelinid
+      Female: NivalisFemaleFelinid

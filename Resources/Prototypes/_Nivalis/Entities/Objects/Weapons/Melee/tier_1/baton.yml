@@ -1,0 +1,10 @@
+- type: entity
+  name: baton
+  parent: NivalisBaseSpear
+  id: NivalisBaton
+  description: Tier 1
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/baton.rsi
+    layers:
+    - state: telebaton

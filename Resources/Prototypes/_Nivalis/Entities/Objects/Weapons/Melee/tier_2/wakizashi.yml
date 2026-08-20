@@ -1,0 +1,10 @@
+- type: entity
+  name: Wakizashi
+  parent: NivalisBaseSpear
+  id: NivalisWakizashi
+  description: Tier 2
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/wakizashi.rsi
+    layers:
+    - state: icon

@@ -2,10 +2,10 @@
   name: combat knife
   parent: [BaseItem, BaseSecurityContraband]
   id: NivalisScavengerCombatKnife
-  description: A deadly knife intended for melee confrontations. Leaves its victims bleeding.
+  description: Knife
   components:
   - type: Sprite
-    sprite: Objects/Weapons/Melee/combat_knife.rsi
+    sprite: _Nivalis/Objects/Weapons/Melee/cknife.rsi
     state: icon
   - type: Tag
     tags:
@@ -56,7 +56,7 @@
   name: lead pipe
   parent: BaseItem
   id: NivalisScavengerLeadPipe
-  description: A heavy length of plumbing. Smashing, not subtle.
+  description: Clang
   components:
   - type: Sprite
     sprite: Objects/Weapons/Melee/truncheon.rsi
@@ -98,10 +98,10 @@
   name: ice axe
   parent: [BaseItem, BaseMinorContraband]
   id: NivalisScavengerIceAxe
-  description: A snowfield implement repurposed as a terrible, terrible weapon.
+  description: Ice
   components:
   - type: Sprite
-    sprite: Objects/Weapons/Melee/pickaxe.rsi
+    sprite: _Nivalis/Objects/Weapons/Melee/icepick.rsi
     state: pickaxe
   - type: NivalisMelee
     lightComboCount: 3
@@ -150,7 +150,7 @@
   name: bone cleaver
   parent: [BaseItem, BaseMinorContraband]
   id: NivalisScavengerCleaver
-  description: A butcher's cleaver, still not fully cleaned. Parries well.
+  description: Cleaver
   components:
   - type: Sprite
     sprite: Objects/Weapons/Melee/cleaver.rsi
@@ -212,7 +212,7 @@
   name: scavenger pistol
   parent: BaseItem
   id: NivalisScavengerGun
-  description: A battered energy pistol that drains charge as it fires and reloads its magazine on its own.
+  description: Base gun
   components:
   - type: Sprite
     sprite: Objects/Weapons/Guns/Pistols/viper.rsi

@@ -1,0 +1,10 @@
+- type: entity
+  name: Specialist Knife
+  parent: NivalisBaseSpear
+  id: NivalisSpecKnife
+  description: Tier 3
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/kukri.rsi
+    layers:
+    - state: icon

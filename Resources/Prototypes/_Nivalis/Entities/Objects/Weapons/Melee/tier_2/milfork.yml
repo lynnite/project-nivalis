@@ -1,0 +1,10 @@
+- type: entity
+  name: Military fork
+  parent: NivalisBaseSpear
+  id: NivalisMilSpear
+  description: Tier 2
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/milspear.rsi
+    layers:
+    - state: spear

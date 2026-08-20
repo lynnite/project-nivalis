@@ -1,6 +1,7 @@
 using Content.Shared.Alert;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.Prototypes;
+using Content.Shared.Random.Helpers;
 using Content.Shared.Rejuvenate;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
@@ -11,7 +12,7 @@ namespace Content.Shared.Nutrition.EntitySystems;
 /// This system manages <see cref="SatiationComponent"/>. It handles the change of satiations in <see cref="Update"/>
 /// and external changes to satiations through accessors like <see cref="ModifyValue"/>.
 /// </summary>
-public abstract partial class SatiationSystem : EntitySystem
+public sealed partial class SatiationSystem : EntitySystem
 {
     [Dependency] private IGameTiming _timing = default!;
 
@@ -60,8 +61,19 @@ public abstract partial class SatiationSystem : EntitySystem
     {
         foreach (var (type, satiation) in entity.Comp.Satiations)
         {
-            AddSatiation(entity.AsNullable(), type, satiation);
+            if (!ProtoMan.Resolve(satiation.Prototype, out var proto))
+                continue;
+
+            satiation.SatiationType = type;
+
+            // TODO: Replace with RandomPredicted once the engine PR is merged
+            var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(entity));
+            var value = rand.NextFloat(proto.StartingValueMinimum, proto.StartingValueMaximum);
+
+            SetAuthoritativeValue(entity, satiation, proto, value);
         }
+
+        DirtyField(entity.AsNullable(), SatiationComponent.SatiationFieldName);
     }
 
     /// <summary>

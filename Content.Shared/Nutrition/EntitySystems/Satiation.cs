@@ -37,6 +37,7 @@ public sealed partial class Satiation : IRobustCloneable<Satiation>
     [DataField(required: true), ViewVariables(VVAccess.ReadOnly)]
     public ProtoId<SatiationPrototype> Prototype;
 
+
     /// <summary>
     /// The value of this satiation as of <see cref="LastAuthoritativeChangeTime"/>.
     /// </summary>

@@ -232,8 +232,9 @@
     - type: Inventory
       templateId: holoclown
     - type: Hands
-      startingHands:
-        hand_left:
+      activeHandId: Hand
+      hands:
+        Hand:
           location: Left
     - type: ComplexInteraction
     - type: MeleeWeapon

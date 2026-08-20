@@ -1665,8 +1665,9 @@
     - map: [ "mask" ]
     - map: [ "head" ]
   - type: Hands
-    startingHands:
-      hand_left:
+    activeHandId: Hand
+    hands:
+      Hand:
         location: Left
   - type: ComplexInteraction
   - type: CreamPied

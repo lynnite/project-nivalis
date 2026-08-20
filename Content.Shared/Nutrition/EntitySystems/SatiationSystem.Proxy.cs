@@ -1,7 +1,6 @@
 using System.Linq;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.Prototypes;
-using Content.Shared.Random.Helpers;
 using Content.Shared.StatusIcon;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
@@ -9,7 +8,7 @@ using Robust.Shared.Utility;
 namespace Content.Shared.Nutrition.EntitySystems;
 
 // This part provides functions for use in other systems.
-public abstract partial class SatiationSystem
+public sealed partial class SatiationSystem
 {
     /// <summary>
     /// Gets <paramref name="entity"/>'s current value of the satiation of <paramref name="type"/>. If this entity does
@@ -281,49 +280,4 @@ public abstract partial class SatiationSystem
     ) => GetAndResolveSatiationOfType(entity, type)?.Proto.MaximumValue;
 
     #endregion
-
-    /// <summary>
-    /// Adds a new <see cref="Satiation"/> of a given <see cref="SatiationTypePrototype"/> to the entity.
-    /// </summary>
-    /// <param name="entity">The entity to add the satiation to.</param>
-    /// <param name="type">The type of satiation to add.</param>
-    /// <param name="satiation">The satiation of that type to be added.</param>
-    public void AddSatiation(Entity<SatiationComponent?> entity, ProtoId<SatiationTypePrototype> type, Satiation satiation)
-    {
-        if (!Resolve(entity, ref entity.Comp))
-            return;
-
-        if (!ProtoMan.Resolve(satiation.Prototype, out var proto))
-            return;
-
-        satiation.SatiationType = type;
-
-        entity.Comp.Satiations.TryAdd(type, satiation);
-        
-        var rand = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(entity));
-        var value = rand.NextFloat(proto.StartingValueMinimum, proto.StartingValueMaximum);
-
-        SetAuthoritativeValue((entity, entity.Comp), satiation, proto, value);
-
-        DirtyField(entity, SatiationComponent.SatiationFieldName);
-    }
-
-    /// <summary>
-    /// Removes an existing <see cref="SatiationTypePrototype"/> from the entity.
-    /// </summary>
-    /// <param name="entity">The entity to remove the satiation from.</param>
-    /// <param name="type">The type of satiation to remove.</param>
-    public void RemoveSatiationType(Entity<SatiationComponent?> entity, ProtoId<SatiationTypePrototype> type)
-    {
-        if (!Resolve(entity, ref entity.Comp))
-            return;
-
-        if (GetAndResolveSatiationOfType(entity.Comp, type) is { } satiation)
-        {
-            _alerts.ClearAlertCategory(entity.Owner, satiation.Proto.AlertCategory);
-            entity.Comp.Satiations.Remove(type);
-        }
-
-        DirtyField(entity, SatiationComponent.SatiationFieldName);
-    }
 }

@@ -40,16 +40,20 @@
       tags:
       - XenoborgModuleGeneric
       - XenoborgModuleEngi
+      - BorgModuleEngineering
+      - BorgModuleGeneric
   - type: ContainerFill
     containers:
       borg_brain:
       - MMIFilled
       borg_module:
       - XenoborgModuleBasic
-      - XenoborgModuleAdvancedTool
-      - XenoborgModuleConstruction
+      - BorgModuleAdvancedTool
+      - BorgModuleConstruction
+      - BorgModuleRCD
+      - BorgModuleCable
       - XenoborgModuleAccessBreaker
-      - XenoborgModuleTileGun
+      - XenoborgModuleFireExtinguisher
   - type: ShowElectrocutionHUD
   - type: ShowHealthBars
     damageContainers:
@@ -276,10 +280,12 @@
       - MMI
       borg_module:
       - XenoborgModuleBasic
-      - XenoborgModuleAdvancedTool
-      - XenoborgModuleConstruction
+      - BorgModuleAdvancedTool
+      - BorgModuleConstruction
+      - BorgModuleRCD
+      - BorgModuleCable
       - XenoborgModuleAccessBreaker
-      - XenoborgModuleTileGun
+      - XenoborgModuleFireExtinguisher
   - type: ItemSlots
     slots:
       cell_slot:

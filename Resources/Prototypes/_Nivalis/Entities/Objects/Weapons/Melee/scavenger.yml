@@ -102,7 +102,7 @@
   components:
   - type: Sprite
     sprite: _Nivalis/Objects/Weapons/Melee/icepick.rsi
-    state: pickaxe
+    state: icon
   - type: NivalisMelee
     lightComboCount: 3
     lightComboInterval: 0.16

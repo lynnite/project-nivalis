@@ -1,0 +1,10 @@
+- type: entity
+  name: scissors
+  parent: NivalisBaseSpear
+  id: NivalisScissors
+  description: Tier 1
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/scissors.rsi
+    layers:
+    - state: icon

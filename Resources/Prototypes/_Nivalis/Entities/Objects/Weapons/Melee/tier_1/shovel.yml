@@ -1,0 +1,10 @@
+- type: entity
+  name: shovel
+  parent: NivalisBaseSpear
+  id: NivalisShovel
+  description: Tier 1
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/shovel.rsi
+    layers:
+    - state: icon

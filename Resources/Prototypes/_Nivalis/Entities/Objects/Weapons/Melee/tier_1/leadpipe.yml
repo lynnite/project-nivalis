@@ -1,0 +1,10 @@
+- type: entity
+  name: lead pipe
+  parent: NivalisBaseSpear
+  id: NivalisLeadpipe
+  description: Tier 1
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/leadpipe.rsi
+    layers:
+    - state: icon

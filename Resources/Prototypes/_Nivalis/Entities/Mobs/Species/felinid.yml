@@ -9,8 +9,6 @@
   components:
   - type: HumanoidProfile
     species: Felinid
-  - type: Wagging
-    action: ActionToggleFelinidWagging
   - type: Vocal
     sounds:
       Male: NivalisMaleFelinid

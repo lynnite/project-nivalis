@@ -1,0 +1,76 @@
+- type: tile
+  parent: NivalisBaseTile
+  id: NivalisPlanetSnow1
+  name: snow
+  sprite: /Textures/_Nivalis/Tiles/snow2/snow_1.png
+  variants: 8
+  placementVariants:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  edgeSpritePriority: 4
+  edgeSprites:
+    SouthEast: /Textures/_Nivalis/Tiles/snow2/snow_single_edge_se.png
+    NorthEast: /Textures/_Nivalis/Tiles/snow2/snow_single_edge_ne.png
+    NorthWest: /Textures/_Nivalis/Tiles/snow2/snow_single_edge_nw.png
+    SouthWest: /Textures/_Nivalis/Tiles/snow2/snow_single_edge_sw.png
+    South: /Textures/_Nivalis/Tiles/snow2/snow_double_edge_s.png
+    East: /Textures/_Nivalis/Tiles/snow2/snow_double_edge_e.png
+    North: /Textures/_Nivalis/Tiles/snow2/snow_double_edge_n.png
+    West: /Textures/_Nivalis/Tiles/snow2/snow_double_edge_w.png
+
+- type: tile
+  parent: NivalisPlanetSnow1
+  id: NivalisPlanetSnow2
+  name: snow
+  sprite: /Textures/_Nivalis/Tiles/snow2/snow_2.png
+  variants: 8
+  placementVariants:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  edgeSpritePriority: 5
+
+- type: tile
+  parent: NivalisPlanetSnow1
+  id: NivalisPlanetSnow3
+  name: snow
+  sprite: /Textures/_Nivalis/Tiles/snow2/snow_3.png
+  variants: 8
+  placementVariants:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  edgeSpritePriority: 6
+
+- type: tile
+  parent: NivalisPlanetSnow1
+  id: NivalisPlanetSnow4
+  name: snow
+  sprite: /Textures/_Nivalis/Tiles/snow2/snow_4.png
+  variants: 8
+  placementVariants:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  edgeSpritePriority: 7

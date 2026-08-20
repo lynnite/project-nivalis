@@ -1,0 +1,9 @@
+- type: tile
+  abstract: true
+  id: NivalisBaseTile
+  isSubfloor: true
+  deconstructTools: [ ]
+  footstepSounds:
+    collection: FootstepGrass
+  heatCapacity: 10000
+  indestructible: true

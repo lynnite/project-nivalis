@@ -1,0 +1,2 @@
+"license": "CC-BY-SA-3.0",
+"copyright": "Taken from cmss13 at https://github.com/cmss13-devs/cmss13/blob/3f7726a500da0bb8502dd612454c70bb975c4dc2/icons/turf/floors/floors.dmi"

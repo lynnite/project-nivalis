@@ -1,0 +1,10 @@
+- type: entity
+  name: Fireaxe
+  parent: NivalisBaseSpear
+  id: NivalisFireaxe
+  description: Tier 4
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/fireaxe.rsi
+    layers:
+    - state: icon

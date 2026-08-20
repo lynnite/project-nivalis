@@ -1,0 +1,10 @@
+- type: entity
+  name: Splitting Axe
+  parent: NivalisBaseSpear
+  id: NivalisSplittingAxe
+  description: Tier 3
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Melee/splittingaxe.rsi
+    layers:
+    - state: icon

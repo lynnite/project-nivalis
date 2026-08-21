@@ -1,0 +1,15 @@
+- type: entity
+  parent: BaseAction
+  id: ActionNivalisOpenAmmoMenu
+  name: Ammunition Menu
+  description: View your survivor ammunition pool.
+  components:
+  - type: Action
+    itemIconStyle: NoItem
+  - type: Sprite
+    layers:
+    - texture: Interface/Actions/harm.png
+  - type: InstantAction
+    event: !type:NivalisOpenAmmoMenuEvent
+
+

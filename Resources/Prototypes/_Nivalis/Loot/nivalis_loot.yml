@@ -48,9 +48,22 @@
   id: NivalisAmmoTable
   table: !type:GroupSelector
     children:
-    - id: MagazinePistol
-    - id: MagazinePistolHighCapacity
-    - id: MagazineShotgun
+    - !type:NestedSelector
+      tableId: NivalisAmmoBoxTable
+      weight: 1.0
+
+# Random Nivalis ammo box loot table. Spawns a single ammo box on the ground.
+- type: entityTable
+  id: NivalisAmmoBoxTable
+  table: !type:GroupSelector
+    children:
+    - id: NivalisAmmoBoxLight
+    - id: NivalisAmmoBoxShort
+    - id: NivalisAmmoBoxLong
+    - id: NivalisAmmoBoxSmall
+    - id: NivalisAmmoBoxShell
+    - id: NivalisAmmoBoxMedium
+    - id: NivalisAmmoBoxHeavy
 
 - type: entityTable
   id: NivalisHardwareTable

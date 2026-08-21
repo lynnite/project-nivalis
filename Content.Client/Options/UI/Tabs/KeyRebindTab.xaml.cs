@@ -172,6 +172,8 @@ namespace Content.Client.Options.UI.Tabs
             InitToggleWalk();
             AddButton(ContentKeyFunctions.ToggleKnockdown);
             AddButton(ContentKeyFunctions.NivalisParry);
+            AddButton(ContentKeyFunctions.NivalisAim);
+            AddButton(ContentKeyFunctions.NivalisReload);
 
             AddHeader("ui-options-header-camera");
             AddButton(EngineKeyFunctions.CameraRotateLeft);

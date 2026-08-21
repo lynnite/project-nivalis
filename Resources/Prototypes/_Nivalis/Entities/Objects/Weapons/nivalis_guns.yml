@@ -1,0 +1,148 @@
+# Nivalis guns.
+# These firearms do NOT use physical magazines or batteries. Instead they draw ammunition
+# from the shooter's shared ammo pool (NivalisAmmoPoolComponent) via the
+# NivalisPoolAmmoProviderComponent. Which pool entry is drained is set on NivalisGunComponent.
+
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: BaseNivalisGun
+  components:
+  - type: Sprite
+  - type: Item
+    size: Large
+  - type: Clothing
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Gun
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    fireRate: 4
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/laser.ogg
+  - type: AmmoCounter
+  - type: NivalisPoolAmmoProvider
+  - type: NivalisGun
+    projectile: RedLaser
+  - type: NivalisReload
+    # Reloads take two seconds and are not interrupted by movement.
+    reloadDelay: 2
+    breakOnMove: false
+    walkSpeedMultiplier: 0.6
+    sprintSpeedMultiplier: 0.6
+
+# Light - a fast-firing handgun.
+- type: entity
+  parent: [BaseNivalisGun, BaseMinorContraband]
+  id: WeaponNivalisPistol
+  name: field light pistol
+  suffix: Nivalis
+  description: A compact energy handgun that draws light rounds from your ammo pool.
+  components:
+  - type: Item
+    size: Small
+    shape:
+    - 0,0,1,0
+    - 0,1,0,1
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Battery/svalinn.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-unshaded-4
+      map: ["enum.GunVisualLayers.MagUnshaded"]
+      shader: unshaded
+  - type: MagazineVisuals
+    magState: mag
+    steps: 5
+    zeroVisible: true
+  - type: Appearance
+  - type: NivalisGun
+    ammoType: Light
+    maxAmmo: 24
+    projectile: RedLaser
+
+# Medium - a semi-automatic rifle.
+- type: entity
+  parent: [BaseNivalisGun, BaseGunWieldable, BaseSecurityContraband]
+  id: WeaponNivalisRifle
+  name: field medium rifle
+  suffix: Nivalis
+  description: A rugged assault rifle that draws medium rounds from your ammo pool.
+  components:
+  - type: Item
+    size: Large
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Battery/laser_gun.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-unshaded-4
+      map: ["enum.GunVisualLayers.MagUnshaded"]
+      shader: unshaded
+  - type: MagazineVisuals
+    magState: mag
+    steps: 5
+    zeroVisible: false
+  - type: Appearance
+  - type: Clothing
+    sprite: Objects/Weapons/Guns/Battery/laser_gun.rsi
+  - type: Gun
+    selectedMode: FullAuto
+    fireRate: 5
+    availableModes:
+    - SemiAuto
+    - FullAuto
+  - type: NivalisGun
+    ammoType: Medium
+    maxAmmo: 40
+    projectile: RedMediumLaser
+
+# Shell - a scatter / shotgun-style weapon firing five pellets in a cone.
+- type: entity
+  parent: [BaseNivalisGun, BaseGunWieldable, BaseSecurityContraband]
+  id: WeaponNivalisShotgun
+  name: field shell scattergun
+  suffix: Nivalis
+  description: A heavy scattergun that draws shells from your ammo pool and fires a wide cone of pellets.
+  components:
+  - type: Item
+    size: Large
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Battery/energy_shotgun.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-unshaded-4
+      map: ["enum.GunVisualLayers.MagUnshaded"]
+      shader: unshaded
+  - type: MagazineVisuals
+    magState: mag
+    steps: 5
+    zeroVisible: false
+  - type: Appearance
+  - type: Clothing
+    sprite: Objects/Weapons/Guns/Battery/energy_shotgun.rsi
+  - type: Gun
+    selectedMode: SemiAuto
+    fireRate: 2
+    minAngle: 0
+    maxAngle: 4
+  - type: NivalisScatterGun
+    projectilesPerShot: 5
+    degreesScatter: 18
+  - type: NivalisAim
+  - type: NivalisScatterDirection
+    maxLeft: 9
+    maxRight: 9
+  - type: NivalisAimedScatter
+    maxLeft: 3
+    maxRight: 3
+  - type: NivalisGun
+    ammoType: Shell
+    maxAmmo: 8
+    projectile: RedLightLaser
+

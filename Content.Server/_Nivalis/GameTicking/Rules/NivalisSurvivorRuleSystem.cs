@@ -15,6 +15,7 @@ using Content.Shared._Nivalis.Stamina;
 using Content.Shared._Nivalis.Status;
 using Content.Shared._Nivalis.Survivor.Components;
 using Content.Shared._Nivalis.Traits;
+using Content.Shared._Nivalis.Weapons;
 using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
 using Content.Shared.Mobs.Components;
@@ -156,6 +157,9 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         EnsureComp<NivalisSurvivalResourceComponent>(mob);
         EnsureComp<NivalisStaminaComponent>(mob);
         EnsureComp<NivalisMoraleComponent>(mob);
+
+        // Grants the survivor the shared ammo pool, HUD action button and ammo menu BUI.
+        EnsureComp<NivalisAmmoHudComponent>(mob);
 
         var ui = EnsureComp<UserInterfaceComponent>(mob);
         _ui.SetUi((mob, ui), NivalisTraitDraftUiKey.Key, new InterfaceData("NivalisTraitDraftBoundUserInterface"));

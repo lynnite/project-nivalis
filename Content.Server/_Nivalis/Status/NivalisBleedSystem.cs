@@ -17,9 +17,9 @@ public sealed partial class NivalisBleedSystem : EntitySystem
     public static readonly EntProtoId BleedEffect = "StatusEffectNivalisBleed";
     private static readonly TimeSpan BleedDuration = TimeSpan.FromSeconds(40);
 
-    [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly StatusEffectsSystem _status = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     private EntityQuery<DamageableComponent> _damageQuery = default!;
     private EntityQuery<MobStateComponent> _mobStateQuery = default!;

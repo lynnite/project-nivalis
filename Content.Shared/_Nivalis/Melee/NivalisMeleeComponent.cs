@@ -34,7 +34,7 @@ public sealed partial class NivalisMeleeComponent : Component
     [DataField, AutoNetworkedField]
     public int ComboHits;
 
-    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoNetworkedField]
+    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoNetworkedField, AutoPausedField]
     public TimeSpan NextAttack;
 
     [DataField, AutoNetworkedField]

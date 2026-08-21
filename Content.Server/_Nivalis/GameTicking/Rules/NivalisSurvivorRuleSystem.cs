@@ -38,13 +38,13 @@ namespace Content.Server._Nivalis.GameTicking.Rules;
 /// </summary>
 public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSurvivorRuleComponent>
 {
-    [Dependency] private readonly MindSystem _mind = default!;
-    [Dependency] private readonly MobStateSystem _mobState = default!;
-    [Dependency] private readonly RoleSystem _roles = default!;
-    [Dependency] private readonly RoundEndSystem _roundEnd = default!;
-    [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
-    [Dependency] private readonly StationJobsSystem _stationJobs = default!;
-    [Dependency] private readonly StationSpawningSystem _stationSpawning = default!;
+    [Dependency] private MindSystem _mind = default!;
+    [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private RoleSystem _roles = default!;
+    [Dependency] private RoundEndSystem _roundEnd = default!;
+    [Dependency] private SharedUserInterfaceSystem _ui = default!;
+    [Dependency] private StationJobsSystem _stationJobs = default!;
+    [Dependency] private StationSpawningSystem _stationSpawning = default!;
 
     public override void Initialize()
     {

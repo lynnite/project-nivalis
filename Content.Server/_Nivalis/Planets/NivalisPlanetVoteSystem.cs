@@ -12,15 +12,15 @@ using Robust.Shared.Random;
 
 namespace Content.Server._Nivalis.Planets;
 
-public sealed class NivalisPlanetVoteSystem : EntitySystem
+public sealed partial class NivalisPlanetVoteSystem : EntitySystem
 {
-    [Dependency] private readonly IGameMapManager _mapManager = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly IComponentFactory _componentFactory = default!;
-    [Dependency] private readonly ChatSystem _chat = default!;
-    [Dependency] private readonly IVoteManager _voteManager = default!;
-    [Dependency] private readonly GameTicker _ticker = default!;
+    [Dependency] private IGameMapManager _mapManager = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private IComponentFactory _componentFactory = default!;
+    [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private IVoteManager _voteManager = default!;
+    [Dependency] private GameTicker _ticker = default!;
 
     private bool _voteCreated;
 

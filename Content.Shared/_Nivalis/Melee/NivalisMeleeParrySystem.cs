@@ -20,14 +20,14 @@ namespace Content.Shared._Nivalis.Melee;
 
 public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly INetManager _net = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private INetManager _net = default!;
     [Dependency] protected SharedAudioSystem Audio = default!;
     [Dependency] protected SharedHandsSystem Hands = default!;
     [Dependency] protected SharedPopupSystem Popup = default!;
     [Dependency] protected StatusEffectsSystem Status = default!;
-    [Dependency] private readonly SharedContainerSystem _container = default!;
-    [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedColorFlashEffectSystem _color = default!;
 
     private EntityQuery<NivalisMeleeComponent> _meleeQuery = default!;
 

@@ -14,12 +14,12 @@ namespace Content.Server._Nivalis.Combat;
 
 public sealed partial class NivalisGrappleSystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
-    [Dependency] private readonly StatusEffectsSystem _status = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedColorFlashEffectSystem _color = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     private static readonly Color GrappleColor = new(1f, 0.1f, 0.1f);
 
@@ -37,8 +37,8 @@ public sealed partial class NivalisGrappleSystem : EntitySystem
             return false;
         }
 
-        if (!TryComp<TransformComponent>(user, out var userXform) ||
-            !TryComp<TransformComponent>(target, out var targetXform))
+        if (!TryComp(user, out TransformComponent? userXform) ||
+            !TryComp(target, out TransformComponent? targetXform))
         {
             return false;
         }

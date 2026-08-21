@@ -11,10 +11,10 @@ namespace Content.Server._Nivalis.Traits;
 
 public sealed partial class NivalisTraitDraftSystem : EntitySystem
 {
-    [Dependency] private readonly NivalisPerkSystem _perks = default!;
-    [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private NivalisPerkSystem _perks = default!;
+    [Dependency] private SharedUserInterfaceSystem _ui = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
     public override void Initialize()
     {

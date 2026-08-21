@@ -29,10 +29,10 @@ public sealed partial class NivalisMoraleSystem : EntitySystem
         (NivalisMoraleLevel.Critical,0.70f, 0.70f),
     };
 
-    [Dependency] private readonly AlertsSystem _alerts = default!;
-    [Dependency] private readonly MobStateSystem _mobState = default!;
-    [Dependency] private readonly MovementModStatusSystem _movementMod = default!;
-    [Dependency] private readonly StatusEffectsSystem _status = default!;
+    [Dependency] private AlertsSystem _alerts = default!;
+    [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private MovementModStatusSystem _movementMod = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
 
     public override void Initialize()
     {

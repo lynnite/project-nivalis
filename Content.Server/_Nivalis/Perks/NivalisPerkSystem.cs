@@ -12,9 +12,9 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
 {
     public static readonly EntProtoId SpeedEffect = "StatusEffectNivalisFrenzied";
 
-    [Dependency] private readonly MovementModStatusSystem _movementMod = default!;
-    [Dependency] private readonly StatusEffectsSystem _status = default!;
-    [Dependency] private readonly IPrototypeManager _perkProto = default!;
+    [Dependency] private MovementModStatusSystem _movementMod = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
+    [Dependency] private IPrototypeManager _perkProto = default!;
 
     public override void Initialize()
     {

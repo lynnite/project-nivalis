@@ -17,10 +17,10 @@ public sealed partial class NivalisSurvivalResourceSystem : EntitySystem
 {
     public static readonly EntProtoId HardshipEffect = "StatusEffectNivalisHardship";
 
-    [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly MovementModStatusSystem _movementMod = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly StatusEffectsSystem _status = default!;
+    [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private MovementModStatusSystem _movementMod = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
 
     private EntityQuery<DamageableComponent> _damageableQuery = default!;
 

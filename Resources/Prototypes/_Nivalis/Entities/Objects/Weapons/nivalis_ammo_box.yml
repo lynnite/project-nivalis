@@ -1,0 +1,111 @@
+# Nivalis ammo boxes.
+# Interacting with these with E adds their ammo to the player's shared ammo pool
+# (NivalisAmmoPoolComponent). They reuse existing box sprites.
+
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: BaseNivalisAmmoBox
+  components:
+  - type: Item
+    size: Small
+  - type: NivalisAmmoBox
+    amount: 12
+
+# Light (handgun rounds) - pistol.rsi
+- type: entity
+  parent: BaseNivalisAmmoBox
+  id: NivalisAmmoBoxLight
+  name: light ammunition box
+  description: A box of light handgun rounds. Adds to your shared ammo pool.
+  components:
+  - type: NivalisAmmoBox
+    ammoType: Light
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Boxes/pistol.rsi
+    layers:
+    - state: base
+
+# Short (SMG rounds) - light_rifle.rsi
+- type: entity
+  parent: BaseNivalisAmmoBox
+  id: NivalisAmmoBoxShort
+  name: short ammunition box
+  description: A box of short submachine-gun rounds. Adds to your shared ammo pool.
+  components:
+  - type: NivalisAmmoBox
+    ammoType: Short
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Boxes/light_rifle.rsi
+    layers:
+    - state: base
+
+# Long (rifle rounds) - rifle.rsi
+- type: entity
+  parent: BaseNivalisAmmoBox
+  id: NivalisAmmoBoxLong
+  name: long ammunition box
+  description: A box of long rifle rounds. Adds to your shared ammo pool.
+  components:
+  - type: NivalisAmmoBox
+    ammoType: Long
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Boxes/rifle.rsi
+    layers:
+    - state: base
+
+# Small (small pistol rounds) - caseless_rifle.rsi
+- type: entity
+  parent: BaseNivalisAmmoBox
+  id: NivalisAmmoBoxSmall
+  name: small ammunition box
+  description: A box of small pistol rounds. Adds to your shared ammo pool.
+  components:
+  - type: NivalisAmmoBox
+    ammoType: Small
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Boxes/caseless_rifle.rsi
+    layers:
+    - state: base
+
+# Shell (shotgun shells) - shotgun.rsi
+- type: entity
+  parent: BaseNivalisAmmoBox
+  id: NivalisAmmoBoxShell
+  name: shotgun shell box
+  description: A box of shotgun shells. Adds to your shared ammo pool.
+  components:
+  - type: NivalisAmmoBox
+    ammoType: Shell
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Boxes/shotgun.rsi
+    layers:
+    - state: base
+
+# Medium (assault rifle rounds) - magnum.rsi
+- type: entity
+  parent: BaseNivalisAmmoBox
+  id: NivalisAmmoBoxMedium
+  name: medium ammunition box
+  description: A box of medium assault-rifle rounds. Adds to your shared ammo pool.
+  components:
+  - type: NivalisAmmoBox
+    ammoType: Medium
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Boxes/magnum.rsi
+    layers:
+    - state: base
+
+# Heavy (anti-materiel rounds) - anti_materiel.rsi
+- type: entity
+  parent: BaseNivalisAmmoBox
+  id: NivalisAmmoBoxHeavy
+  name: heavy ammunition box
+  description: A box of heavy anti-materiel rounds. Adds to your shared ammo pool.
+  components:
+  - type: NivalisAmmoBox
+    ammoType: Heavy
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Boxes/anti_materiel.rsi
+    layers:
+    - state: base

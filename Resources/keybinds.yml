@@ -551,6 +551,12 @@ binds:
 - function: NivalisParry
   type: State
   key: N
+- function: NivalisAim
+  type: State
+  key: MouseRight
+- function: NivalisReload
+  type: State
+  key: R
 - function: OpenAbilitiesMenu
   type: State
   key: K

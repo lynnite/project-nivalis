@@ -1,0 +1,42 @@
+<nivalis:NivalisAmmoMenuWindow
+    xmlns="https://spacestation14.io"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+    xmlns:nivalis="clr-namespace:Content.Client._Nivalis.UserInterface.AmmoMenu"
+    Title="AMMUNITION"
+    MinSize="380 460"
+    SetSize="420 500">
+
+    <PanelContainer Name="MainPanel"
+                    MinSize="380 460"
+                    SetSize="420 500">
+        <BoxContainer Orientation="Vertical" Margin="8 8 8 8" SeparationOverride="8">
+
+            <Label Text="AMMUNITION"
+               HorizontalAlignment="Center"
+               Margin="0 4 0 0"
+               FontColorOverride="#58C6E8" />
+
+        <PanelContainer MinSize="0 1">
+            <PanelContainer.PanelOverride>
+                    <gfx:StyleBoxFlat BackgroundColor="#58C6E8" />
+            </PanelContainer.PanelOverride>
+        </PanelContainer>
+
+        <ScrollContainer VerticalExpand="True">
+            <BoxContainer Name="AmmoList"
+                          Orientation="Vertical"
+                              SeparationOverride="6"
+                          HorizontalExpand="True"
+                          VerticalExpand="True" />
+        </ScrollContainer>
+
+        <Button Name="CloseAmmoButton"
+                Text="CLOSE"
+                HorizontalAlignment="Center"
+                MinWidth="140"
+                    MinHeight="28" />
+    </BoxContainer>
+    </PanelContainer>
+</nivalis:NivalisAmmoMenuWindow>
+

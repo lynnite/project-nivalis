@@ -1,0 +1,35 @@
+using Content.Shared._Nivalis.Weapons;
+using Content.Shared.Input;
+using Robust.Client.Player;
+using Robust.Shared.Input.Binding;
+
+namespace Content.Client._Nivalis.Weapons;
+
+public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
+{
+    [Dependency] private readonly IPlayerManager _player = default!;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        CommandBinds.Builder
+            .Bind(ContentKeyFunctions.NivalisReload,
+                InputCmdHandler.FromDelegate(
+                    enabled: _ => OnReloadKey(true),
+                    disabled: _ => OnReloadKey(false),
+                    outsidePrediction: false))
+            .Register<NivalisWeaponsSystem>();
+    }
+
+    private void OnReloadKey(bool active)
+    {
+        if (!active)
+            return;
+
+        if (_player.LocalEntity == null)
+            return;
+
+        RaisePredictiveEvent(new NivalisReloadEvent(true));
+    }
+}

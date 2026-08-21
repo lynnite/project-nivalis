@@ -7,6 +7,8 @@ namespace Content.Shared.Input
     {
         public static readonly BoundKeyFunction ToggleKnockdown = "ToggleKnockdown";
         public static readonly BoundKeyFunction NivalisParry = "NivalisParry";
+        public static readonly BoundKeyFunction NivalisAim = "NivalisAim";
+        public static readonly BoundKeyFunction NivalisReload = "NivalisReload";
         public static readonly BoundKeyFunction UseItemInHand = "ActivateItemInHand";
         public static readonly BoundKeyFunction AltUseItemInHand = "AltActivateItemInHand";
         public static readonly BoundKeyFunction ActivateItemInWorld = "ActivateItemInWorld";

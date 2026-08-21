@@ -7,7 +7,7 @@ namespace Content.Shared._Nivalis.Status;
 
 public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
 {
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     private EntityQuery<MobStateComponent> _mobStateQuery = default!;
     private EntityQuery<BloodstreamComponent> _bloodQuery = default!;

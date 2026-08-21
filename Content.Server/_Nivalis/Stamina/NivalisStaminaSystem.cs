@@ -16,8 +16,8 @@ public sealed partial class NivalisStaminaSystem : EntitySystem
 {
     public static readonly EntProtoId ExhaustionEffect = "StatusEffectNivalisExhaustion";
 
-    [Dependency] private readonly MovementModStatusSystem _movementMod = default!;
-    [Dependency] private readonly StatusEffectsSystem _status = default!;
+    [Dependency] private MovementModStatusSystem _movementMod = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
     private EntityQuery<InputMoverComponent> _inputQuery = default!;
 
     public override void Initialize()

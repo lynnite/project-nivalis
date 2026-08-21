@@ -39,7 +39,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
     [Dependency] protected SharedPhysicsSystem Physics = default!;
     [Dependency] protected SharedPopupSystem PopupSystem = default!;
     [Dependency] protected SharedTransformSystem TransformSystem = default!;
-    [Dependency] private readonly SharedNivalisMeleeParrySystem _parry = default!;
+    [Dependency] private SharedNivalisMeleeParrySystem _parry = default!;
 
     private EntityQuery<DamageableComponent> _damageQuery = default!;
 

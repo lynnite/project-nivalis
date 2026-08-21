@@ -23,10 +23,10 @@ namespace Content.Server._Nivalis.GameTicking.Rules;
 /// </summary>
 public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisSurvivalCycleComponent>
 {
-    [Dependency] private readonly ChatSystem _chat = default!;
-    [Dependency] private readonly MobStateSystem _mobState = default!;
-    [Dependency] private readonly NivalisTraitDraftSystem _traitDraft = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private NivalisTraitDraftSystem _traitDraft = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
     public override void Initialize()
     {
@@ -96,7 +96,7 @@ public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisS
                     coords = coords.Offset(offset);
                 }
 
-                EntityManager.SpawnEntity(spawner.SpawnPrototype, coords);
+                Spawn(spawner.SpawnPrototype, coords);
                 spawned++;
             }
         }

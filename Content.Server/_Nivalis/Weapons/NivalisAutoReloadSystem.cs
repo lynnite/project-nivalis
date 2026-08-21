@@ -9,9 +9,9 @@ namespace Content.Server._Nivalis.Weapons;
 
 public sealed partial class NivalisAutoReloadSystem : EntitySystem
 {
-    [Dependency] private readonly SharedGunSystem _gun = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private SharedGunSystem _gun = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     public override void Update(float frameTime)
     {

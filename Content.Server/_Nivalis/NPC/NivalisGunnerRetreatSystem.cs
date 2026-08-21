@@ -10,9 +10,9 @@ namespace Content.Server._Nivalis.NPC;
 
 public sealed partial class NivalisGunnerRetreatSystem : EntitySystem
 {
-    [Dependency] private readonly NPCSteeringSystem _steering = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
+    [Dependency] private NPCSteeringSystem _steering = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
 
     private const float RetreatDistance = 1.5f;
 

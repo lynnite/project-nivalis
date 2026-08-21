@@ -22,7 +22,7 @@ public sealed partial class NivalisNoBleedComponent : Component
     /// <summary>
     ///     When this component should be removed and the original bleed modifiers restored.
     /// </summary>
-    [DataField]
+    [DataField, AutoPausedField]
     public TimeSpan RemoveAt;
 }
 

@@ -17,13 +17,13 @@ public sealed partial class NivalisNPCCombatSystem : EntitySystem
 {
     private const float TargetMeleeLostRange = 16f;
 
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly NPCSteeringSystem _steering = default!;
-    [Dependency] private readonly SharedCombatModeSystem _combat = default!;
-    [Dependency] private readonly NivalisMeleeSystem _melee = default!;
-    [Dependency] private readonly NivalisMeleeParrySystem _parry = default!;
-    [Dependency] private readonly NivalisGrappleSystem _grapple = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private NPCSteeringSystem _steering = default!;
+    [Dependency] private SharedCombatModeSystem _combat = default!;
+    [Dependency] private NivalisMeleeSystem _melee = default!;
+    [Dependency] private NivalisMeleeParrySystem _parry = default!;
+    [Dependency] private NivalisGrappleSystem _grapple = default!;
 
     private EntityQuery<CombatModeComponent> _combatQuery = default!;
 

@@ -4,7 +4,7 @@ namespace Content.Shared._Nivalis.Perks;
 
 public abstract partial class SharedNivalisPerkSystem : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
 
     public override void Initialize()
     {

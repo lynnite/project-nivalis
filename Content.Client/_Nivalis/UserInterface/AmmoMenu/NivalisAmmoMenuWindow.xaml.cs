@@ -28,6 +28,8 @@ public sealed partial class NivalisAmmoMenuWindow : DefaultWindow
     private readonly ScrollingScanlineStyleBox _scanline = new();
     private Texture? _scanlineTexture;
 
+    private Action<NivalisAmmoType, int>? _dropAction;
+
     public NivalisAmmoMenuWindow()
     {
         RobustXamlLoader.Load(this);
@@ -126,7 +128,7 @@ public sealed partial class NivalisAmmoMenuWindow : DefaultWindow
             {
                 Text = entry.Name,
                 VerticalAlignment = VAlignment.Center,
-                MinWidth = 160,
+                MinWidth = 120,
                 FontColorOverride = new Color(0xE6, 0xE6, 0xE6),
             };
             rowBox.AddChild(name);
@@ -141,8 +143,35 @@ public sealed partial class NivalisAmmoMenuWindow : DefaultWindow
             };
             rowBox.AddChild(count);
 
+            // Drop this ammo type (all of it, or a fixed 6-round bundle) as a box.
+            var type = entry.Type;
+            var drop6 = new Button
+            {
+                Text = "6",
+                MinWidth = 28,
+                MinHeight = 24,
+                Disabled = entry.Count <= 0,
+            };
+            drop6.OnPressed += _ => _dropAction?.Invoke(type, 6);
+            rowBox.AddChild(drop6);
+
+            var dropAll = new Button
+            {
+                Text = "ALL",
+                MinWidth = 40,
+                MinHeight = 24,
+                Disabled = entry.Count <= 0,
+            };
+            dropAll.OnPressed += _ => _dropAction?.Invoke(type, entry.Count);
+            rowBox.AddChild(dropAll);
+
             AmmoList.AddChild(row);
         }
+    }
+
+    public void SetDropAction(Action<NivalisAmmoType, int> dropAction)
+    {
+        _dropAction = dropAction;
     }
 }
 

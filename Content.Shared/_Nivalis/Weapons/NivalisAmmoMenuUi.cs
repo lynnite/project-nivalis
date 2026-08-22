@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+
 using Robust.Shared.Serialization;
 
 namespace Content.Shared._Nivalis.Weapons;
@@ -9,9 +10,6 @@ public enum NivalisAmmoMenuUiKey : byte
     Key,
 }
 
-/// <summary>
-///     A single entry in the ammo menu, describing one ammo type and its current count.
-/// </summary>
 [Serializable, NetSerializable]
 public sealed class NivalisAmmoMenuEntry
 {
@@ -21,11 +19,16 @@ public sealed class NivalisAmmoMenuEntry
     public int Count;
 }
 
-/// <summary>
-///     State sent to the client's ammo menu GUI.
-/// </summary>
 [Serializable, NetSerializable]
 public sealed class NivalisAmmoMenuUiState : BoundUserInterfaceState
 {
     public List<NivalisAmmoMenuEntry> Entries = new();
 }
+
+[Serializable, NetSerializable]
+public sealed class NivalisAmmoMenuDropAmmoMessage : BoundUserInterfaceMessage
+{
+    public NivalisAmmoType Type;
+    public int Amount;
+}
+

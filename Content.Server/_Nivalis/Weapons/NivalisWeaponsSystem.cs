@@ -10,9 +10,6 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server._Nivalis.Weapons;
 
-/// <summary>
-///     Server-side power for the Nivalis weapons &amp; ammo pool system.
-/// </summary>
 public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
 {
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
@@ -25,6 +22,9 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
         SubscribeLocalEvent<NivalisAmmoBoxComponent, ActivateInWorldEvent>(OnAmmoBoxActivate);
         SubscribeLocalEvent<NivalisAmmoHudComponent, MapInitEvent>(OnAmmoHudMapInit);
         SubscribeLocalEvent<NivalisAmmoHudComponent, NivalisOpenAmmoMenuEvent>(OnOpenAmmoMenu);
+
+        Subs.BuiEvents<NivalisAmmoHudComponent>(NivalisAmmoMenuUiKey.Key,
+            subs => subs.Event<NivalisAmmoMenuDropAmmoMessage>(OnDropAmmoMessage));
     }
 
     private void OnOpenAmmoMenu(Entity<NivalisAmmoHudComponent> ent, ref NivalisOpenAmmoMenuEvent args)
@@ -42,9 +42,6 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
     {
         base.InitializeWeapons();
     }
-    /// <summary>
-    ///     Interacting with an ammo box (E key) adds its ammo to the player's pool.
-    /// </summary>
     private void OnAmmoBoxActivate(Entity<NivalisAmmoBoxComponent> box, ref ActivateInWorldEvent args)
     {
         if (args.Handled || !args.Complex)
@@ -68,17 +65,51 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
         args.Handled = true;
     }
 
-    /// <summary>
-    ///     Grants the ammo menu action when the HUD component is first placed.
-    /// </summary>
+    private void OnDropAmmoMessage(Entity<NivalisAmmoHudComponent> ent, ref NivalisAmmoMenuDropAmmoMessage args)
+    {
+        if (args.Actor != ent.Owner)
+            return;
+
+        if (args.Amount <= 0)
+            return;
+
+        if (!TryComp<NivalisAmmoPoolComponent>(ent.Owner, out var pool))
+            return;
+
+        var available = pool.GetAmmo(args.Type);
+        if (available <= 0)
+            return;
+
+        var amount = Math.Min(available, args.Amount);
+        if (amount <= 0)
+            return;
+
+        pool.SetAmmo(args.Type, available - amount);
+        Dirty(ent.Owner, pool);
+
+        var boxProto = GetAmmoBoxProto(args.Type);
+        if (!string.IsNullOrEmpty(boxProto))
+        {
+            var box = Spawn(boxProto, Transform(ent.Owner).Coordinates);
+            if (TryComp<NivalisAmmoBoxComponent>(box, out var boxComp))
+            {
+                boxComp.Amount = amount;
+                Dirty(box, boxComp);
+            }
+        }
+
+        var locName = GetAmmoTypeName(args.Type);
+        _popup.PopupEntity(Loc.GetString("nivalis-ammo-drop",
+            ("amount", amount), ("type", locName)), ent.Owner, ent.Owner, PopupType.Medium);
+
+    }
+
     private void OnAmmoHudMapInit(Entity<NivalisAmmoHudComponent> ent, ref MapInitEvent args)
     {
         _actions.AddAction(ent, ent.Comp.OpenAmmoMenuAction);
 
-        // Make sure the pool exists alongside the HUD.
         var pool = EnsureComp<NivalisAmmoPoolComponent>(ent);
 
-        // Seed any configured starting ammo once.
         if (!pool.Seeded)
         {
             foreach (var (type, count) in pool.StartingAmmo)
@@ -89,15 +120,11 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
             Dirty(ent, pool);
         }
 
-        // Register the BUI so the client can open the ammo menu on this entity.
         var ui = EnsureComp<UserInterfaceComponent>(ent);
         if (!_ui.HasUi(ent, NivalisAmmoMenuUiKey.Key, ui))
             _ui.SetUi((ent, ui), NivalisAmmoMenuUiKey.Key, new InterfaceData("NivalisAmmoMenuBoundUserInterface"));
     }
 
-    /// <summary>
-    ///     Refreshes and opens the ammo menu for a player.
-    /// </summary>
     public void OpenAmmoMenu(EntityUid owner, ICommonSession? session = null)
     {
         if (session == null)
@@ -128,6 +155,21 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
     private string GetAmmoTypeName(NivalisAmmoType type)
     {
         return Loc.GetString($"nivalis-ammo-{type.ToString().ToLowerInvariant()}");
+    }
+
+    private string GetAmmoBoxProto(NivalisAmmoType type)
+    {
+        switch (type)
+        {
+            case NivalisAmmoType.Light:   return "NivalisAmmoBoxLight";
+            case NivalisAmmoType.Short:   return "NivalisAmmoBoxShort";
+            case NivalisAmmoType.Long:    return "NivalisAmmoBoxLong";
+            case NivalisAmmoType.Small:   return "NivalisAmmoBoxSmall";
+            case NivalisAmmoType.Shell:   return "NivalisAmmoBoxShell";
+            case NivalisAmmoType.Medium:  return "NivalisAmmoBoxMedium";
+            case NivalisAmmoType.Heavy:   return "NivalisAmmoBoxHeavy";
+            default:                      return string.Empty;
+        }
     }
 
     private string GetAmmoIcon(NivalisAmmoType type)

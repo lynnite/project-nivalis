@@ -9,6 +9,8 @@
     factions:
       - Syndicate
   - type: NivalisStormEnemy
+  - type: NivalisFriendlyFire
+    team: Scavenger
   - type: NivalisNoCritical
   - type: InputMover
   - type: MobMover

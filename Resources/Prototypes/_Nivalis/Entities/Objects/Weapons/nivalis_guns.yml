@@ -144,5 +144,6 @@
   - type: NivalisGun
     ammoType: Shell
     maxAmmo: 8
-    projectile: RedLightLaser
+    reloadAmount: 1
+    projectile: NivalisScatterPelletBurst
 

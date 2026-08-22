@@ -9,6 +9,7 @@ using Content.Server.Station.Systems;
 using Content.Server._Nivalis.GameTicking.Rules.Components;
 using Content.Server._Nivalis.Survivor.Components;
 using Content.Shared._Nivalis.GameTicking.Components;
+using Content.Shared._Nivalis.Combat;
 using Content.Shared._Nivalis.Morale;
 using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Stamina;
@@ -157,6 +158,10 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         EnsureComp<NivalisSurvivalResourceComponent>(mob);
         EnsureComp<NivalisStaminaComponent>(mob);
         EnsureComp<NivalisMoraleComponent>(mob);
+
+        var ff = EnsureComp<NivalisFriendlyFireComponent>(mob);
+        ff.Team = NivalisCombatTeam.Survivor;
+        Dirty(mob, ff);
 
         // Grants the survivor the shared ammo pool, HUD action button and ammo menu BUI.
         EnsureComp<NivalisAmmoHudComponent>(mob);

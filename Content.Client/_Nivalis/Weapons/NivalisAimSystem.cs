@@ -2,6 +2,7 @@ using Content.Shared._Nivalis.Weapons;
 using Content.Shared.Input;
 using Robust.Client.Player;
 using Robust.Shared.Input.Binding;
+using Robust.Shared.Timing;
 
 namespace Content.Client._Nivalis.Weapons;
 
@@ -11,6 +12,7 @@ namespace Content.Client._Nivalis.Weapons;
 public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
 {
     [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
 
     public override void Initialize()
     {
@@ -21,13 +23,14 @@ public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
                 InputCmdHandler.FromDelegate(
                     enabled: _ => OnAimChanged(true),
                     disabled: _ => OnAimChanged(false),
+                    handle: false,
                     outsidePrediction: false))
             .Register<NivalisAimSystem>();
     }
 
     private void OnAimChanged(bool active)
     {
-        if (_player.LocalEntity == null)
+        if (!_timing.IsFirstTimePredicted || _player.LocalEntity == null)
             return;
 
         RaisePredictiveEvent(new NivalisAimEvent(active));

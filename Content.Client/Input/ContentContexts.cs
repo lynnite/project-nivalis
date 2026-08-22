@@ -68,6 +68,7 @@ namespace Content.Client.Input
             {
                 human.AddFunction(handKey);
             }
+            human.AddFunction(ContentKeyFunctions.NivalisDrop);
             human.AddFunction(ContentKeyFunctions.Drop);
             human.AddFunction(ContentKeyFunctions.UseItemInHand);
             human.AddFunction(ContentKeyFunctions.AltUseItemInHand);

@@ -181,6 +181,7 @@ namespace Content.Client.Options.UI.Tabs
             {
                 AddButton(handKey);
             }
+            AddButton(ContentKeyFunctions.NivalisDrop);
 
             AddHeader("ui-options-header-camera");
             AddButton(EngineKeyFunctions.CameraRotateLeft);

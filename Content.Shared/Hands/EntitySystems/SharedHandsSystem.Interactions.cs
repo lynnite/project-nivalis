@@ -7,8 +7,10 @@ using Content.Shared.Interaction;
 using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Localizations;
 using Robust.Shared.Input.Binding;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Hands.EntitySystems;
@@ -43,6 +45,11 @@ public abstract partial class SharedHandsSystem : EntitySystem
                 InputCmdHandler.FromDelegate(session => SelectHandByIndex(session, index),
                     handle: false, outsidePrediction: false));
         }
+
+        builder = builder.Bind(ContentKeyFunctions.NivalisDrop,
+            InputCmdHandler.FromDelegate(NivalisDropPressed,
+                handle: false, outsidePrediction: false));
+
         builder.Register<SharedHandsSystem>();
     }
 
@@ -58,6 +65,29 @@ public abstract partial class SharedHandsSystem : EntitySystem
             return;
 
         TrySetActiveHand(player, hands.SortedHands[index]);
+    }
+
+    private void NivalisDropPressed(ICommonSession? session)
+    {
+        if (session?.AttachedEntity is not { } player)
+            return;
+
+        if (!TryComp<HandsComponent>(player, out var hands) || hands.ActiveHandId is not { } handId)
+            return;
+
+        if (!TryGetHeldItem(player, handId, out var held) || held is not { } entity || TerminatingOrDeleted(entity))
+            return;
+
+        if (!TryComp<MetaDataComponent>(entity, out var meta) || meta.EntityPrototype is not { } prototype)
+            return;
+
+        if (ContainerSystem.TryGetContainer(player, handId, out var container))
+            ContainerSystem.Remove(entity, container);
+
+        QueueDel(entity);
+
+        var coords = Transform(player).Coordinates;
+        Spawn(prototype.ID, coords);
     }
 
     #region Event and Key-binding Handlers

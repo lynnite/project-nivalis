@@ -89,6 +89,7 @@ namespace Content.Shared.Input
         public static readonly BoundKeyFunction NivalisHand8 = "NivalisHand8";
         public static readonly BoundKeyFunction NivalisHand9 = "NivalisHand9";
         public static readonly BoundKeyFunction NivalisHand10 = "NivalisHand10";
+        public static readonly BoundKeyFunction NivalisDrop = "NivalisDrop";
         public static readonly BoundKeyFunction ShuttleStrafeLeft = "ShuttleStrafeLeft";
         public static readonly BoundKeyFunction ShuttleStrafeUp = "ShuttleStrafeUp";
         public static readonly BoundKeyFunction ShuttleStrafeRight = "ShuttleStrafeRight";

@@ -162,10 +162,10 @@ binds:
   key: P
 - function: SwapHands
   type: State
-  key: X
+  key: L
 - function: SwapHandsReverse
   type: State
-  key: X
+  key: L
   mod1: Shift
 - function: MoveStoredItem
   type: State
@@ -602,6 +602,10 @@ binds:
 - function: NivalisHand10
   type: State
   key: Num0
+  priority: 2
+- function: NivalisDrop
+  type: State
+  key: X
   priority: 2
 - function: Hotbar0
   type: State

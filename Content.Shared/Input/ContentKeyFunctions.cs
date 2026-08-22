@@ -78,6 +78,18 @@ namespace Content.Shared.Input
         public static readonly BoundKeyFunction Arcade3 = "Arcade3";
 
         public static readonly BoundKeyFunction OpenActionsMenu = "OpenAbilitiesMenu";
+
+        public static readonly BoundKeyFunction NivalisHand1 = "NivalisHand1";
+        public static readonly BoundKeyFunction NivalisHand2 = "NivalisHand2";
+        public static readonly BoundKeyFunction NivalisHand3 = "NivalisHand3";
+        public static readonly BoundKeyFunction NivalisHand4 = "NivalisHand4";
+        public static readonly BoundKeyFunction NivalisHand5 = "NivalisHand5";
+        public static readonly BoundKeyFunction NivalisHand6 = "NivalisHand6";
+        public static readonly BoundKeyFunction NivalisHand7 = "NivalisHand7";
+        public static readonly BoundKeyFunction NivalisHand8 = "NivalisHand8";
+        public static readonly BoundKeyFunction NivalisHand9 = "NivalisHand9";
+        public static readonly BoundKeyFunction NivalisHand10 = "NivalisHand10";
+        public static readonly BoundKeyFunction NivalisDrop = "NivalisDrop";
         public static readonly BoundKeyFunction ShuttleStrafeLeft = "ShuttleStrafeLeft";
         public static readonly BoundKeyFunction ShuttleStrafeUp = "ShuttleStrafeUp";
         public static readonly BoundKeyFunction ShuttleStrafeRight = "ShuttleStrafeRight";
@@ -85,6 +97,13 @@ namespace Content.Shared.Input
         public static readonly BoundKeyFunction ShuttleRotateLeft = "ShuttleRotateLeft";
         public static readonly BoundKeyFunction ShuttleRotateRight = "ShuttleRotateRight";
         public static readonly BoundKeyFunction ShuttleBrake = "ShuttleBrake";
+
+        public static BoundKeyFunction[] GetNivalisHandKeys() =>
+            new[]
+            {
+                NivalisHand1, NivalisHand2, NivalisHand3, NivalisHand4, NivalisHand5,
+                NivalisHand6, NivalisHand7, NivalisHand8, NivalisHand9, NivalisHand10,
+            };
 
         public static readonly BoundKeyFunction Hotbar0 = "Hotbar0";
         public static readonly BoundKeyFunction Hotbar1 = "Hotbar1";

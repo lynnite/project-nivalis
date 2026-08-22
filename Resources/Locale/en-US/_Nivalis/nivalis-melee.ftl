@@ -3,3 +3,5 @@ nivalis-melee-no-stamina-heavy = You are too tired to perform a heavy attack!
 nivalis-parry-success = You parried the attack!
 nivalis-parry-failed = Your parry missed!
 ui-options-function-nivalis-parry = Parry
+ui-options-function-nivalis-aim = Aim
+ui-options-function-nivalis-drop = Drop

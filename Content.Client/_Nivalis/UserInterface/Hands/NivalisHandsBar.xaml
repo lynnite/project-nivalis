@@ -1,0 +1,8 @@
+<widgets:NivalisHandsBar xmlns="https://spacestation14.io"
+                          xmlns:widgets="clr-namespace:Content.Client._Nivalis.UserInterface.Hands"
+                          SetWidth="200"
+                          SetHeight="100">
+    <BoxContainer Name="Root" Orientation="Vertical">
+        <BoxContainer Name="HandButtonContainer" Orientation="Vertical" />
+    </BoxContainer>
+</widgets:NivalisHandsBar>

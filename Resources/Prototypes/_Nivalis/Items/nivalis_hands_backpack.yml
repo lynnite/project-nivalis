@@ -1,0 +1,14 @@
+- type: entity
+  parent: ClothingBackpack
+  id: NivalisBackpackHands
+  name: metasynthetic backpack
+  description: Woven from locally-sourced biomatter, this backpack hums faintly when you touch it. Use it in hand to grow extra appendages.
+  components:
+  - type: NivalisExtraHands
+    hands: 6
+    maxTotalHands: 10
+  - type: Sprite
+    sprite: Clothing/Back/Backpacks/backpack.rsi
+    state: icon
+  - type: Item
+    size: Colossal

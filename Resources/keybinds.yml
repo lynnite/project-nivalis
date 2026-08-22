@@ -563,6 +563,46 @@ binds:
 - function: OpenAbilitiesMenu
   type: State
   key: K
+- function: NivalisHand1
+  type: State
+  key: Num1
+  priority: 2
+- function: NivalisHand2
+  type: State
+  key: Num2
+  priority: 2
+- function: NivalisHand3
+  type: State
+  key: Num3
+  priority: 2
+- function: NivalisHand4
+  type: State
+  key: Num4
+  priority: 2
+- function: NivalisHand5
+  type: State
+  key: Num5
+  priority: 2
+- function: NivalisHand6
+  type: State
+  key: Num6
+  priority: 2
+- function: NivalisHand7
+  type: State
+  key: Num7
+  priority: 2
+- function: NivalisHand8
+  type: State
+  key: Num8
+  priority: 2
+- function: NivalisHand9
+  type: State
+  key: Num9
+  priority: 2
+- function: NivalisHand10
+  type: State
+  key: Num0
+  priority: 2
 - function: Hotbar0
   type: State
   key: Num0

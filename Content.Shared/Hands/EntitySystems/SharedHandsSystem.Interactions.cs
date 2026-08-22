@@ -32,8 +32,32 @@ public abstract partial class SharedHandsSystem : EntitySystem
             .Bind(ContentKeyFunctions.AltUseItemInHand, InputCmdHandler.FromDelegate(HandleAltUseInHand, handle: false, outsidePrediction: false))
             .Bind(ContentKeyFunctions.SwapHands, InputCmdHandler.FromDelegate(SwapHandsPressed, handle: false, outsidePrediction: false))
             .Bind(ContentKeyFunctions.SwapHandsReverse, InputCmdHandler.FromDelegate(SwapHandsReversePressed, handle: false, outsidePrediction: false))
-            .Bind(ContentKeyFunctions.Drop, new PointerInputCmdHandler(DropPressed))
-            .Register<SharedHandsSystem>();
+            .Bind(ContentKeyFunctions.Drop, new PointerInputCmdHandler(DropPressed));
+
+        var builder = CommandBinds.Builder;
+        var keys = ContentKeyFunctions.GetNivalisHandKeys();
+        for (var i = 0; i < keys.Length; i++)
+        {
+            var index = i;
+            builder = builder.Bind(keys[i],
+                InputCmdHandler.FromDelegate(session => SelectHandByIndex(session, index),
+                    handle: false, outsidePrediction: false));
+        }
+        builder.Register<SharedHandsSystem>();
+    }
+
+    private void SelectHandByIndex(ICommonSession? session, int index)
+    {
+        if (session?.AttachedEntity is not { } player)
+            return;
+
+        if (!TryComp<HandsComponent>(player, out var hands) || hands.Count == 0)
+            return;
+
+        if (index < 0 || index >= hands.SortedHands.Count)
+            return;
+
+        TrySetActiveHand(player, hands.SortedHands[index]);
     }
 
     #region Event and Key-binding Handlers

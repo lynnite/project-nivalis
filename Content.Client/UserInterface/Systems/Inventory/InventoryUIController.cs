@@ -129,74 +129,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
 
     private void UpdateInventoryHotbar(InventorySlotsComponent? clientInv)
     {
-        if (clientInv == null)
-        {
-            _inventoryHotbar?.ClearButtons();
-            if (_inventoryButton != null)
-                _inventoryButton.Visible = false;
-
-            return;
-        }
-
-        foreach (var (_, data) in clientInv.SlotData)
-        {
-            if (!data.ShowInWindow || !_slotGroups.TryGetValue(data.SlotGroup, out var container))
-                continue;
-
-            if (!container.TryGetButton(data.SlotName, out var button))
-            {
-                button = CreateSlotButton(data);
-                container.TryAddButton(button);
-            }
-
-            var showStorage = _entities.HasComponent<StorageComponent>(data.HeldEntity);
-            var update = new SlotSpriteUpdate(data.HeldEntity, data.SlotGroup, data.SlotName, showStorage);
-            SpriteUpdated(update);
-        }
-
-        if (_inventoryHotbar == null)
-            return;
-
-        var clothing = clientInv.SlotData.Where(p => !p.Value.HasSlotGroup).ToList();
-
-        if (_inventoryButton != null)
-            _inventoryButton.Visible = clothing.Count != 0;
-        if (clothing.Count == 0)
-            return;
-
-        foreach (var child in new List<Control>(_inventoryHotbar.Children))
-        {
-            if (child is not SlotControl)
-                _inventoryHotbar.RemoveChild(child);
-        }
-
-        var maxWidth = clothing.Max(p => p.Value.ButtonOffset.X) + 1;
-        var maxIndex = clothing.Select(p => GetIndex(p.Value.ButtonOffset)).Max();
-
-        _inventoryHotbar.MaxColumns = maxWidth;
-        _inventoryHotbar.Columns = maxWidth;
-
-        for (var i = 0; i <= maxIndex; i++)
-        {
-            var index = i;
-            if (clothing.FirstOrNull(p => GetIndex(p.Value.ButtonOffset) == index) is { } pair)
-            {
-                if (_inventoryHotbar.TryGetButton(pair.Key, out var slot))
-                    slot.SetPositionLast();
-            }
-            else
-            {
-                _inventoryHotbar.AddChild(new Control
-                {
-                    MinSize = new Vector2(64, 64)
-                });
-            }
-        }
-
-        int GetIndex(Vector2i position)
-        {
-            return position.Y * maxWidth + position.X;
-        }
+        return;
     }
 
     private void UpdateStrippingWindow(InventorySlotsComponent? clientInv)
@@ -226,28 +159,12 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
 
     public void ToggleStrippingMenu()
     {
-        UpdateStrippingWindow(_playerInventory);
-        if (_strippingWindow!.IsOpen)
-        {
-            _strippingWindow!.Close();
-            return;
-        }
-
-        _strippingWindow.Open();
+        return;
     }
 
     public void ToggleInventoryBar()
     {
-        if (_inventoryHotbar == null)
-        {
-            Log.Warning("Tried to toggle inventory bar when none are assigned");
-            return;
-        }
-
-        UpdateInventoryHotbar(_playerInventory);
-        var shouldBeVisible = !_inventoryHotbar.Visible;
-        _inventoryHotbar.Visible = shouldBeVisible;
-
+        return;
     }
 
     // Neuron Activation
@@ -272,52 +189,12 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
 
     private void ItemPressed(GUIBoundKeyEventArgs args, SlotControl control)
     {
-        var slot = control.SlotName;
-
-        if (args.Function == EngineKeyFunctions.UIClick)
-        {
-            _inventorySystem.UIInventoryActivate(control.SlotName);
-            args.Handle();
-            return;
-        }
-
-        if (_playerInventory == null || _playerUid == null)
-        {
-            return;
-        }
-
-        switch (args.Function)
-        {
-            case var _ when args.Function == ContentKeyFunctions.ExamineEntity:
-                _inventorySystem.UIInventoryExamine(slot, _playerUid.Value);
-                break;
-
-            case var _ when args.Function == EngineKeyFunctions.UseSecondary:
-                _inventorySystem.UIInventoryOpenContextMenu(slot, _playerUid.Value);
-                break;
-
-            case var _ when args.Function == ContentKeyFunctions.ActivateItemInWorld:
-                _inventorySystem.UIInventoryActivateItem(slot, _playerUid.Value);
-                break;
-
-            case var _ when args.Function == ContentKeyFunctions.AltActivateItemInWorld:
-                _inventorySystem.UIInventoryAltActivateItem(slot, _playerUid.Value);
-                break;
-
-            case var _ when args.Function == ContentKeyFunctions.Point:
-                _inventorySystem.UIInventoryPointAt(slot, _playerUid.Value);
-                break;
-
-            default:
-                return;
-        }
-
         args.Handle();
     }
 
     private void StoragePressed(GUIBoundKeyEventArgs args, SlotControl control)
     {
-        _inventorySystem.UIInventoryStorageActivate(control.SlotName);
+        args.Handle();
     }
 
     private void SlotButtonHovered(GUIMouseHoverEventArgs args, SlotControl control)

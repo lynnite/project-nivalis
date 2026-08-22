@@ -7,6 +7,7 @@
     xmlns:alerts="clr-namespace:Content.Client.UserInterface.Systems.Alerts.Widgets"
     xmlns:nivalis="clr-namespace:Content.Client._Nivalis.UserInterface.SurvivalHud"
     xmlns:nivalisperks="clr-namespace:Content.Client._Nivalis.UserInterface.Perks"
+    xmlns:nivalishands="clr-namespace:Content.Client._Nivalis.UserInterface.Hands"
     xmlns:hotbar="clr-namespace:Content.Client.UserInterface.Systems.Hotbar.Widgets"
     xmlns:widgets="clr-namespace:Content.Client.UserInterface.Systems.Ghost.Widgets"
     xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
@@ -29,6 +30,7 @@
             <alerts:AlertsUI Name="Alerts" Access="Protected" />
             <nivalis:NivalisSurvivalHud Name="SurvivalHud" Access="Protected" />
             <nivalisperks:NivalisPerksWidget Name="PerksWidget" Access="Protected" />
+            <nivalishands:NivalisHandsBar Name="NivalisHandsBar" Access="Protected" />
         </LayoutContainer>
         <PanelContainer Name="SeparatedChatPanel" MinWidth="300">
             <PanelContainer.PanelOverride>

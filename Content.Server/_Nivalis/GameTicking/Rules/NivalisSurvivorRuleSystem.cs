@@ -1,7 +1,9 @@
 using Content.Server.GameTicking;
 using Content.Server.GameTicking.Rules;
+using Content.Server.Hands.Systems;
 using Content.Server.Mind;
 using Content.Server.Roles;
+using Content.Server._Nivalis.Hands;
 using Content.Server.RoundEnd;
 using Content.Server.Station.Components;
 using Content.Server.Station.Events;
@@ -47,6 +49,7 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
     [Dependency] private SharedUserInterfaceSystem _ui = default!;
     [Dependency] private StationJobsSystem _stationJobs = default!;
     [Dependency] private StationSpawningSystem _stationSpawning = default!;
+    [Dependency] private NivalisHandsSystem _nivalisHands = default!;
 
     public override void Initialize()
     {
@@ -158,6 +161,8 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         EnsureComp<NivalisSurvivalResourceComponent>(mob);
         EnsureComp<NivalisStaminaComponent>(mob);
         EnsureComp<NivalisMoraleComponent>(mob);
+
+        _nivalisHands.EnsureHandCount(mob, 4);
 
         var ff = EnsureComp<NivalisFriendlyFireComponent>(mob);
         ff.Team = NivalisCombatTeam.Survivor;

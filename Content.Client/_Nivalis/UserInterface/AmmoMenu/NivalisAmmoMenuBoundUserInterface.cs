@@ -15,6 +15,16 @@ public sealed class NivalisAmmoMenuBoundUserInterface : BoundUserInterface
     {
         base.Open();
         _window = this.CreateWindow<NivalisAmmoMenuWindow>();
+        _window.SetDropAction(DropAmmo);
+    }
+
+    public void DropAmmo(NivalisAmmoType type, int amount)
+    {
+        SendMessage(new NivalisAmmoMenuDropAmmoMessage
+        {
+            Type = type,
+            Amount = amount,
+        });
     }
 
     protected override void UpdateState(BoundUserInterfaceState state)

@@ -19,8 +19,6 @@ public abstract partial class SharedNivalisNoCriticalSystem : EntitySystem
             return;
 
         args.State = MobState.Dead;
-
-        QueueDel(uid);
     }
 }
 

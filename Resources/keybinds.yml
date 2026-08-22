@@ -557,6 +557,9 @@ binds:
 - function: NivalisReload
   type: State
   key: R
+- function: NivalisUnload
+  type: State
+  key: H
 - function: OpenAbilitiesMenu
   type: State
   key: K

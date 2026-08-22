@@ -19,6 +19,11 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
                     enabled: _ => OnReloadKey(true),
                     disabled: _ => OnReloadKey(false),
                     outsidePrediction: false))
+            .Bind(ContentKeyFunctions.NivalisUnload,
+                InputCmdHandler.FromDelegate(
+                    enabled: _ => OnUnloadKey(true),
+                    disabled: _ => OnUnloadKey(false),
+                    outsidePrediction: false))
             .Register<NivalisWeaponsSystem>();
     }
 
@@ -31,5 +36,16 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
             return;
 
         RaisePredictiveEvent(new NivalisReloadEvent(true));
+    }
+
+    private void OnUnloadKey(bool active)
+    {
+        if (!active)
+            return;
+
+        if (_player.LocalEntity == null)
+            return;
+
+        RaisePredictiveEvent(new NivalisUnloadEvent());
     }
 }

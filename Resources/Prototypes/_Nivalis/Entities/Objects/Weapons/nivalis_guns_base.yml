@@ -1,8 +1,3 @@
-# Nivalis guns.
-# These firearms do NOT use physical magazines or batteries. Instead they draw ammunition
-# from the shooter's shared ammo pool (NivalisAmmoPoolComponent) via the
-# NivalisPoolAmmoProviderComponent. Which pool entry is drained is set on NivalisGunComponent.
-
 - type: entity
   abstract: true
   parent: BaseItem
@@ -22,19 +17,17 @@
     - SemiAuto
     fireRate: 4
     soundGunshot:
-      path: /Audio/Weapons/Guns/Gunshots/laser.ogg
+      path: /Audio/Weapons/Guns/Gunshots/lmg.ogg
   - type: AmmoCounter
   - type: NivalisPoolAmmoProvider
   - type: NivalisGun
-    projectile: RedLaser
+    projectile: BallisticHitscanBaseNivalis
   - type: NivalisReload
-    # Reloads take two seconds and are not interrupted by movement.
     reloadDelay: 2
     breakOnMove: false
     walkSpeedMultiplier: 0.6
     sprintSpeedMultiplier: 0.6
 
-# Light - a fast-firing handgun.
 - type: entity
   parent: [BaseNivalisGun, BaseMinorContraband]
   id: WeaponNivalisPistol
@@ -63,11 +56,10 @@
   - type: NivalisGun
     ammoType: Light
     maxAmmo: 24
-    projectile: RedLaser
+    projectile: BallisticHitscanBaseNivalis
 
-# Medium - a semi-automatic rifle.
 - type: entity
-  parent: [BaseNivalisGun, BaseGunWieldable, BaseSecurityContraband]
+  parent: [BaseNivalisGun, BaseSecurityContraband]
   id: WeaponNivalisRifle
   name: field medium rifle
   suffix: Nivalis
@@ -99,11 +91,10 @@
   - type: NivalisGun
     ammoType: Medium
     maxAmmo: 40
-    projectile: RedMediumLaser
+    projectile: BallisticHitscanBaseNivalis
 
-# Shell - a scatter / shotgun-style weapon firing five pellets in a cone.
 - type: entity
-  parent: [BaseNivalisGun, BaseGunWieldable, BaseSecurityContraband]
+  parent: [BaseNivalisGun, BaseSecurityContraband]
   id: WeaponNivalisShotgun
   name: field shell scattergun
   suffix: Nivalis
@@ -147,3 +138,41 @@
     reloadAmount: 1
     projectile: NivalisScatterPelletBurst
 
+- type: entity
+  id: BasicHitscanNivalis
+  name: basic hitscan
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: HitscanAmmo
+  - type: HitscanBasicRaycast
+  - type: HitscanBasicVisuals
+    muzzleFlash:
+      sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/ballistichitscan.rsi
+      state: muzzle_laser
+    travelFlash:
+      sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/ballistichitscan.rsi
+      state: beam
+    impactFlash:
+      sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/ballistichitscan.rsi
+      state: impact_laser
+  - type: HitscanReflect
+  - type: HitscanBasicEffects
+
+- type: entity
+  parent: BasicHitscanNivalis
+  id: LaserHitscanBaseNivalis
+  name: basic laser ray
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: LaserProjectile
+
+- type: entity
+  parent: LaserHitscanBaseNivalis
+  id: BallisticHitscanBaseNivalis
+  name: base bullet
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: HitscanBasicDamage
+    damage:
+      types:
+        Piercing: 7

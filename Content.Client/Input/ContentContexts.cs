@@ -58,7 +58,9 @@ namespace Content.Client.Input
             human.AddFunction(EngineKeyFunctions.MoveRight);
             human.AddFunction(EngineKeyFunctions.Walk);
             human.AddFunction(ContentKeyFunctions.ToggleKnockdown);
+            // Nivalis
             human.AddFunction(ContentKeyFunctions.NivalisParry);
+            human.AddFunction(ContentKeyFunctions.NivalisShove);
             human.AddFunction(ContentKeyFunctions.NivalisAim);
             human.AddFunction(ContentKeyFunctions.NivalisReload);
             human.AddFunction(ContentKeyFunctions.NivalisUnload);

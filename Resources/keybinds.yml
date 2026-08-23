@@ -1,4 +1,4 @@
-﻿version: 1 # Not used right now, whatever.
+version: 1 # Not used right now, whatever.
 binds:
 - function: UIClick
   type: State
@@ -551,6 +551,9 @@ binds:
 - function: NivalisParry
   type: State
   key: N
+- function: NivalisShove
+  type: State
+  key: Q
 - function: NivalisAim
   type: State
   key: MouseRight

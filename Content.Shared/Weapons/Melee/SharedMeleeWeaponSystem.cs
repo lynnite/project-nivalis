@@ -245,11 +245,8 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
 
     private void OnDisarmAttack(DisarmAttackEvent msg, EntitySessionEventArgs args)
     {
-        if (args.SenderSession.AttachedEntity is not {} user)
-            return;
-
-        if (TryGetWeapon(user, out var weaponUid, out var weapon))
-            AttemptAttack(user, weaponUid, weapon, msg, args.SenderSession);
+        // Nivalis - Legacy right-click disarm is disabled (shove is bound to Q via NivalisShoveEvent)
+        return;
     }
 
     /// <summary>

@@ -171,7 +171,9 @@ namespace Content.Client.Options.UI.Tabs
             AddCheckBox("ui-options-hotkey-toggle-walk", _cfg.GetCVar(CCVars.ToggleWalk), HandleToggleWalk);
             InitToggleWalk();
             AddButton(ContentKeyFunctions.ToggleKnockdown);
+            // Nivalis
             AddButton(ContentKeyFunctions.NivalisParry);
+            AddButton(ContentKeyFunctions.NivalisShove);
             AddButton(ContentKeyFunctions.NivalisAim);
             AddButton(ContentKeyFunctions.NivalisReload);
             AddButton(ContentKeyFunctions.NivalisUnload);

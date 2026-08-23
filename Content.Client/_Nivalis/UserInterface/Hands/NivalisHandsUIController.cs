@@ -13,7 +13,7 @@ namespace Content.Client._Nivalis.UserInterface.Hands;
 
 public sealed partial class NivalisHandsUIController : UIController, IOnSystemChanged<HandsSystem>
 {
-    [Dependency] private readonly IEntityManager _entities = default!;
+    [Dependency] private IEntityManager _entities = default!;
     private HandsSystem? _handsSystem;
 
     public override void Initialize()

@@ -5,7 +5,7 @@
     xmlns:lobby="clr-namespace:Content.Client.Lobby.UI.ProfileEditorControls"
     xmlns:nivalis="clr-namespace:Content.Client._Nivalis.UserInterface.Lobby">
 
-    <LayoutContainer Name="Root" HorizontalExpand="True" VerticalExpand="True">
+    <LayoutContainer Name="RootElement" HorizontalExpand="True" VerticalExpand="True">
 
         <TextureRect Name="BackgroundViewport"
                      Stretch="KeepAspectCovered"

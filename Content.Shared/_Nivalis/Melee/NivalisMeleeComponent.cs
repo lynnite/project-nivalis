@@ -17,6 +17,9 @@ public sealed partial class NivalisMeleeComponent : Component
     public float HeavyStaminaDamage = 15f;
 
     [DataField, AutoNetworkedField]
+    public float HeavyWindupTime = 0.5f;
+
+    [DataField, AutoNetworkedField]
     public DamageSpecifier LightDamage = new();
 
     [DataField, AutoNetworkedField]

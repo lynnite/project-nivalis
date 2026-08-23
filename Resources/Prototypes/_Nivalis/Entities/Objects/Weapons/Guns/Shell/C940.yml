@@ -1,0 +1,12 @@
+- type: entity
+  parent: WeaponNivalisShotgun
+  id: WeaponNivalisShotgunC940
+  name: C940 Double barrel
+  suffix: Nivalis
+  description: Shell
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Guns/Shell/inhands.rsi
+    layers:
+    - state: icon
+      sprite: _Nivalis/Objects/Weapons/Guns/Shell/icon.rsi

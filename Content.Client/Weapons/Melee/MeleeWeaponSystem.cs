@@ -134,10 +134,9 @@ public sealed partial class MeleeWeaponSystem : SharedMeleeWeaponSystem
         // Heavy attack.
         if (altDown == BoundKeyState.Down)
         {
-            // If it's an unarmed attack then do a disarm
+            // Nivalis - Unarmed right-click disarm is disabled in favor of Q shove
             if (weapon.AltDisarm && weaponUid == entity)
             {
-                ClientDisarm(entity, mousePos, coordinates);
                 return;
             }
 

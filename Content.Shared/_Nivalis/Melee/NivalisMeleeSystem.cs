@@ -13,6 +13,10 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Physics;
 using Content.Shared.Popups;
+using Content.Shared.DoAfter;
+using Content.Shared.StatusEffectNew;
+using Content.Shared.Stunnable;
+using Content.Shared.Throwing;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameObjects;
@@ -40,12 +44,16 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
     [Dependency] protected SharedPopupSystem PopupSystem = default!;
     [Dependency] protected SharedTransformSystem TransformSystem = default!;
     [Dependency] private SharedNivalisMeleeParrySystem _parry = default!;
+    [Dependency] protected StatusEffectsSystem Status = default!;
+    [Dependency] protected ThrowingSystem Throwing = default!;
+    [Dependency] protected SharedDoAfterSystem DoAfter = default!;
 
     private EntityQuery<DamageableComponent> _damageQuery = default!;
 
     private const int AttackMask = (int)(CollisionGroup.MobMask | CollisionGroup.Opaque);
 
     public const int MaxTargets = 5;
+    public const float ShoveRange = 1.8f;
 
     public override void Initialize()
     {
@@ -56,6 +64,87 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         SubscribeAllEvent<NivalisLightAttackEvent>(OnLightAttack);
         SubscribeAllEvent<NivalisHeavyAttackEvent>(OnHeavyAttack);
         SubscribeAllEvent<NivalisStopAttackEvent>(OnStopAttack);
+        SubscribeAllEvent<NivalisShoveEvent>(OnShove);
+    }
+
+    private void OnShove(NivalisShoveEvent msg, EntitySessionEventArgs args)
+    {
+        if (args.SenderSession.AttachedEntity is not { } user)
+            return;
+
+        var target = GetEntity(msg.Target);
+        PerformShove(user, target, GetCoordinates(msg.Coordinates), args.SenderSession);
+    }
+
+    public bool PerformShove(EntityUid user, EntityUid target, EntityCoordinates coordinates, ICommonSession? session = null)
+    {
+        if (Deleted(target) || user == target)
+            return false;
+
+        if (!CombatMode.IsInCombatMode(user) || !Blocker.CanAttack(user, target))
+            return false;
+
+        if (!InRange(user, target, ShoveRange, session))
+            return false;
+
+        var weaponUid = user;
+        if (TryGetWeapon(user, out var wUid, out _))
+            weaponUid = wUid;
+
+        DoLungeAnimation(user, weaponUid, Angle.FromDegrees(45), TransformSystem.ToMapCoordinates(coordinates), ShoveRange, null);
+
+        var swingSound = new SoundPathSpecifier("/Audio/Weapons/punchmiss.ogg")
+        {
+            Params = AudioParams.Default.AddVolume(-2f).WithVariation(0.05f),
+        };
+        if (_net.IsClient)
+            Audio.PlayPredicted(swingSound, user, user);
+        else
+            Audio.PlayPvs(swingSound, user);
+
+        var userPos = TransformSystem.GetWorldPosition(user);
+        var targetPos = TransformSystem.GetWorldPosition(target);
+        var dir = targetPos - userPos;
+        if (dir.LengthSquared() > 0.0001f)
+        {
+            var pushDir = dir.Normalized();
+            Throwing.TryThrow(target, pushDir * 0.5f, baseThrowSpeed: 2.5f, user: user, pushbackRatio: 0f, playSound: false, doSpin: false);
+        }
+
+        Status.TryAddStatusEffectDuration(target, SharedStunSystem.StunId, TimeSpan.FromSeconds(1.0));
+
+        if (TryGetWeapon(target, out var targetWeaponUid, out var targetWeapon))
+        {
+            targetWeapon.Attacking = false;
+            var curTime = Timing.CurTime;
+            if (targetWeapon.NextAttack < curTime + TimeSpan.FromSeconds(1.0))
+            {
+                targetWeapon.NextAttack = curTime + TimeSpan.FromSeconds(1.0);
+            }
+            DirtyField(targetWeaponUid, targetWeapon, nameof(NivalisMeleeComponent.Attacking));
+            DirtyField(targetWeaponUid, targetWeapon, nameof(NivalisMeleeComponent.NextAttack));
+        }
+
+        if (TryComp<NivalisMeleeParryComponent>(target, out var parryComp))
+        {
+            parryComp.Protecting = false;
+            Dirty(target, parryComp);
+        }
+
+        if (TryComp<DoAfterComponent>(target, out var doAfterComp))
+        {
+            foreach (var doAfter in doAfterComp.DoAfters.Values)
+            {
+                DoAfter.Cancel(target, doAfter.Index, doAfterComp);
+            }
+        }
+
+        if (_net.IsServer)
+        {
+            PopupSystem.PopupEntity(Loc.GetString("nivalis-shove-popup"), target, user);
+        }
+
+        return true;
     }
 
     private void OnStopAttack(NivalisStopAttackEvent msg, EntitySessionEventArgs args)
@@ -289,7 +378,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         DoLunge(user, weapon, angle, localPos, animation);
     }
 
-    private bool CanAffordStamina(EntityUid user, NivalisMeleeComponent weapon, bool heavy)
+    protected bool CanAffordStamina(EntityUid user, NivalisMeleeComponent weapon, bool heavy)
     {
         if (!TryComp<NivalisStaminaComponent>(user, out var stamina))
             return true;

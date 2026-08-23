@@ -4,12 +4,14 @@ using Content.Shared.Input;
 using Robust.Client.Player;
 using Robust.Shared.Input;
 using Robust.Shared.Input.Binding;
+using Robust.Shared.Timing;
 
 namespace Content.Client._Nivalis.Melee;
 
 public sealed partial class NivalisMeleeParrySystem : SharedNivalisMeleeParrySystem
 {
-    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     public override void Initialize()
     {
@@ -25,7 +27,7 @@ public sealed partial class NivalisMeleeParrySystem : SharedNivalisMeleeParrySys
 
     private void OnParryPressed()
     {
-        if (_player.LocalEntity == null)
+        if (!_timing.IsFirstTimePredicted || _player.LocalEntity == null)
             return;
 
         RaisePredictiveEvent(new NivalisMeleeParryEvent(true));

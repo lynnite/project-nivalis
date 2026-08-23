@@ -75,19 +75,7 @@ public abstract partial class SharedHandsSystem : EntitySystem
         if (!TryComp<HandsComponent>(player, out var hands) || hands.ActiveHandId is not { } handId)
             return;
 
-        if (!TryGetHeldItem(player, handId, out var held) || held is not { } entity || TerminatingOrDeleted(entity))
-            return;
-
-        if (!TryComp(entity, out MetaDataComponent? meta) || meta.EntityPrototype is not { } prototype)
-            return;
-
-        if (ContainerSystem.TryGetContainer(player, handId, out var container))
-            ContainerSystem.Remove(entity, container);
-
-        QueueDel(entity);
-
-        var coords = Transform(player).Coordinates;
-        Spawn(prototype.ID, coords);
+        TryDrop((player, hands), handId, null, checkActionBlocker: false);
     }
 
     #region Event and Key-binding Handlers

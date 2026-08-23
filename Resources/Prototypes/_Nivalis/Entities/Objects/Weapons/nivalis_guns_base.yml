@@ -167,6 +167,27 @@
   - type: LaserProjectile
 
 - type: entity
+  parent: BulletLaser
+  id: NivalisScatterPelletBurst
+  name: red scatter burst
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: ProjectileSpread
+    proto: NivalisScatterPelletBurst
+    count: 5
+    spread: 18
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/shotgun.rsi
+    layers:
+    - state: scatter
+      shader: unshaded
+  - type: Projectile
+    impactEffect: BulletImpactEffectKinetic
+    damage:
+      types:
+        Piercing: 7
+
+- type: entity
   parent: LaserHitscanBaseNivalis
   id: BallisticHitscanBaseNivalis
   name: base bullet

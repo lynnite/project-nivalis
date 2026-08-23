@@ -78,7 +78,7 @@ public abstract partial class SharedHandsSystem : EntitySystem
         if (!TryGetHeldItem(player, handId, out var held) || held is not { } entity || TerminatingOrDeleted(entity))
             return;
 
-        if (!TryComp<MetaDataComponent>(entity, out var meta) || meta.EntityPrototype is not { } prototype)
+        if (!TryComp(entity, out MetaDataComponent? meta) || meta.EntityPrototype is not { } prototype)
             return;
 
         if (ContainerSystem.TryGetContainer(player, handId, out var container))

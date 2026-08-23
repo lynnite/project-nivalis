@@ -9,9 +9,9 @@ namespace Content.Shared._Nivalis.Hands;
 
 public abstract partial class SharedNivalisHandsSystem : EntitySystem
 {
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     public int EnsureHandCount(Entity<HandsComponent?> user, int count)
     {

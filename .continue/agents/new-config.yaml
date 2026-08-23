@@ -1,0 +1,13 @@
+name: Deepseek V4
+version: 1.0.0
+schema: v1
+
+models:
+  - name: DeepSeek Coder
+    provider: deepseek
+    model: deepseek-coder
+    apiKey: sk-b89dfca145ca42cc9bc47af7f83d0552
+    contextLength: 128000
+    capabilities:
+      - tool_use
+      - image_input

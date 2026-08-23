@@ -23,7 +23,7 @@ public sealed partial class NivalisAmmoMenuWindow : DefaultWindow
 {
     private const float ScrollSpeed = 14f;
 
-    [Dependency] private readonly IResourceCache _resourceCache = default!;
+    [Dependency] private IResourceCache _resourceCache = default!;
 
     private readonly ScrollingScanlineStyleBox _scanline = new();
     private Texture? _scanlineTexture;

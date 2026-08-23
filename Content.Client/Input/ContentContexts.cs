@@ -63,27 +63,22 @@ namespace Content.Client.Input
             human.AddFunction(ContentKeyFunctions.NivalisShove);
             human.AddFunction(ContentKeyFunctions.NivalisAim);
             human.AddFunction(ContentKeyFunctions.NivalisReload);
-            // end
+            human.AddFunction(ContentKeyFunctions.NivalisUnload);
             human.AddFunction(ContentKeyFunctions.SwapHands);
             human.AddFunction(ContentKeyFunctions.SwapHandsReverse);
+            foreach (var handKey in ContentKeyFunctions.GetNivalisHandKeys())
+            {
+                human.AddFunction(handKey);
+            }
+            human.AddFunction(ContentKeyFunctions.NivalisDrop);
             human.AddFunction(ContentKeyFunctions.Drop);
             human.AddFunction(ContentKeyFunctions.UseItemInHand);
             human.AddFunction(ContentKeyFunctions.AltUseItemInHand);
             human.AddFunction(ContentKeyFunctions.OpenCharacterMenu);
             human.AddFunction(ContentKeyFunctions.OpenEmotesMenu);
             human.AddFunction(ContentKeyFunctions.ActivateItemInWorld);
-            human.AddFunction(ContentKeyFunctions.ThrowItemInHand);
             human.AddFunction(ContentKeyFunctions.AltActivateItemInWorld);
-            human.AddFunction(ContentKeyFunctions.TryPullObject);
-            human.AddFunction(ContentKeyFunctions.MovePulledObject);
-            human.AddFunction(ContentKeyFunctions.ReleasePulledObject);
             human.AddFunction(ContentKeyFunctions.OpenCraftingMenu);
-            human.AddFunction(ContentKeyFunctions.OpenInventoryMenu);
-            human.AddFunction(ContentKeyFunctions.SmartEquipBackpack);
-            human.AddFunction(ContentKeyFunctions.SmartEquipBelt);
-            human.AddFunction(ContentKeyFunctions.SmartEquipPocket1);
-            human.AddFunction(ContentKeyFunctions.SmartEquipPocket2);
-            human.AddFunction(ContentKeyFunctions.SmartEquipSuitStorage);
             human.AddFunction(ContentKeyFunctions.OpenBackpack);
             human.AddFunction(ContentKeyFunctions.OpenBelt);
             human.AddFunction(ContentKeyFunctions.MouseMiddle);

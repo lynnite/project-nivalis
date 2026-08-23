@@ -29,12 +29,12 @@ public sealed partial class NivalisLobbyControl : Control
 {
     public event Action<string>? NavigationPressed;
 
-    [Dependency] private readonly IClientPreferencesManager _preferences = default!;
-    [Dependency] private readonly IEntityManager _entityManager = default!;
-    [Dependency] private readonly IClientConsoleHost _consoleHost = default!;
-    [Dependency] private readonly IResourceCache _resourceCache = default!;
-    [Dependency] private readonly IUriOpener _uriOpener = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private IClientPreferencesManager _preferences = default!;
+    [Dependency] private IEntityManager _entityManager = default!;
+    [Dependency] private IClientConsoleHost _consoleHost = default!;
+    [Dependency] private IResourceCache _resourceCache = default!;
+    [Dependency] private IUriOpener _uriOpener = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
 
     private readonly Dictionary<Button, ScrollingScanlineStyleBox> _navStyle = new();
     private readonly Dictionary<Button, Vector2> _navBaseSize = new();

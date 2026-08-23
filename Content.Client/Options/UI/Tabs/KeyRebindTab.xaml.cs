@@ -176,7 +176,14 @@ namespace Content.Client.Options.UI.Tabs
             AddButton(ContentKeyFunctions.NivalisShove);
             AddButton(ContentKeyFunctions.NivalisAim);
             AddButton(ContentKeyFunctions.NivalisReload);
-            // end
+            AddButton(ContentKeyFunctions.NivalisUnload);
+
+            AddHeader("ui-options-header-hands");
+            foreach (var handKey in ContentKeyFunctions.GetNivalisHandKeys())
+            {
+                AddButton(handKey);
+            }
+            AddButton(ContentKeyFunctions.NivalisDrop);
 
             AddHeader("ui-options-header-camera");
             AddButton(EngineKeyFunctions.CameraRotateLeft);

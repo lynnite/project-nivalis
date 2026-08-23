@@ -14,10 +14,10 @@ namespace Content.Client._Nivalis.UserInterface.SurvivalHud;
 [GenerateTypedNameReferences]
 public sealed partial class NivalisSurvivalHud : UIWidget
 {
-    [Dependency] private readonly IEntityManager _entity = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly ILocalizationManager _loc = default!;
+    [Dependency] private IEntityManager _entity = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private ILocalizationManager _loc = default!;
 
     public NivalisSurvivalHud()
     {

@@ -11,8 +11,8 @@ namespace Content.Client._Nivalis.Weapons;
 /// </summary>
 public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
 {
-    [Dependency] private readonly IPlayerManager _player = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private IPlayerManager _player = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     public override void Initialize()
     {

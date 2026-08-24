@@ -7,7 +7,7 @@ namespace Content.Shared._Nivalis.Status;
 public sealed partial class NivalisBleedActiveComponent : Component
 {
     [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float DamagePerSecond = 1f;
+    public float DamagePerSecond = 0.5f;
 
     [DataField]
     public EntityUid? Source;

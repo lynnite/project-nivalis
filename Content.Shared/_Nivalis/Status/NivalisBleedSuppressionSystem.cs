@@ -1,13 +1,18 @@
 using Content.Shared._Nivalis.Melee;
 using Content.Shared.Body.Components;
 using Content.Shared.Mobs.Components;
+using Content.Shared.StatusEffectNew;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 namespace Content.Shared._Nivalis.Status;
 
 public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
 {
+    public static readonly EntProtoId NivalisBleedEffect = "StatusEffectNivalisBleed";
+
     [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
 
     private EntityQuery<MobStateComponent> _mobStateQuery = default!;
     private EntityQuery<BloodstreamComponent> _bloodQuery = default!;
@@ -54,6 +59,9 @@ public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
         var query = EntityQueryEnumerator<NivalisNoBleedComponent>();
         while (query.MoveNext(out var uid, out var noBleed))
         {
+            if (_status.HasStatusEffect(uid, NivalisBleedEffect))
+                continue;
+
             if (_timing.CurTime < noBleed.RemoveAt)
                 continue;
 
@@ -67,3 +75,4 @@ public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
         }
     }
 }
+

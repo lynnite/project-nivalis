@@ -88,8 +88,9 @@ public sealed partial class NivalisBleedSystem : EntitySystem
             Dirty(uid, bleed);
 
             var damage = new DamageSpecifier();
-            damage.DamageDict["Brute"] = FixedPoint2.New(bleed.DamagePerSecond);
+            damage.DamageDict["Slash"] = FixedPoint2.New(bleed.DamagePerSecond);
             _damageable.ChangeDamage((uid, damageable), damage, true, origin: bleed.Source);
         }
     }
 }
+

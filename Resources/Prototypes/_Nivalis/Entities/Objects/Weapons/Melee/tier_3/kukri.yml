@@ -8,3 +8,6 @@
     sprite: _Nivalis/Objects/Weapons/Melee/kukri.rsi
     layers:
     - state: icon
+  - type: NivalisBleed
+    damagePerSecond: 0.5
+    duration: 40

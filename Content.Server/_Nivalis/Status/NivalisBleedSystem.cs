@@ -8,6 +8,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Mobs.Components;
 using Content.Shared.StatusEffectNew;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
 namespace Content.Server._Nivalis.Status;
@@ -16,10 +17,12 @@ public sealed partial class NivalisBleedSystem : EntitySystem
 {
     public static readonly EntProtoId BleedEffect = "StatusEffectNivalisBleed";
     private static readonly TimeSpan BleedDuration = TimeSpan.FromSeconds(40);
+    private const float BleedChance = 0.1f;
 
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private StatusEffectsSystem _status = default!;
     [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
     private EntityQuery<DamageableComponent> _damageQuery = default!;
     private EntityQuery<MobStateComponent> _mobStateQuery = default!;
@@ -42,6 +45,9 @@ public sealed partial class NivalisBleedSystem : EntitySystem
         foreach (var target in args.HitEntities)
         {
             if (!_mobStateQuery.HasComp(target) || !_damageQuery.HasComp(target))
+                continue;
+
+            if (!_random.Prob(BleedChance))
                 continue;
 
             TryApplyBleed(target, args.User, bleedComp.DamagePerSecond);

@@ -1,0 +1,29 @@
+- type: stack
+  parent: BaseSmallStack
+  id: NivalisBandage
+  name: nivalis-bandage-stack
+  icon: { sprite: "/Textures/Objects/Specific/Medical/medical.rsi", state: gauze }
+  spawn: NivalisBandage1
+
+- type: stack
+  parent: BaseSmallStack
+  id: NivalisAsepticBandage
+  name: nivalis-aseptic-bandage-stack
+  icon: { sprite: "/Textures/Objects/Specific/Medical/medical.rsi", state: gauze }
+  spawn: NivalisAsepticBandage1
+
+- type: stack
+  parent: BaseSmallStack
+  id: NivalisSplint
+  name: nivalis-splint-stack
+  icon: { sprite: "/Textures/Objects/Specific/Medical/medical.rsi", state: gauze }
+  spawn: NivalisSplint1
+
+- type: stack
+  parent: BaseSmallStack
+  id: NivalisTourniquet
+  name: nivalis-tourniquet-stack
+  icon: { sprite: "/Textures/Objects/Specific/Medical/medical.rsi", state: gauze }
+  spawn: NivalisTourniquet
+
+

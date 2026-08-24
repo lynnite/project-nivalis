@@ -77,6 +77,8 @@
     wideAnimation: WeaponArcSlash
     soundHit:
       path: /Audio/Weapons/smash.ogg
+  - type: NivalisFracturer
+    fractureChance: 0.1
   - type: Item
     sprite: Objects/Weapons/Melee/truncheon.rsi
   - type: Tag

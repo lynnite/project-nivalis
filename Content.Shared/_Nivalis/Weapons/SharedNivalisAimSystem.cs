@@ -1,3 +1,4 @@
+using Content.Shared._Nivalis.Status;
 using Content.Shared.Hands.EntitySystems;
 
 namespace Content.Shared._Nivalis.Weapons;
@@ -10,6 +11,7 @@ public abstract partial class SharedNivalisAimSystem : EntitySystem
 {
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private SharedNivalisScatterSystem _scatter = default!;
+    [Dependency] private NivalisFractureSystem _fracture = default!;
 
     public override void Initialize()
     {
@@ -22,6 +24,9 @@ public abstract partial class SharedNivalisAimSystem : EntitySystem
     {
         var user = args.SenderSession.AttachedEntity;
         if (user == null)
+            return;
+
+        if (msg.Active && _fracture.HasArmFracture(user.Value))
             return;
 
         var held = _hands.GetActiveItem((user.Value, null));

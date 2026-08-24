@@ -1,0 +1,50 @@
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectNivalisFractureArm
+  name: fractured arm
+  description: Your arm is broken. You can't aim a gun or shove effectively.
+  components:
+  - type: StatusEffect
+    whitelist:
+      components:
+      - MobState
+      - Damageable
+      requireAll: true
+  - type: StatusEffectAlert
+    alert: NivalisFractureArm
+  - type: ExaminableStatusEffect
+    messageId: status-effect-examine-fracture-arm
+
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectNivalisFractureLeg
+  name: fractured leg
+  description: Your leg is broken. You can barely walk.
+  components:
+  - type: StatusEffect
+    whitelist:
+      components:
+      - MobState
+      - Damageable
+      requireAll: true
+  - type: StatusEffectAlert
+    alert: NivalisFractureLeg
+  - type: ExaminableStatusEffect
+    messageId: status-effect-examine-fracture-leg
+
+- type: alert
+  id: NivalisFractureArm
+  name: nivalis-fracture-arm-alert-name
+  description: nivalis-fracture-arm-alert-desc
+  icons:
+  - sprite: /Textures/Interface/Alerts/bleed.rsi
+    state: bleed0
+
+- type: alert
+  id: NivalisFractureLeg
+  name: nivalis-fracture-leg-alert-name
+  description: nivalis-fracture-leg-alert-desc
+  icons:
+  - sprite: /Textures/Interface/Alerts/bleed.rsi
+    state: bleed1
+

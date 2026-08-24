@@ -1,0 +1,128 @@
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectNivalisBleedImmunity
+  name: bandaged
+  description: Your wounds are dressed and protected.
+  components:
+  - type: StatusEffect
+    whitelist:
+      components:
+      - MobState
+      requireAll: true
+  - type: StatusEffectAlert
+    alert: NivalisBandaged
+
+- type: alert
+  id: NivalisBandaged
+  name: nivalis-bandaged-alert-name
+  description: nivalis-bandaged-alert-desc
+  icons:
+  - sprite: /Textures/Interface/Alerts/bleed.rsi
+    state: bleed0
+
+- type: entity
+  parent: BaseItem
+  id: NivalisBandageBase
+  abstract: true
+  name: bandage
+  description: Stops the bleeding.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/medical.rsi
+    state: gauze
+  - type: Item
+    size: Small
+    sprite: Objects/Specific/Medical/medical.rsi
+    heldPrefix: gauze
+  - type: NivalisBandage
+  - type: Stack
+    stackType: NivalisBandage
+    count: 3
+  - type: StackPrice
+    price: 10
+
+- type: entity
+  parent: NivalisBandageBase
+  id: NivalisBandage
+  suffix: Full
+  components:
+  - type: Stack
+    count: 3
+
+- type: entity
+  parent: NivalisBandageBase
+  id: NivalisBandage1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: NivalisBandageBase
+  id: NivalisAsepticBandage
+  name: aseptic bandage
+  suffix: Full
+  description: Stops bleeding and keeps it from coming back for a while.
+  components:
+  - type: NivalisBandage
+    aseptic: true
+  - type: Stack
+    stackType: NivalisAsepticBandage
+    count: 2
+
+- type: entity
+  parent: NivalisAsepticBandage
+  id: NivalisAsepticBandage1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: BaseItem
+  id: NivalisSplint
+  name: bone splint
+  description: A rigid splint used to brace a fracture.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/medical.rsi
+    state: gauze
+  - type: Item
+    size: Small
+    sprite: Objects/Specific/Medical/medical.rsi
+    heldPrefix: gauze
+  - type: NivalisSplint
+  - type: Stack
+    stackType: NivalisSplint
+    count: 1
+  - type: StackPrice
+    price: 15
+
+- type: entity
+  parent: NivalisSplint
+  id: NivalisSplint1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: BaseItem
+  id: NivalisTourniquet
+  name: tourniquet
+  description: Tightens around a limb to stop heavy bleeding.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/medical.rsi
+    state: gauze
+  - type: Item
+    size: Small
+    sprite: Objects/Specific/Medical/medical.rsi
+    heldPrefix: gauze
+  - type: NivalisTourniquet
+  - type: Stack
+    stackType: NivalisTourniquet
+    count: 1
+  - type: StackPrice
+    price: 20
+

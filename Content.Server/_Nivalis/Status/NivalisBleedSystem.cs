@@ -16,6 +16,7 @@ namespace Content.Server._Nivalis.Status;
 public sealed partial class NivalisBleedSystem : EntitySystem
 {
     public static readonly EntProtoId BleedEffect = "StatusEffectNivalisBleed";
+    public static readonly EntProtoId ImmunityEffect = "StatusEffectNivalisBleedImmunity";
     private static readonly TimeSpan BleedDuration = TimeSpan.FromSeconds(40);
     private const float BleedChance = 0.1f;
 
@@ -57,6 +58,9 @@ public sealed partial class NivalisBleedSystem : EntitySystem
     public void TryApplyBleed(EntityUid target, EntityUid source, float damagePerSecond)
     {
         if (!_mobStateQuery.HasComp(target) || !_damageQuery.HasComp(target))
+            return;
+
+        if (_status.HasStatusEffect(target, ImmunityEffect))
             return;
 
         if (_status.HasStatusEffect(target, BleedEffect))

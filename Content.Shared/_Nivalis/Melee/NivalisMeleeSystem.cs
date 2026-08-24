@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using Content.Shared._Nivalis.Melee.Events;
 using Content.Shared._Nivalis.Stamina;
+using Content.Shared._Nivalis.Status;
 using Content.Shared.ActionBlocker;
 using Content.Shared.CombatMode;
 using Content.Shared.Damage;
@@ -47,6 +48,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
     [Dependency] protected StatusEffectsSystem Status = default!;
     [Dependency] protected ThrowingSystem Throwing = default!;
     [Dependency] protected SharedDoAfterSystem DoAfter = default!;
+    [Dependency] private NivalisFractureSystem _fracture = default!;
 
     private EntityQuery<DamageableComponent> _damageQuery = default!;
 
@@ -82,6 +84,9 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             return false;
 
         if (!CombatMode.IsInCombatMode(user) || !Blocker.CanAttack(user, target))
+            return false;
+
+        if (_fracture.HasArmFracture(user))
             return false;
 
         if (!InRange(user, target, ShoveRange, session))

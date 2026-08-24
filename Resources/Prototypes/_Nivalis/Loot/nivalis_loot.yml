@@ -41,6 +41,14 @@
       weight: 1.5
     - id: Gauze1
       weight: 1.5
+    - id: NivalisBandage1
+      weight: 2.0
+    - id: NivalisAsepticBandage1
+      weight: 1.0
+    - id: NivalisSplint1
+      weight: 1.0
+    - id: NivalisTourniquet
+      weight: 1.0
     - id: MedkitFilled
       weight: 0.5
 

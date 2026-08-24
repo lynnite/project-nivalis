@@ -1,0 +1,25 @@
+- type: entity
+  parent: MobStatusEffectDebuff
+  id: StatusEffectNivalisArtery
+  name: severed artery
+  description: A major artery has been severed. You're losing blood fast.
+  components:
+  - type: StatusEffect
+    whitelist:
+      components:
+      - NivalisSurvivalResource
+      - MobState
+      requireAll: true
+  - type: StatusEffectAlert
+    alert: NivalisArtery
+  - type: ExaminableStatusEffect
+    messageId: status-effect-examine-artery
+
+- type: alert
+  id: NivalisArtery
+  name: nivalis-artery-alert-name
+  description: nivalis-artery-alert-desc
+  icons:
+  - sprite: /Textures/Interface/Alerts/bleed.rsi
+    state: bleed4
+

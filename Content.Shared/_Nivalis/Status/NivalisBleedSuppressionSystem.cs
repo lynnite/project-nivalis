@@ -1,13 +1,20 @@
 using Content.Shared._Nivalis.Melee;
 using Content.Shared.Body.Components;
 using Content.Shared.Mobs.Components;
-using Robust.Shared.Timing;
+using Content.Shared.Projectiles;
+using Content.Shared.StatusEffectNew;
+using Content.Shared.Weapons.Hitscan.Components;
+using Content.Shared.Weapons.Hitscan.Events;
+using Content.Shared.Weapons.Hitscan.Systems;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared._Nivalis.Status;
 
 public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
 {
-    [Dependency] private IGameTiming _timing = default!;
+    public static readonly EntProtoId NivalisBleedEffect = "StatusEffectNivalisBleed";
+
+    [Dependency] private StatusEffectsSystem _status = default!;
 
     private EntityQuery<MobStateComponent> _mobStateQuery = default!;
     private EntityQuery<BloodstreamComponent> _bloodQuery = default!;
@@ -20,18 +27,39 @@ public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
         _bloodQuery = GetEntityQuery<BloodstreamComponent>();
 
         SubscribeLocalEvent<NivalisMeleeHitEvent>(OnMeleeHit);
+        SubscribeLocalEvent<ProjectileHitEvent>(OnProjectileHit);
+        SubscribeLocalEvent<HitscanBasicRaycastComponent, HitscanRaycastFiredEvent>(OnHitscanHit,
+            before: new[] { typeof(HitscanBasicDamageSystem) });
     }
 
     private void OnMeleeHit(NivalisMeleeHitEvent args)
     {
         foreach (var target in args.HitEntities)
         {
-            if (!_mobStateQuery.HasComp(target))
+            if (!_mobStateQuery.HasComp(target) || !_bloodQuery.HasComp(target))
                 continue;
 
-            if (_bloodQuery.HasComp(target))
                 SuppressNormalBleed(target);
         }
+    }
+
+    private void OnProjectileHit(ref ProjectileHitEvent args)
+    {
+        if (!_mobStateQuery.HasComp(args.Target) || !_bloodQuery.HasComp(args.Target))
+            return;
+
+        SuppressNormalBleed(args.Target);
+    }
+
+    private void OnHitscanHit(Entity<HitscanBasicRaycastComponent> ent, ref HitscanRaycastFiredEvent args)
+    {
+        if (args.Data.HitEntity is not { } target)
+            return;
+
+        if (!_mobStateQuery.HasComp(target) || !_bloodQuery.HasComp(target))
+            return;
+
+        SuppressNormalBleed(target);
     }
 
     private void SuppressNormalBleed(EntityUid target)
@@ -42,7 +70,6 @@ public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
         var comp = EnsureComp<NivalisNoBleedComponent>(target);
         comp.OriginalBleedModifiers = blood.DamageBleedModifiers;
         blood.DamageBleedModifiers = "NivalisNoBleed";
-        comp.RemoveAt = _timing.CurTime + TimeSpan.FromSeconds(0.6);
         Dirty(target, blood);
         Dirty(target, comp);
     }
@@ -54,7 +81,7 @@ public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
         var query = EntityQueryEnumerator<NivalisNoBleedComponent>();
         while (query.MoveNext(out var uid, out var noBleed))
         {
-            if (_timing.CurTime < noBleed.RemoveAt)
+            if (_status.HasStatusEffect(uid, NivalisBleedEffect))
                 continue;
 
             if (_bloodQuery.TryGetComponent(uid, out var blood))
@@ -67,3 +94,4 @@ public sealed partial class NivalisBleedSuppressionSystem : EntitySystem
         }
     }
 }
+

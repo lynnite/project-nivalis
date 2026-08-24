@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using Content.Shared._Nivalis.Melee.Events;
 using Content.Shared._Nivalis.Stamina;
+using Content.Shared._Nivalis.Status;
 using Content.Shared.ActionBlocker;
 using Content.Shared.CombatMode;
 using Content.Shared.Damage;
@@ -47,6 +48,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
     [Dependency] protected StatusEffectsSystem Status = default!;
     [Dependency] protected ThrowingSystem Throwing = default!;
     [Dependency] protected SharedDoAfterSystem DoAfter = default!;
+    [Dependency] private NivalisFractureSystem _fracture = default!;
 
     private EntityQuery<DamageableComponent> _damageQuery = default!;
 
@@ -82,6 +84,9 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             return false;
 
         if (!CombatMode.IsInCombatMode(user) || !Blocker.CanAttack(user, target))
+            return false;
+
+        if (_fracture.HasArmFracture(user))
             return false;
 
         if (!InRange(user, target, ShoveRange, session))
@@ -410,7 +415,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             !InRange(user, target.Value, component.Range, session))
         {
             var missEvent = new NivalisMeleeHitEvent(new List<EntityUid>(), user, meleeUid, damage, null);
-            RaiseLocalEvent(meleeUid, missEvent);
+            RaiseLocalEvent(meleeUid, missEvent, broadcast: true);
             PlaySwingSound(user, meleeUid, component);
             return;
         }
@@ -419,7 +424,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         var hitEntities = new List<EntityUid>();
         hitEntities.Add(target.Value);
         var hitEvent = new NivalisMeleeHitEvent(hitEntities, user, meleeUid, damage, null);
-        RaiseLocalEvent(meleeUid, hitEvent);
+        RaiseLocalEvent(meleeUid, hitEvent, broadcast: true);
 
         if (hitEvent.Handled)
             return;
@@ -465,7 +470,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         if (entities.Count == 0)
         {
             var missEvent = new NivalisMeleeHitEvent(new List<EntityUid>(), user, meleeUid, damage, direction);
-            RaiseLocalEvent(meleeUid, missEvent);
+            RaiseLocalEvent(meleeUid, missEvent, broadcast: true);
             PlaySwingSound(user, meleeUid, component);
             return;
         }
@@ -497,7 +502,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         }
 
         var hitEvent = new NivalisMeleeHitEvent(targets, user, meleeUid, damage, direction);
-        RaiseLocalEvent(meleeUid, hitEvent);
+        RaiseLocalEvent(meleeUid, hitEvent, broadcast: true);
 
         if (hitEvent.Handled)
             return;

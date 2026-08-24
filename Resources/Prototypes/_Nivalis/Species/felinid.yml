@@ -3,9 +3,16 @@
   name: species-name-felinid
   prototype: MobFelinid
   dollPrototype: AppearanceFelinid
-  markingLimits: Felinid
   skinColoration: Hues
   roundStart: true
+  defaultSoundsBySex:
+  - NivalisMaleFelinid
+  - NivalisFemaleFelinid
+  - NivalisUnisexFelinid
+  voices:
+  - NivalisMaleFelinid
+  - NivalisFemaleFelinid
+  - NivalisUnisexFelinid
 
 - type: markingsGroup
   parent: Undergarments
@@ -14,7 +21,7 @@
     enum.HumanoidVisualLayers.HeadTop:
       limit: 1
       required: true
-      defaultMarkings: [ FelinidEarsBasic ]
+      default: [ FelinidEarsBasic ]
     enum.HumanoidVisualLayers.Hair:
       limit: 1
       required: false
@@ -55,7 +62,7 @@
     enum.HumanoidVisualLayers.Tail:
       limit: 1
       required: true
-      defaultMarkings: [ FelinidTailBasic ]
+      default: [ FelinidTailBasic ]
     enum.HumanoidVisualLayers.Special:
       limit: 0
       required: false

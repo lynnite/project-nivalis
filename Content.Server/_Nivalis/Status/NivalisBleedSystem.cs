@@ -8,6 +8,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Mobs.Components;
 using Content.Shared.StatusEffectNew;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
 namespace Content.Server._Nivalis.Status;
@@ -15,11 +16,14 @@ namespace Content.Server._Nivalis.Status;
 public sealed partial class NivalisBleedSystem : EntitySystem
 {
     public static readonly EntProtoId BleedEffect = "StatusEffectNivalisBleed";
+    public static readonly EntProtoId ImmunityEffect = "StatusEffectNivalisBleedImmunity";
     private static readonly TimeSpan BleedDuration = TimeSpan.FromSeconds(40);
+    private const float BleedChance = 0.1f;
 
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private StatusEffectsSystem _status = default!;
     [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
 
     private EntityQuery<DamageableComponent> _damageQuery = default!;
     private EntityQuery<MobStateComponent> _mobStateQuery = default!;
@@ -44,6 +48,9 @@ public sealed partial class NivalisBleedSystem : EntitySystem
             if (!_mobStateQuery.HasComp(target) || !_damageQuery.HasComp(target))
                 continue;
 
+            if (!_random.Prob(BleedChance))
+                continue;
+
             TryApplyBleed(target, args.User, bleedComp.DamagePerSecond);
         }
     }
@@ -51,6 +58,9 @@ public sealed partial class NivalisBleedSystem : EntitySystem
     public void TryApplyBleed(EntityUid target, EntityUid source, float damagePerSecond)
     {
         if (!_mobStateQuery.HasComp(target) || !_damageQuery.HasComp(target))
+            return;
+
+        if (_status.HasStatusEffect(target, ImmunityEffect))
             return;
 
         if (_status.HasStatusEffect(target, BleedEffect))
@@ -88,8 +98,9 @@ public sealed partial class NivalisBleedSystem : EntitySystem
             Dirty(uid, bleed);
 
             var damage = new DamageSpecifier();
-            damage.DamageDict["Brute"] = FixedPoint2.New(bleed.DamagePerSecond);
+            damage.DamageDict["Slash"] = FixedPoint2.New(bleed.DamagePerSecond);
             _damageable.ChangeDamage((uid, damageable), damage, true, origin: bleed.Source);
         }
     }
 }
+

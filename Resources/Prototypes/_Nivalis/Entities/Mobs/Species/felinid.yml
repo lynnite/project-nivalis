@@ -9,8 +9,3 @@
   components:
   - type: HumanoidProfile
     species: Felinid
-  - type: Vocal
-    sounds:
-      Male: NivalisMaleFelinid
-      Unsexed: NivalisUnisexFelinid
-      Female: NivalisFemaleFelinid

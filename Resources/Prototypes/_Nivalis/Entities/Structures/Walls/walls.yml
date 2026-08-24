@@ -3,7 +3,6 @@
   id: NivalisBaseWallInvincible
   description: A huge chunk of metal used to separate rooms.
   placement:
-    state: full
     mode: SnapgridCenter
     snap:
     - Wall

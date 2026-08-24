@@ -1,0 +1,39 @@
+- type: emote
+  id: Hiss
+  name: chat-emote-name-felinid-hiss
+  category: Vocal
+  chatMessages: ["chat-emote-msg-felinid-hiss"]
+  chatTriggers:
+  - hiss
+  - hisses
+  - hissed
+
+- type: emote
+  id: Meow
+  name: chat-emote-name-felinid-meow
+  category: Vocal
+  chatMessages: ["chat-emote-msg-felinid-meow"]
+  chatTriggers:
+  - meow
+  - meows
+  - meowed
+
+- type: emote
+  id: Mew
+  name: chat-emote-name-felinid-mew
+  category: Vocal
+  chatMessages: ["chat-emote-msg-felinid-mew"]
+  chatTriggers:
+  - mew
+  - mews
+  - mewed
+
+- type: emote
+  id: Purr
+  name: chat-emote-name-felinid-purr
+  category: Vocal
+  chatMessages: ["chat-emote-msg-felinid-purr"]
+  chatTriggers:
+  - purr
+  - purrs
+  - purred

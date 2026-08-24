@@ -4,15 +4,11 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 namespace Content.Shared._Nivalis.Status;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentPause]
-public sealed partial class NivalisBleedActiveComponent : Component
+public sealed partial class NivalisArteryActiveComponent : Component
 {
-    [DataField, ViewVariables(VVAccess.ReadWrite)]
-    public float DamagePerSecond = 0.5f;
-
     [DataField]
     public EntityUid? Source;
 
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoPausedField]
     public TimeSpan NextTick;
 }
-

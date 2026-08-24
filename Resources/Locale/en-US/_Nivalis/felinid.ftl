@@ -1,5 +1,14 @@
 species-name-felinid = Felinid
 
+chat-emote-name-felinid-hiss = Hiss
+chat-emote-msg-felinid-hiss = hisses
+chat-emote-name-felinid-meow = Meow
+chat-emote-msg-felinid-meow = meows
+chat-emote-name-felinid-mew = Mew
+chat-emote-msg-felinid-mew = mews
+chat-emote-name-felinid-purr = Purr
+chat-emote-msg-felinid-purr = purrs
+
 marking-FelinidEarsBasic = Basic Ears
 marking-FelinidEarsBasic-basic_outer = Outer ear
 marking-FelinidEarsBasic-basic_inner = Inner ear

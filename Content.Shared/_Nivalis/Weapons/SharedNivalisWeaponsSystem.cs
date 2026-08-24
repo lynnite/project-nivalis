@@ -1,13 +1,22 @@
+using System.Numerics;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Systems;
+using Content.Shared.Physics;
 using Content.Shared.Popups;
+using Content.Shared.Sprite;
 using Content.Shared.Weapons.Ranged;
 using Content.Shared.Weapons.Ranged.Systems;
 using Content.Shared.Weapons.Hitscan.Components;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
+using Robust.Shared.Map;
+using Robust.Shared.Network;
+using Robust.Shared.Physics;
+using Robust.Shared.Physics.Components;
+using Robust.Shared.Physics.Systems;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Utility;
 
 namespace Content.Shared._Nivalis.Weapons;
 
@@ -18,6 +27,11 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
     [Dependency] private SharedDoAfterSystem _doAfter = default!;
     [Dependency] private MovementSpeedModifierSystem _movementSpeed = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedTransformSystem _transformSystem = default!;
+    [Dependency] private SharedScaleVisualsSystem _scaleVisuals = default!;
+    [Dependency] private INetManager _netMan = default!;
+
+    public static readonly EntProtoId NivalisBulletTrail = "NivalisBulletTrail";
 
     public override void Initialize()
     {
@@ -38,6 +52,58 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
         SubscribeLocalEvent<NivalisReloadComponent, NivalisReloadDoAfterEvent>(OnReloadDoAfter);
         SubscribeLocalEvent<NivalisAmmoPoolComponent, RefreshMovementSpeedModifiersEvent>(OnUserReloadMoveSpeed);
         SubscribeLocalEvent<NivalisGunComponent, AttemptShootEvent>(OnAttemptShoot);
+
+        SubscribeLocalEvent<NivalisGunComponent, AmmoShotEvent>(OnAmmoShot);
+    }
+
+    private void OnAmmoShot(Entity<NivalisGunComponent> gun, ref AmmoShotEvent args)
+    {
+        if (args.FiredProjectiles.Count == 0)
+            return;
+
+        var muzzleXform = Transform(gun);
+        var muzzle = _transformSystem.ToMapCoordinates(muzzleXform.Coordinates);
+
+        var projectile = args.FiredProjectiles[0];
+        if (TryComp<PhysicsComponent>(projectile, out var physics) &&
+            physics.LinearVelocity.LengthSquared() >= 0.01f)
+        {
+            var trail = Spawn(NivalisBulletTrail, muzzle);
+            var comp = EnsureComp<NivalisTrailComponent>(trail);
+            comp.Target = projectile;
+            comp.Muzzle = muzzle;
+            Dirty(trail, comp);
+        }
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var query = EntityQueryEnumerator<NivalisTrailComponent>();
+        while (query.MoveNext(out var uid, out var comp))
+        {
+            if (TerminatingOrDeleted(comp.Target))
+            {
+                if (_netMan.IsServer)
+                    QueueDel(uid);
+                continue;
+            }
+
+            var bulletPos = _transformSystem.GetMapCoordinates(comp.Target).Position;
+            var offset = bulletPos - comp.Muzzle.Position;
+            var distance = offset.Length();
+
+            if (distance < 1f)
+                continue;
+
+            var direction = offset.Normalized();
+            var midPoint = comp.Muzzle.Position + direction * (distance / 2f);
+
+            _transformSystem.SetWorldPosition(uid, midPoint);
+            _transformSystem.SetWorldRotation(uid, direction.ToAngle());
+            _scaleVisuals.SetSpriteScale(uid, new Vector2(distance, 1f));
+        }
     }
 
     private void OnAttemptShoot(Entity<NivalisGunComponent> gun, ref AttemptShootEvent args)

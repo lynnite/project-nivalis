@@ -1,7 +1,10 @@
 using Content.Server.Interaction;
+using Content.Server.NPC.Components;
 using Content.Shared._Nivalis.Weapons;
 using Content.Shared.Actions;
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
+using Content.Shared.Movement.Components;
 using Content.Shared.Popups;
 using Content.Shared.UserInterface;
 using Robust.Server.GameObjects;
@@ -15,6 +18,7 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
     [Dependency] private SharedUserInterfaceSystem _ui = default!;
     [Dependency] private SharedActionsSystem _actions = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
     public override void Initialize()
     {
         base.Initialize();
@@ -25,6 +29,28 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
 
         Subs.BuiEvents<NivalisAmmoHudComponent>(NivalisAmmoMenuUiKey.Key,
             subs => subs.Event<NivalisAmmoMenuDropAmmoMessage>(OnDropAmmoMessage));
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var query = EntityQueryEnumerator<NPCRangedCombatComponent, InputMoverComponent>();
+        while (query.MoveNext(out var npc, out _, out _))
+        {
+            foreach (var held in _hands.EnumerateHeld(npc))
+            {
+                if (!TryComp<NivalisGunComponent>(held, out var gun) ||
+                    gun.Reloading ||
+                    gun.MagazineCount >= gun.MaxAmmo)
+                {
+                    continue;
+                }
+
+                TryReload(held, npc);
+                break;
+            }
+        }
     }
 
     private void OnOpenAmmoMenu(Entity<NivalisAmmoHudComponent> ent, ref NivalisOpenAmmoMenuEvent args)

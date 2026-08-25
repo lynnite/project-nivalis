@@ -14,6 +14,10 @@
   - type: NivalisNoCritical
   - type: InputMover
   - type: MobMover
+  - type: NivalisAmmoPool
+    ammo:
+      Light: 1000
+      Medium: 1000
   - type: HTN
     rootTask:
       task: NivalisScavengerHostileCompound

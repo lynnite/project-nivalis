@@ -11,11 +11,11 @@ using Content.Shared.Weapons.Hitscan.Components;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
 using Robust.Shared.Map;
-using Robust.Shared.Network;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Spawners;
 using Robust.Shared.Utility;
 
 namespace Content.Shared._Nivalis.Weapons;
@@ -29,7 +29,6 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private SharedTransformSystem _transformSystem = default!;
     [Dependency] private SharedScaleVisualsSystem _scaleVisuals = default!;
-    [Dependency] private INetManager _netMan = default!;
 
     public static readonly EntProtoId NivalisBulletTrail = "NivalisBulletTrail";
 
@@ -85,8 +84,11 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
         {
             if (TerminatingOrDeleted(comp.Target))
             {
-                if (_netMan.IsServer)
-                    QueueDel(uid);
+                if (!HasComp<TimedDespawnComponent>(uid))
+                {
+                    var despawn = AddComp<TimedDespawnComponent>(uid);
+                    despawn.Lifetime = 1.0f;
+                }
                 continue;
             }
 

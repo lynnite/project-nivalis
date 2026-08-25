@@ -174,24 +174,18 @@
       types:
         Piercing: 7
 
-# Thin bullet trail that lingers from the muzzle toward the bullet's impact point
-# and fades out shortly after. Uses beam_omni, a bright uniform beam that is visible
-# from its first static frame, so the trail is guaranteed to be visible.
 - type: entity
   id: NivalisBulletTrail
   categories: [ HideSpawnMenu ]
   components:
-  - type: TimedDespawn
-    lifetime: 0.6
   - type: Sprite
     drawdepth: Effects
     layers:
     - shader: unshaded
       map: ["enum.EffectLayers.Unshaded"]
-      sprite: Objects/Weapons/Guns/Projectiles/projectiles.rsi
-      state: beam_omni
+      sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/ballistichitscan.rsi
+      state: trail
       autoAnimated: false
-      color: "#D0D0D0"
   - type: Tag
     tags:
     - HideContextMenu

@@ -42,7 +42,7 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
             {
                 if (!TryComp<NivalisGunComponent>(held, out var gun) ||
                     gun.Reloading ||
-                    gun.MagazineCount >= gun.MaxAmmo)
+                    gun.MagazineCount > 0)
                 {
                     continue;
                 }
@@ -187,14 +187,14 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
     {
         switch (type)
         {
-            case NivalisAmmoType.Light:   return "NivalisAmmoBoxLight";
-            case NivalisAmmoType.Short:   return "NivalisAmmoBoxShort";
-            case NivalisAmmoType.Long:    return "NivalisAmmoBoxLong";
-            case NivalisAmmoType.Small:   return "NivalisAmmoBoxSmall";
-            case NivalisAmmoType.Shell:   return "NivalisAmmoBoxShell";
-            case NivalisAmmoType.Medium:  return "NivalisAmmoBoxMedium";
-            case NivalisAmmoType.Heavy:   return "NivalisAmmoBoxHeavy";
-            default:                      return string.Empty;
+            case NivalisAmmoType.Light: return "NivalisAmmoBoxLight";
+            case NivalisAmmoType.Short: return "NivalisAmmoBoxShort";
+            case NivalisAmmoType.Long: return "NivalisAmmoBoxLong";
+            case NivalisAmmoType.Small: return "NivalisAmmoBoxSmall";
+            case NivalisAmmoType.Shell: return "NivalisAmmoBoxShell";
+            case NivalisAmmoType.Medium: return "NivalisAmmoBoxMedium";
+            case NivalisAmmoType.Heavy: return "NivalisAmmoBoxHeavy";
+            default: return string.Empty;
         }
     }
 
@@ -202,14 +202,14 @@ public sealed partial class NivalisWeaponsSystem : SharedNivalisWeaponsSystem
     {
         switch (type)
         {
-            case NivalisAmmoType.Light:   return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/pistol.rsi/base.png";
-            case NivalisAmmoType.Short:   return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/light_rifle.rsi/base.png";
-            case NivalisAmmoType.Long:    return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/rifle.rsi/base.png";
-            case NivalisAmmoType.Small:   return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/caseless_rifle.rsi/base.png";
-            case NivalisAmmoType.Shell:   return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/shotgun.rsi/base.png";
-            case NivalisAmmoType.Medium:  return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/magnum.rsi/base.png";
-            case NivalisAmmoType.Heavy:   return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/anti_materiel.rsi/base.png";
-            default:                      return "/Textures/Interface/Actions/ammo.png";
+            case NivalisAmmoType.Light: return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/pistol.rsi/base.png";
+            case NivalisAmmoType.Short: return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/light_rifle.rsi/base.png";
+            case NivalisAmmoType.Long: return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/rifle.rsi/base.png";
+            case NivalisAmmoType.Small: return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/caseless_rifle.rsi/base.png";
+            case NivalisAmmoType.Shell: return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/shotgun.rsi/base.png";
+            case NivalisAmmoType.Medium: return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/magnum.rsi/base.png";
+            case NivalisAmmoType.Heavy: return "/Textures/Objects/Weapons/Guns/Ammunition/Boxes/anti_materiel.rsi/base.png";
+            default: return "/Textures/Interface/Actions/ammo.png";
         }
     }
 }

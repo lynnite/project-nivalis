@@ -17,7 +17,7 @@ public sealed partial class NivalisBleedSystem : EntitySystem
 {
     public static readonly EntProtoId BleedEffect = "StatusEffectNivalisBleed";
     public static readonly EntProtoId ImmunityEffect = "StatusEffectNivalisBleedImmunity";
-    private static readonly TimeSpan BleedDuration = TimeSpan.FromSeconds(40);
+    private static readonly TimeSpan BleedDuration = TimeSpan.FromMinutes(2);
     private const float BleedChance = 0.1f;
 
     [Dependency] private DamageableSystem _damageable = default!;

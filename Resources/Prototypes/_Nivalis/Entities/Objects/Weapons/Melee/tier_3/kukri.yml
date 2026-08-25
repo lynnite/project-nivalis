@@ -1,13 +1,13 @@
 - type: entity
-  name: Specialist Knife
+  name: Kukri
   parent: NivalisBaseSpear
-  id: NivalisSpecKnife
+  id: NivalisKukriT3
   description: Tier 3
   components:
   - type: Sprite
-    sprite: _Nivalis/Objects/Weapons/Melee/kukri.rsi
+    sprite: _Nivalis/Objects/Weapons/Melee/cknife.rsi
     layers:
     - state: icon
   - type: NivalisBleed
-    damagePerSecond: 0.5
+    damagePerSecond: 0.15
     duration: 40

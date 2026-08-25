@@ -28,7 +28,7 @@
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
   - type: NivalisBleed
-    damagePerSecond: 0.5
+    damagePerSecond: 0.15
     duration: 40
   - type: MeleeChemicalInjector
     solution: melee
@@ -122,7 +122,7 @@
     soundHit:
       path: /Audio/Weapons/smash.ogg
   - type: NivalisBleed
-    damagePerSecond: 0.5
+    damagePerSecond: 0.15
     duration: 40
   - type: MeleeChemicalInjector
     solution: melee
@@ -183,7 +183,7 @@
     failedParryPenalty: 0.5
     stunDuration: 1.5
   - type: NivalisBleed
-    damagePerSecond: 0.5
+    damagePerSecond: 0.15
     duration: 40
   - type: MeleeChemicalInjector
     solution: melee

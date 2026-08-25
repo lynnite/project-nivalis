@@ -8,6 +8,7 @@
     Asphyxiation: 0.0
     Bloodloss: 0.0 # no double dipping
     Blunt: 0.08
+    Bullet: 0.0 # gunshots bleed through the nivalis artery system, not upstream bloodloss
     Caustic: 0.0
     Cellular: 0.0
     Cold: 0.0

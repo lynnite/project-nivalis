@@ -7,8 +7,8 @@
   - type: StatusEffect
     whitelist:
       components:
-      - NivalisSurvivalResource
       - MobState
+      - Damageable
       requireAll: true
   - type: StatusEffectAlert
     alert: NivalisArtery

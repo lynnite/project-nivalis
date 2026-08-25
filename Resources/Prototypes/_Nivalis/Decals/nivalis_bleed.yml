@@ -1,0 +1,55 @@
+- type: decal
+  id: NivalisBloodFloor1
+  tags: ["dirty"]
+  defaultCleanable: true
+  sprite:
+    sprite: _Nivalis/Decals/blood.rsi
+    state: mfloor1
+
+- type: decal
+  id: NivalisBloodFloor2
+  tags: ["dirty"]
+  defaultCleanable: true
+  sprite:
+    sprite: _Nivalis/Decals/blood.rsi
+    state: mfloor2
+
+- type: decal
+  id: NivalisBloodFloor3
+  tags: ["dirty"]
+  defaultCleanable: true
+  sprite:
+    sprite: _Nivalis/Decals/blood.rsi
+    state: mfloor3
+
+- type: decal
+  id: NivalisBloodFloor4
+  tags: ["dirty"]
+  defaultCleanable: true
+  sprite:
+    sprite: _Nivalis/Decals/blood.rsi
+    state: mfloor4
+
+- type: decal
+  id: NivalisBloodFloor5
+  tags: ["dirty"]
+  defaultCleanable: true
+  sprite:
+    sprite: _Nivalis/Decals/blood.rsi
+    state: mfloor5
+
+- type: decal
+  id: NivalisBloodFloor6
+  tags: ["dirty"]
+  defaultCleanable: true
+  sprite:
+    sprite: _Nivalis/Decals/blood.rsi
+    state: mfloor6
+
+- type: decal
+  id: NivalisBloodFloor7
+  tags: ["dirty"]
+  defaultCleanable: true
+  sprite:
+    sprite: _Nivalis/Decals/blood.rsi
+    state: mfloor7

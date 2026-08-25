@@ -18,7 +18,7 @@ public sealed partial class NivalisArterySystem : EntitySystem
     public static readonly EntProtoId ArteryEffect = "StatusEffectNivalisArtery";
     public static readonly EntProtoId ImmunityEffect = "StatusEffectNivalisBleedImmunity";
 
-    private const float ArteryChance = 0.05f;
+    private const float ArteryChance = 0.1f;
     private const float ArteryBrutePerSecond = 1.0f;
 
     [Dependency] private DamageableSystem _damageable = default!;
@@ -36,22 +36,36 @@ public sealed partial class NivalisArterySystem : EntitySystem
         _damageQuery = GetEntityQuery<DamageableComponent>();
         _mobStateQuery = GetEntityQuery<MobStateComponent>();
 
-        SubscribeLocalEvent<ProjectileHitEvent>(OnProjectileHit);
+
+        SubscribeLocalEvent<DamageableComponent, DamageChangedEvent>(OnDamageChanged);
+        SubscribeLocalEvent<ProjectileComponent, ProjectileHitEvent>(OnProjectileHit);
     }
 
-    private void OnProjectileHit(ref ProjectileHitEvent args)
+    private void OnProjectileHit(Entity<ProjectileComponent> projectile, ref ProjectileHitEvent args)
     {
-        var target = args.Target;
-        if (!_mobStateQuery.HasComp(target) || !_damageQuery.HasComp(target))
+        RollArtery(args.Target, args.Shooter, args.Damage);
+    }
+
+    private void OnDamageChanged(Entity<DamageableComponent> damageable, ref DamageChangedEvent args)
+    {
+        RollArtery(damageable.Owner, args.Origin, args.DamageDelta);
+    }
+
+    private void RollArtery(EntityUid target, EntityUid? source, DamageSpecifier? damage)
+    {
+        if (damage == null)
             return;
 
-        if (!HasComp<NivalisSurvivalResourceComponent>(target))
+        if ((!damage.DamageDict.TryGetValue("Bullet", out var bulletDamage) || bulletDamage <= 0) &&
+            (!damage.DamageDict.TryGetValue("Piercing", out var piercingDamage) || piercingDamage <= 0))
+        {
             return;
+        }
 
         if (!_random.Prob(ArteryChance))
             return;
 
-        TryApplyArtery(target, args.Shooter);
+        TryApplyArtery(target, source);
     }
 
     public void TryApplyArtery(EntityUid target, EntityUid? source)
@@ -59,7 +73,13 @@ public sealed partial class NivalisArterySystem : EntitySystem
         if (!_mobStateQuery.HasComp(target) || !_damageQuery.HasComp(target))
             return;
 
-        _status.TrySetStatusEffectDuration(target, ArteryEffect, out _);
+        if (_status.HasStatusEffect(target, ImmunityEffect))
+            return;
+
+        if (_status.HasStatusEffect(target, ArteryEffect))
+            return;
+
+        _status.TrySetStatusEffectDuration(target, ArteryEffect, out _, null);
 
         var active = EnsureComp<NivalisArteryActiveComponent>(target);
         active.Source = source;
@@ -103,3 +123,4 @@ public sealed partial class NivalisArterySystem : EntitySystem
         }
     }
 }
+

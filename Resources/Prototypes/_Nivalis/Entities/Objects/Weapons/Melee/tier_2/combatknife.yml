@@ -9,5 +9,5 @@
     layers:
     - state: icon
   - type: NivalisBleed
-    damagePerSecond: 0.5
+    damagePerSecond: 0.15
     duration: 40

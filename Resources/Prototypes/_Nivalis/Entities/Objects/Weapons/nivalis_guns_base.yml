@@ -158,7 +158,7 @@
     impactEffect: BulletImpactEffect
     damage:
       types:
-        Piercing: 7
+        Bullet: 7
 
 - type: entity
   parent: BaseBullet
@@ -172,7 +172,7 @@
     impactEffect: BulletImpactEffect
     damage:
       types:
-        Piercing: 7
+        Bullet: 7
 
 - type: entity
   id: NivalisBulletTrail

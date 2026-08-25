@@ -52,6 +52,14 @@
   armorCoefficientPrice: 2
   armorFlatPrice: 10
 
+# Nivalis: kinetic guns deal "bullet" damage, which lurks under the brute group and can
+# sever arteries (unlike Piercing, which is purely a body type).
+- type: damageType
+  id: Bullet
+  name: damage-type-bullet
+  armorCoefficientPrice: 2
+  armorFlatPrice: 10
+
 # Poison damage. Generally caused by various reagents being metabolised.
 - type: damageType
   id: Poison

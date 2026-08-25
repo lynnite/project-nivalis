@@ -5,6 +5,7 @@
     - Blunt
     - Slash
     - Piercing
+    - Bullet
     - Melee
 
 - type: damageGroup

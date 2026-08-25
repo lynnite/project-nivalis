@@ -63,10 +63,14 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
         var muzzleXform = Transform(gun);
         var muzzle = _transformSystem.ToMapCoordinates(muzzleXform.Coordinates);
 
-        var projectile = args.FiredProjectiles[0];
-        if (TryComp<PhysicsComponent>(projectile, out var physics) &&
-            physics.LinearVelocity.LengthSquared() >= 0.01f)
+        foreach (var projectile in args.FiredProjectiles)
         {
+            if (!TryComp<PhysicsComponent>(projectile, out var physics) ||
+                physics.LinearVelocity.LengthSquared() < 0.01f)
+            {
+                continue;
+            }
+
             var trail = Spawn(NivalisBulletTrail, muzzle);
             var comp = EnsureComp<NivalisTrailComponent>(trail);
             comp.Target = projectile;

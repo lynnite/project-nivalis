@@ -184,7 +184,7 @@
     - shader: unshaded
       map: ["enum.EffectLayers.Unshaded"]
       sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/ballistichitscan.rsi
-      state: trail
+      state: trail_thin
       autoAnimated: false
   - type: Tag
     tags:

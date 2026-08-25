@@ -227,21 +227,19 @@
     fireRate: 4
     selectedMode: SemiAuto
     availableModes: [ SemiAuto ]
+    projectileSpeed: 80
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/pistol.ogg
     soundEmpty:
       path: /Audio/Weapons/Guns/Empty/empty.ogg
-  - type: NivalisAutoReload
-    reloadDelay: 2.0
-    soundMagOut:
-      path: /Audio/Weapons/Guns/MagOut/pistol_magout.ogg
-    soundMagIn:
-      path: /Audio/Weapons/Guns/MagIn/pistol_magin.ogg
-  - type: BasicEntityAmmoProvider
-    proto: BulletPistol
-    capacity: 8
-    count: 8
   - type: AmmoCounter
+  - type: NivalisPoolAmmoProvider
+  - type: NivalisGun
+    ammoType: Light
+    maxAmmo: 12
+    projectile: BallisticBulletBaseNivalis
+  - type: NivalisReload
+    reloadDelay: 1.5
   - type: Tag
     tags:
     - Sidearm

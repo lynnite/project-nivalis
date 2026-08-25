@@ -11,7 +11,7 @@ namespace Content.Shared._Nivalis.Weapons;
 /// </summary>
 /// <remarks>
 ///     Handles <see cref="TakeAmmoEvent"/> and <see cref="GetAmmoCountEvent"/> so the
-///     standard predicted gun firing pipeline works unchanged. The gun spawns the hitscan
+///     standard predicted gun firing pipeline works unchanged. The gun spawns the bullet
 ///     projectile declared on <see cref="NivalisGunComponent.Projectile"/>.
 /// </remarks>
 [RegisterComponent, NetworkedComponent]

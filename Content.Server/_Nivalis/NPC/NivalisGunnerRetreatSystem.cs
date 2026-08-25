@@ -4,7 +4,6 @@ using Content.Server.NPC.Systems;
 using Content.Shared._Nivalis.Weapons;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Components;
-using Content.Shared.Weapons.Ranged.Components;
 using Robust.Shared.Map;
 namespace Content.Server._Nivalis.NPC;
 
@@ -33,9 +32,10 @@ public sealed partial class NivalisGunnerRetreatSystem : EntitySystem
             var weaponDry = false;
             foreach (var item in _hands.EnumerateHeld(npc))
             {
-                if (TryComp<NivalisAutoReloadComponent>(item, out _) &&
-                    TryComp<BasicEntityAmmoProviderComponent>(item, out var ammo) &&
-                    ammo.Count is not null && ammo.Count <= 0)
+                if (TryComp<NivalisGunComponent>(item, out var gun) &&
+                    gun.MagazineCount <= 0 &&
+                    TryComp<NivalisAmmoPoolComponent>(npc, out var pool) &&
+                    pool.GetAmmo(gun.AmmoType) > 0)
                 {
                     weaponDry = true;
                     break;

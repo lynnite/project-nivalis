@@ -168,17 +168,14 @@ public sealed partial class GunSystem : SharedGunSystem
                 var spreadEvent = new GunGetAmmoSpreadEvent(ammoSpreadComp.Spread);
                 RaiseLocalEvent(gun, ref spreadEvent);
 
-                var angles = LinearSpread(mapAngle - spreadEvent.Spread / 2,
-                    mapAngle + spreadEvent.Spread / 2, ammoSpreadComp.Count);
-
-                ShootOrThrow(ammoEnt, angles[0].ToVec(), gunVelocity, gun, user);
-                shotProjectiles.Add(ammoEnt);
-
-                for (var i = 1; i < ammoSpreadComp.Count; i++)
+                // Each projectile gets its own random direction within the spread cone, so
+                // the scatter varies for every projectile in which direction it flies.
+                for (var i = 0; i < ammoSpreadComp.Count; i++)
                 {
-                    var newuid = Spawn(ammoSpreadComp.Proto, fromEnt);
-                    ShootOrThrow(newuid, angles[i].ToVec(), gunVelocity, gun, user);
-                    shotProjectiles.Add(newuid);
+                    var angle = mapAngle + Random.NextAngle(-spreadEvent.Spread / 2, spreadEvent.Spread / 2);
+                    var uid = i == 0 ? ammoEnt : Spawn(ammoSpreadComp.Proto, fromEnt);
+                    ShootOrThrow(uid, angle.ToVec(), gunVelocity, gun, user);
+                    shotProjectiles.Add(uid);
                 }
             }
             else
@@ -211,25 +208,6 @@ public sealed partial class GunSystem : SharedGunSystem
         }
 
         ShootProjectile(uid, mapDirection, gunVelocity, gun, user, gun.Comp.ProjectileSpeedModified);
-    }
-
-    /// <summary>
-    /// Gets a linear spread of angles between start and end.
-    /// </summary>
-    /// <param name="start">Start angle in degrees</param>
-    /// <param name="end">End angle in degrees</param>
-    /// <param name="intervals">How many shots there are</param>
-    private Angle[] LinearSpread(Angle start, Angle end, int intervals)
-    {
-        var angles = new Angle[intervals];
-        DebugTools.Assert(intervals > 1);
-
-        for (var i = 0; i <= intervals - 1; i++)
-        {
-            angles[i] = new Angle(start + (end - start) * i / (intervals - 1));
-        }
-
-        return angles;
     }
 
     private Angle GetRecoilAngle(TimeSpan curTime, GunComponent component, Angle direction)

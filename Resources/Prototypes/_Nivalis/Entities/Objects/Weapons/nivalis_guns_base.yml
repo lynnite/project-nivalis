@@ -16,12 +16,13 @@
     availableModes:
     - SemiAuto
     fireRate: 4
+    projectileSpeed: 80 # Very fast bullet projectiles (default is 40)
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/lmg.ogg
   - type: AmmoCounter
   - type: NivalisPoolAmmoProvider
   - type: NivalisGun
-    projectile: BallisticHitscanBaseNivalis
+    projectile: BallisticBulletBaseNivalis
   - type: NivalisReload
     reloadDelay: 2
     breakOnMove: false
@@ -56,7 +57,7 @@
   - type: NivalisGun
     ammoType: Light
     maxAmmo: 24
-    projectile: BallisticHitscanBaseNivalis
+    projectile: BallisticBulletBaseNivalis
 
 - type: entity
   parent: [BaseNivalisGun, BaseSecurityContraband]
@@ -91,7 +92,7 @@
   - type: NivalisGun
     ammoType: Medium
     maxAmmo: 40
-    projectile: BallisticHitscanBaseNivalis
+    projectile: BallisticBulletBaseNivalis
 
 - type: entity
   parent: [BaseNivalisGun, BaseSecurityContraband]
@@ -139,34 +140,6 @@
     projectile: NivalisScatterPelletBurst
 
 - type: entity
-  id: BasicHitscanNivalis
-  name: basic hitscan
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: HitscanAmmo
-  - type: HitscanBasicRaycast
-  - type: HitscanBasicVisuals
-    muzzleFlash:
-      sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/ballistichitscan.rsi
-      state: muzzle_laser
-    travelFlash:
-      sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/ballistichitscan.rsi
-      state: beam
-    impactFlash:
-      sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/ballistichitscan.rsi
-      state: impact_laser
-  - type: HitscanReflect
-  - type: HitscanBasicEffects
-
-- type: entity
-  parent: BasicHitscanNivalis
-  id: LaserHitscanBaseNivalis
-  name: basic laser ray
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: LaserProjectile
-
-- type: entity
   parent: BulletLaser
   id: NivalisScatterPelletBurst
   name: red scatter burst
@@ -182,18 +155,37 @@
     - state: scatter
       shader: unshaded
   - type: Projectile
-    impactEffect: BulletImpactEffectKinetic
+    impactEffect: BulletImpactEffect
     damage:
       types:
         Piercing: 7
 
 - type: entity
-  parent: LaserHitscanBaseNivalis
-  id: BallisticHitscanBaseNivalis
-  name: base bullet
+  parent: BaseBullet
+  id: BallisticBulletBaseNivalis
+  name: base fast bullet
   categories: [ HideSpawnMenu ]
+  description: A very fast kinetic round. You shouldn't be able to read this.
   components:
-  - type: HitscanBasicDamage
+  - type: Ammo
+  - type: Projectile
+    impactEffect: BulletImpactEffect
     damage:
       types:
         Piercing: 7
+
+- type: entity
+  id: NivalisBulletTrail
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    layers:
+    - shader: unshaded
+      map: ["enum.EffectLayers.Unshaded"]
+      sprite: _Nivalis/Objects/Weapons/Guns/Projectiles/ballistichitscan.rsi
+      state: trail_thin
+      autoAnimated: false
+  - type: Tag
+    tags:
+    - HideContextMenu

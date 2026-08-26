@@ -13,12 +13,6 @@ using System.Collections.Generic;
 
 namespace Content.Server._Nivalis.GameTicking.Rules;
 
-/// <summary>
-///     Handles the circle of storm clouds marked by <see cref="NivalisStormZoneComponent"/>.
-///     When the survival phase switches to <see cref="NivalisSurvivalPhase.Storm"/> the clouds
-///     activate; while active each one damages every entity with
-///     <see cref="NivalisSurvivorComponent"/> that is inside its radius.
-/// </summary>
 public sealed partial class NivalisStormSystem : EntitySystem
 {
     private static readonly EntProtoId CloudProto = "NivalisSmokeCloud";

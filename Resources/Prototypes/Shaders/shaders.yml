@@ -127,6 +127,16 @@
   path: "/Textures/Shaders/heatBlur.swsl"
 
 - type: shader
+  id: NivalisStormDistort
+  kind: source
+  path: "/Textures/Shaders/nivalis_storm_distort.swsl"
+
+- type: shader
+  id: NivalisStormMask
+  kind: source
+  path: "/Textures/Shaders/nivalis_storm_mask.swsl"
+
+- type: shader
   id: ScreechShockWave
   kind: source
   path: "/Textures/Shaders/screech_shock_wave.swsl"

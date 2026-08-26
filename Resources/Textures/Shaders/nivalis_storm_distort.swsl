@@ -1,0 +1,21 @@
+uniform sampler2D SCREEN_TEXTURE;
+uniform sampler2D NOISE_TEXTURE;
+
+uniform highp float grainScale;
+uniform highp float intensity;
+
+void fragment()
+{
+    highp vec2 grainUV = floor(UV * grainScale) / grainScale;
+    highp float n = texture2D(NOISE_TEXTURE, fract(grainUV * 3.0 + vec2(TIME * 0.4, TIME * 0.25))).r;
+
+    const highp vec3 white = vec3(0.92, 0.94, 0.98);
+
+    highp vec3 screen = zTextureSpec(SCREEN_TEXTURE, UV).rgb;
+
+    highp float strength = clamp(n * intensity, 0.0, 1.0);
+    screen = mix(screen, white, strength * 0.30);
+    screen = clamp(screen + vec3(0.10 * intensity), 0.0, 1.0);
+
+    COLOR = vec4(screen, 1.0);
+}

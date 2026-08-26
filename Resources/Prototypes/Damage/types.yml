@@ -85,6 +85,14 @@
   armorCoefficientPrice: 2
   armorFlatPrice: 10
 
+# Nivalis: the survival storm. A raw elemental/brutal environmental damage type that
+# lurches under the brute group. Not mitigated by conventional brute armor necessarily.
+- type: damageType
+  id: Storm
+  name: damage-type-storm
+  armorCoefficientPrice: 2
+  armorFlatPrice: 10
+
 - type: damageType
   id: Melee
   name: damage-type-melee

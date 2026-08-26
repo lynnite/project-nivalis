@@ -1,0 +1,12 @@
+- type: entity
+  id: NivalisStormZone
+  parent: MarkerBase
+  name: Storm Zone
+  suffix: Nivalis
+  description: A map-marker that becomes an active storm cloud once the storm phase begins. Survivors inside take ongoing storm damage.
+  components:
+  - type: NivalisStormZone
+    radius: 1
+    stormDamagePerSecond: 5
+    damageInterval: 1
+

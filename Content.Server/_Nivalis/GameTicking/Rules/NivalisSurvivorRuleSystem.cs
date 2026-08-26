@@ -12,6 +12,7 @@ using Content.Server._Nivalis.GameTicking.Rules.Components;
 using Content.Server._Nivalis.Survivor.Components;
 using Content.Shared._Nivalis.GameTicking.Components;
 using Content.Shared._Nivalis.Combat;
+using Content.Shared._Nivalis.Environment;
 using Content.Shared._Nivalis.Morale;
 using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Stamina;
@@ -34,12 +35,6 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server._Nivalis.GameTicking.Rules;
 
-/// <summary>
-///     Game rule system for the Nivalis Survivor gamemode.
-///     Every joining player (round start and late-join) is spawned on a specific
-///     mapping-only marker and forced into the Survivor role. The round ends once
-///     no living entity with a <see cref="NivalisSurvivorComponent"/> remains.
-/// </summary>
 public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSurvivorRuleComponent>
 {
     [Dependency] private MindSystem _mind = default!;
@@ -156,6 +151,8 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
 
         EnsureComp<NivalisSurvivorComponent>(mob);
 
+        EnsureComp<NivalisEnvironmentImmunityComponent>(mob);
+
         EnsureComp<NivalisPerkComponent>(mob);
 
         EnsureComp<NivalisSurvivalResourceComponent>(mob);
@@ -168,7 +165,6 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         ff.Team = NivalisCombatTeam.Survivor;
         Dirty(mob, ff);
 
-        // Grants the survivor the shared ammo pool, HUD action button and ammo menu BUI.
         EnsureComp<NivalisAmmoHudComponent>(mob);
 
         var ui = EnsureComp<UserInterfaceComponent>(mob);

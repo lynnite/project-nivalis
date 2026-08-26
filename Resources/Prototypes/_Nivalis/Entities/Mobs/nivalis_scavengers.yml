@@ -12,6 +12,7 @@
   - type: NivalisFriendlyFire
     team: Scavenger
   - type: NivalisNoCritical
+  - type: NivalisEnvironmentImmunity
   - type: InputMover
   - type: MobMover
   - type: NivalisAmmoPool

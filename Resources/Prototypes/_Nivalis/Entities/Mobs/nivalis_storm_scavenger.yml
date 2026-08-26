@@ -8,6 +8,7 @@
     factions:
       - Syndicate
   - type: NivalisStormEnemy
+  - type: NivalisEnvironmentImmunity
   - type: Loadout
     prototypes:
       - SyndicateFootsoldierGearRuinNivalis

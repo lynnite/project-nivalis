@@ -1,0 +1,14 @@
+- type: entity
+  id: NivalisSmokeCloud
+  name: storm smoke
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: Effects
+    sprite: Effects/chemsmoke.rsi
+    state: chemsmoke_white
+    scale: "2, 2"
+  - type: NivalisSmokeCloud
+  - type: Transform
+    anchored: true

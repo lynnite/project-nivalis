@@ -1,0 +1,29 @@
+light_mode unshaded;
+
+uniform highp vec2 viewportSize;
+uniform highp vec2 center;
+uniform highp vec3 whiteColor;
+uniform highp float maxAlpha;
+uniform highp float innerRadius;
+uniform highp float outerRadius;
+
+void fragment()
+{
+    highp vec2 p = UV * viewportSize;
+    highp float dist = length(p - center);
+
+    if (dist < innerRadius)
+    {
+        COLOR = vec4(whiteColor, 0.0);
+    }
+    else if (dist >= outerRadius)
+    {
+        COLOR = vec4(whiteColor, maxAlpha);
+    }
+    else
+    {
+        highp float t = (dist - innerRadius) / (outerRadius - innerRadius);
+        highp float alpha = maxAlpha * smoothstep(0.0, 1.0, clamp(t, 0.0, 1.0));
+        COLOR = vec4(whiteColor, alpha);
+    }
+}

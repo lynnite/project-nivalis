@@ -1,0 +1,67 @@
+- type: entity
+  id: NivalisMuzzleFlashBase
+  abstract: true
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: BelowMobs
+    layers:
+    - shader: unshaded
+      map: [ "enum.EffectLayers.Unshaded" ]
+    - shader: unshaded
+      map: [ "enum.EffectLayers.Smoke" ]
+  - type: TimedDespawn
+    lifetime: 0.4
+  - type: Tag
+    tags:
+    - HideContextMenu
+  - type: AnimationPlayer
+  - type: EffectVisuals
+
+- type: entity
+  parent: NivalisMuzzleFlashBase
+  id: NivalisMuzzleFlashPistol
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - shader: unshaded
+      map: [ "enum.EffectLayers.Smoke" ]
+      sprite: _Nivalis/Objects/Effects/MuzzleFlash/pistol.rsi
+      state: smoke
+    - shader: unshaded
+      map: [ "enum.EffectLayers.Unshaded" ]
+      sprite: _Nivalis/Objects/Effects/MuzzleFlash/pistol.rsi
+      state: muzzle_bullet
+
+- type: entity
+  parent: NivalisMuzzleFlashBase
+  id: NivalisMuzzleFlashRifle
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - shader: unshaded
+      map: [ "enum.EffectLayers.Smoke" ]
+      sprite: _Nivalis/Objects/Effects/MuzzleFlash/rifle.rsi
+      state: smoke
+    - shader: unshaded
+      map: [ "enum.EffectLayers.Unshaded" ]
+      sprite: _Nivalis/Objects/Effects/MuzzleFlash/rifle.rsi
+      state: muzzle_bullet
+
+- type: entity
+  parent: NivalisMuzzleFlashBase
+  id: NivalisMuzzleFlashShotgun
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - shader: unshaded
+      map: [ "enum.EffectLayers.Smoke" ]
+      sprite: _Nivalis/Objects/Effects/MuzzleFlash/shotgun.rsi
+      state: smoke
+    - shader: unshaded
+      map: [ "enum.EffectLayers.Unshaded" ]
+      sprite: _Nivalis/Objects/Effects/MuzzleFlash/shotgun.rsi
+      state: muzzle_bullet

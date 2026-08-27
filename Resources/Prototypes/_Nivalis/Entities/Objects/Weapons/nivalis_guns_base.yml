@@ -57,7 +57,7 @@
   - type: NivalisGun
     ammoType: Light
     maxAmmo: 24
-    projectile: BallisticBulletBaseNivalis
+    projectile: NivalisBulletLight
 
 - type: entity
   parent: [BaseNivalisGun, BaseSecurityContraband]
@@ -92,7 +92,7 @@
   - type: NivalisGun
     ammoType: Medium
     maxAmmo: 40
-    projectile: BallisticBulletBaseNivalis
+    projectile: NivalisBulletMedium
 
 - type: entity
   parent: [BaseNivalisGun, BaseSecurityContraband]
@@ -137,7 +137,7 @@
     ammoType: Shell
     maxAmmo: 8
     reloadAmount: 1
-    projectile: NivalisScatterPelletBurst
+    projectile: NivalisScatterPelletBurstShell
 
 - type: entity
   parent: BulletLaser
@@ -159,6 +159,24 @@
     damage:
       types:
         Bullet: 7
+
+# Shell burst fired by Nivalis shotguns, carrying the shotgun muzzle flash.
+- type: entity
+  parent: NivalisScatterPelletBurst
+  id: NivalisScatterPelletBurstShell
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Ammo
+    muzzleFlash: NivalisMuzzleFlashShotgun
+
+# Medium ammunition projectile fired by rifle-class Nivalis guns, with the rifle muzzle flash.
+- type: entity
+  parent: BallisticBulletBaseNivalis
+  id: NivalisBulletMedium
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Ammo
+    muzzleFlash: NivalisMuzzleFlashRifle
 
 - type: entity
   parent: BaseBullet

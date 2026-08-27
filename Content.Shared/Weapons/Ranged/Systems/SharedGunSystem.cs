@@ -708,6 +708,7 @@ public record struct ShooterImpulseEvent()
 public enum EffectLayers : byte
 {
     Unshaded,
+    Smoke,
 }
 
 [Serializable, NetSerializable]

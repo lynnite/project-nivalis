@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-4.0",
+  "copyright": "icon by matchy. on discord, modified by lynnite, inhands by lynnite",
+  "size": {
+      "x": 32,
+      "y": 32
+  },
+  "states": [
+        {
+            "name": "icon"
+        },
+        {
+            "name": "inhand-left"
+        },
+        {
+            "name": "inhand-right"
+        }
+  ]
+}

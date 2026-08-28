@@ -53,6 +53,11 @@ public record struct HitscanRaycastFiredData
     public EntityUid? HitEntity;
 
     /// <summary>
+    /// nivalis
+    /// </summary>
+    public EntityUid? Target;
+
+    /// <summary>
     /// Gun that fired the raycast.
     /// </summary>
     public EntityUid Gun;

@@ -1,0 +1,78 @@
+- type: entity
+  parent: [BaseNivalisGun]
+  id: NivalisAjm9
+  name: A.J.M. 9
+  suffix: Nivalis
+  description: Short
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Guns/Short/ajm.rsi
+    layers:
+    - state: icon
+  - type: Clothing
+    sprite: _Nivalis/Objects/Weapons/Guns/Short/ajm.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Item
+    size: Small
+    sprite: _Nivalis/Objects/Weapons/Guns/Short/ajm.rsi
+  - type: Gun
+    selectedMode: Burst
+    availableModes:
+    - Burst
+    fireRate: 15.8
+    burstFireRate: 15.8
+    burstCooldown: 0.06
+    shotsPerBurst: 3
+    projectileSpeed: 100
+    cameraRecoilScalar: 0.15
+    minAngle: 0
+    maxAngle: 8
+    angleIncrease: 3.2
+    angleDecay: 8
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/laser.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/empty.ogg
+  - type: AmmoCounter
+  - type: NivalisPoolAmmoProvider
+  - type: NivalisGun
+    ammoType: Short
+    maxAmmo: 21
+    projectile: NivalisLaserAjm
+    limbDamage:
+      types:
+        Heat: 20
+    headshotDamage:
+      types:
+        Heat: 65
+  - type: NivalisReload
+    reloadDelay: 1.9
+    breakOnMove: false
+    walkSpeedMultiplier: 0.75
+    sprintSpeedMultiplier: 0.75
+
+- type: entity
+  parent: LaserHitscanBase
+  id: NivalisLaserAjm
+  name: red omni beam
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: HitscanBasicDamage
+    damage:
+      types:
+        Heat: 20
+  - type: NivalisHitscanHeadshot
+  - type: HitscanBasicVisuals
+    muzzleFlash:
+      sprite: Objects/Weapons/Guns/Projectiles/projectiles.rsi
+      state: muzzle_omni
+    travelFlash:
+      sprite: Objects/Weapons/Guns/Projectiles/projectiles.rsi
+      state: beam_omni
+    impactFlash:
+      sprite: Objects/Weapons/Guns/Projectiles/projectiles.rsi
+      state: impact_omni
+

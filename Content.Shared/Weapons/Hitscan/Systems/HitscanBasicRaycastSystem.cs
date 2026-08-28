@@ -67,6 +67,7 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
             Gun = args.Gun,
             Hitscan = ent.Owner,
             Shooter = args.Shooter,
+            Target = args.Target,
             HitEntity = result?.HitEntity,
         };
 

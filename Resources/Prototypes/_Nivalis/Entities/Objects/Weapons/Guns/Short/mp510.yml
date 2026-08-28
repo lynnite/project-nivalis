@@ -1,0 +1,61 @@
+- type: entity
+  parent: [BaseNivalisGun, BaseSecurityContraband]
+  id: NivalisMp510
+  name: H&K MP5/10
+  suffix: Nivalis
+  description: Short
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Guns/Short/mp510.rsi
+    layers:
+    - state: icon
+  - type: Clothing
+    sprite: _Nivalis/Objects/Weapons/Guns/Short/mp510.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Item
+    size: Normal
+    sprite: _Nivalis/Objects/Weapons/Guns/Short/mp510.rsi
+  - type: Gun
+    selectedMode: FullAuto
+    availableModes:
+    - SemiAuto
+    - FullAuto
+    fireRate: 13.33
+    projectileSpeed: 90
+    cameraRecoilScalar: 0.7
+    minAngle: 0
+    maxAngle: 3.5
+    angleIncrease: 3
+    angleDecay: 8
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/smg.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/empty.ogg
+  - type: AmmoCounter
+  - type: NivalisPoolAmmoProvider
+  - type: NivalisGun
+    ammoType: Short
+    maxAmmo: 30
+    projectile: NivalisBulletShort
+    limbDamage:
+      types:
+        Bullet: 23
+    headshotDamage:
+      types:
+        Bullet: 58
+  - type: NivalisReload
+    reloadDelay: 2
+    breakOnMove: false
+    walkSpeedMultiplier: 0.6
+    sprintSpeedMultiplier: 0.6
+
+- type: entity
+  parent: BallisticBulletBaseNivalis
+  id: NivalisBulletShort
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Ammo
+    muzzleFlash: NivalisMuzzleFlashRifle

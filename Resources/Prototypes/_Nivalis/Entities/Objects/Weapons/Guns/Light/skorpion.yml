@@ -1,0 +1,53 @@
+- type: entity
+  parent: [BaseNivalisGun, BaseMinorContraband]
+  id: NivalisSkorpion
+  name: Skorpion vz. 61
+  suffix: Nivalis
+  description: Light
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Guns/Light/skorpion.rsi
+    layers:
+    - state: icon
+  - type: Clothing
+    sprite: _Nivalis/Objects/Weapons/Guns/Light/skorpion.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Item
+    size: Small
+    sprite: _Nivalis/Objects/Weapons/Guns/Light/skorpion.rsi
+  - type: Gun
+    selectedMode: FullAuto
+    availableModes:
+    - SemiAuto
+    - FullAuto
+    fireRate: 14.2
+    projectileSpeed: 85
+    cameraRecoilScalar: 0.45
+    minAngle: 0
+    maxAngle: 3
+    angleIncrease: 2.2
+    angleDecay: 9
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/smg.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/empty.ogg
+  - type: AmmoCounter
+  - type: NivalisPoolAmmoProvider
+  - type: NivalisGun
+    ammoType: Light
+    maxAmmo: 30
+    projectile: NivalisBulletLight
+    limbDamage:
+      types:
+        Bullet: 12
+    headshotDamage:
+      types:
+        Bullet: 30
+  - type: NivalisReload
+    reloadDelay: 2
+    breakOnMove: false
+    walkSpeedMultiplier: 0.6
+    sprintSpeedMultiplier: 0.6

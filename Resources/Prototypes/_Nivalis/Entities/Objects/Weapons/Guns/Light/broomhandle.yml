@@ -1,0 +1,60 @@
+- type: entity
+  parent: [BaseNivalisGun]
+  id: NivalisBroomhandle
+  name: .22 Broomhandle
+  suffix: Nivalis
+  description: Light
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Guns/Light/broomhandle.rsi
+    layers:
+    - state: icon
+  - type: Clothing
+    sprite: _Nivalis/Objects/Weapons/Guns/Light/broomhandle.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Item
+    size: Small
+    sprite: _Nivalis/Objects/Weapons/Guns/Light/broomhandle.rsi
+  - type: Gun
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    fireRate: 3.2
+    projectileSpeed: 80
+    cameraRecoilScalar: 0.4
+    minAngle: 0
+    maxAngle: 2.5
+    angleIncrease: 1.2
+    angleDecay: 5
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/pistol.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/empty.ogg
+  - type: AmmoCounter
+  - type: NivalisPoolAmmoProvider
+  - type: NivalisGun
+    ammoType: Light
+    maxAmmo: 10
+    projectile: NivalisBulletLight
+    limbDamage:
+      types:
+        Bullet: 8
+    headshotDamage:
+      types:
+        Bullet: 17
+  - type: NivalisReload
+    reloadDelay: 1.5
+    breakOnMove: false
+    walkSpeedMultiplier: 0.8
+    sprintSpeedMultiplier: 0.8
+
+- type: entity
+  parent: BallisticBulletBaseNivalis
+  id: NivalisBulletLight
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Ammo
+    muzzleFlash: NivalisMuzzleFlashPistol

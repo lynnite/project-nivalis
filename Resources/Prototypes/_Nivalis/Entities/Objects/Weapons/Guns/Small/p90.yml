@@ -1,0 +1,64 @@
+- type: entity
+  parent: [BaseNivalisGun]
+  id: NivalisP90
+  name: P90 PDW
+  suffix: Nivalis
+  description: Small
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Guns/Small/P90.rsi
+    layers:
+    - state: icon
+  - type: Clothing
+    sprite: _Nivalis/Objects/Weapons/Guns/Small/P90.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Item
+    size: Normal
+    sprite: _Nivalis/Objects/Weapons/Guns/Small/P90.rsi
+    shape:
+    - 0,0,2,0
+    - 0,1,1,1
+  - type: Gun
+    selectedMode: FullAuto
+    availableModes:
+    - SemiAuto
+    - FullAuto
+    fireRate: 8
+    projectileSpeed: 85
+    cameraRecoilScalar: 0.55
+    minAngle: 0
+    maxAngle: 4
+    angleIncrease: 2.2
+    angleDecay: 8
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/smg.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/empty.ogg
+  - type: AmmoCounter
+  - type: NivalisPoolAmmoProvider
+  - type: NivalisGun
+    ammoType: Small
+    maxAmmo: 50
+    projectile: NivalisBulletSmall
+    limbDamage:
+      types:
+        Bullet: 7
+    headshotDamage:
+      types:
+        Bullet: 16
+  - type: NivalisReload
+    reloadDelay: 2.2
+    breakOnMove: false
+    walkSpeedMultiplier: 0.65
+    sprintSpeedMultiplier: 0.65
+
+- type: entity
+  parent: BallisticBulletBaseNivalis
+  id: NivalisBulletSmall
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Ammo
+    muzzleFlash: NivalisMuzzleFlashRifle

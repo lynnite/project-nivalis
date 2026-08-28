@@ -1,0 +1,52 @@
+- type: entity
+  parent: [BaseNivalisGun]
+  id: NivalisStiCustom
+  name: STI Custom
+  suffix: Nivalis
+  description: Light
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Guns/Light/sticustom.rsi
+    layers:
+    - state: icon
+  - type: Clothing
+    sprite: _Nivalis/Objects/Weapons/Guns/Light/sticustom.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Item
+    size: Small
+    sprite: _Nivalis/Objects/Weapons/Guns/Light/sticustom.rsi
+  - type: Gun
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    fireRate: 2.8
+    projectileSpeed: 90
+    cameraRecoilScalar: 0.6
+    minAngle: 0
+    maxAngle: 1.2
+    angleIncrease: 0.6
+    angleDecay: 6
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/pistol.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/empty.ogg
+  - type: AmmoCounter
+  - type: NivalisPoolAmmoProvider
+  - type: NivalisGun
+    ammoType: Light
+    maxAmmo: 9
+    projectile: NivalisBulletLight
+    limbDamage:
+      types:
+        Bullet: 10
+    headshotDamage:
+      types:
+        Bullet: 24
+  - type: NivalisReload
+    reloadDelay: 1.6
+    breakOnMove: false
+    walkSpeedMultiplier: 0.8
+    sprintSpeedMultiplier: 0.8

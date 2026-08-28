@@ -1,3 +1,4 @@
+using Content.Shared.Damage;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
@@ -26,5 +27,10 @@ public sealed partial class NivalisGunComponent : Component
 
     [DataField, AutoNetworkedField]
     public int ReloadAmount = 0;
-}
 
+    [DataField]
+    public DamageSpecifier? LimbDamage;
+
+    [DataField]
+    public DamageSpecifier? HeadshotDamage;
+}

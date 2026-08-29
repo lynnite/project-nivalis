@@ -1,5 +1,6 @@
 using Content.Shared._Nivalis.GameTicking.Components;
 using Content.Shared._Nivalis.Survivor.Components;
+using Content.Shared.Alert;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Prototypes;
@@ -16,16 +17,19 @@ namespace Content.Server._Nivalis.GameTicking.Rules;
 public sealed partial class NivalisStormSystem : EntitySystem
 {
     private static readonly EntProtoId CloudProto = "NivalisSmokeCloud";
+    private static readonly ProtoId<AlertPrototype> StormToxinsAlert = "NivalisStormToxins";
 
     [Dependency] private EntityLookupSystem _lookup = default!;
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private SharedTransformSystem _xforms = default!;
     [Dependency] private IPrototypeManager _protos = default!;
     [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private AlertsSystem _alerts = default!;
 
     private EntityQuery<DamageableComponent> _damageQuery = default!;
     private EntityQuery<NivalisSurvivorComponent> _survivorQuery = default!;
     private readonly Dictionary<EntityUid, EntityUid> _clouds = new();
+    private readonly HashSet<EntityUid> _alertedSurvivors = new();
 
     public override void Initialize()
     {
@@ -67,17 +71,24 @@ public sealed partial class NivalisStormSystem : EntitySystem
         ent.Comp.Active = active;
         ent.Comp.NextTick = _timing.CurTime + TimeSpan.FromSeconds(ent.Comp.DamageInterval);
         Dirty(ent);
+
+        if (!active)
+            ClearAlertedSurvivors();
     }
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
+        var nextAlerted = new HashSet<EntityUid>();
+
         var query = EntityQueryEnumerator<NivalisStormZoneComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out var zone, out var xform))
         {
             if (!zone.Active)
                 continue;
+
+            AlertSurvivorsInZone((uid, zone), xform, nextAlerted);
 
             if (_timing.CurTime < zone.NextTick)
                 continue;
@@ -87,6 +98,44 @@ public sealed partial class NivalisStormSystem : EntitySystem
 
             DamageSurvivorsInZone((uid, zone), xform);
         }
+
+        foreach (var ent in _alertedSurvivors)
+        {
+            if (!nextAlerted.Contains(ent))
+                _alerts.ClearAlert(ent, StormToxinsAlert);
+        }
+
+        _alertedSurvivors.Clear();
+        _alertedSurvivors.UnionWith(nextAlerted);
+    }
+
+    private void AlertSurvivorsInZone(Entity<NivalisStormZoneComponent> ent, TransformComponent xform, HashSet<EntityUid> nextAlerted)
+    {
+        if (xform.MapID == MapId.Nullspace)
+            return;
+
+        var worldPos = _xforms.GetWorldPosition(xform);
+        var targets = _lookup.GetEntitiesInRange(xform.MapID, worldPos, ent.Comp.Radius);
+
+        if (targets.Count == 0)
+            return;
+
+        foreach (var target in targets)
+        {
+            if (!_survivorQuery.HasComp(target))
+                continue;
+
+            nextAlerted.Add(target);
+            _alerts.ShowAlert(target, StormToxinsAlert);
+        }
+    }
+
+    private void ClearAlertedSurvivors()
+    {
+        foreach (var ent in _alertedSurvivors)
+            _alerts.ClearAlert(ent, StormToxinsAlert);
+
+        _alertedSurvivors.Clear();
     }
 
     private void DamageSurvivorsInZone(Entity<NivalisStormZoneComponent> ent, TransformComponent xform)

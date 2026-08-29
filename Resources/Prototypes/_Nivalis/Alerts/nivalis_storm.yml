@@ -1,0 +1,9 @@
+- type: alert
+  id: NivalisStormToxins
+  icons:
+  - sprite: /Textures/Interface/Alerts/toxins.rsi
+    state: icon
+  name: nivalis-alert-storm-toxins-name
+  description: nivalis-alert-storm-toxins-desc
+
+

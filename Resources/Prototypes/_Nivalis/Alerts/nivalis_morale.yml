@@ -1,16 +1,18 @@
 - type: alert
   id: NivalisMorale
-  # Placeholder
   icons:
-  - sprite: /Textures/Interface/Alerts/human_alive.rsi
-    state: health4 # High
-  - sprite: /Textures/Interface/Alerts/human_alive.rsi
-    state: health3 # Normal
-  - sprite: /Textures/Interface/Alerts/human_alive.rsi
-    state: health1 # Low
-  - sprite: /Textures/Interface/Alerts/human_critical.rsi
-    state: critical # Critical
+  - sprite: /Textures/Interface/Alerts/morale.rsi
+    state: icon # 0 stacks
+  - sprite: /Textures/Interface/Alerts/morale.rsi
+    state: icon2 # 1 stack
+  - sprite: /Textures/Interface/Alerts/morale.rsi
+    state: icon3 # 2 stacks
+  - sprite: /Textures/Interface/Alerts/morale.rsi
+    state: icon4 # 3 stacks
+  - sprite: /Textures/Interface/Alerts/morale.rsi
+    state: icon5 # 4 stacks
   name: nivalis-alert-morale-name
   description: nivalis-alert-morale-desc
   minSeverity: 0
-  maxSeverity: 3
+  maxSeverity: 4
+

@@ -37,14 +37,14 @@
   name: nivalis-fracture-arm-alert-name
   description: nivalis-fracture-arm-alert-desc
   icons:
-  - sprite: /Textures/Interface/Alerts/bleed.rsi
-    state: bleed0
+  - sprite: /Textures/_Nivalis/Interface/Alerts/fractures.rsi
+    state: fracture
 
 - type: alert
   id: NivalisFractureLeg
   name: nivalis-fracture-leg-alert-name
   description: nivalis-fracture-leg-alert-desc
   icons:
-  - sprite: /Textures/Interface/Alerts/bleed.rsi
-    state: bleed1
+  - sprite: /Textures/_Nivalis/Interface/Alerts/fractures.rsi
+    state: cripple
 

@@ -5,8 +5,8 @@
   id: BaseAlertOrder
   order:
     - category: Health
-    - category: Stamina
     - alertType: NivalisMorale
+    - alertType: NivalisStormToxins
     - alertType: SuitPower
     - category: Internals
     - alertType: Fire
@@ -22,8 +22,6 @@
     - category: Pressure
     - alertType: Bleed
     - category: Temperature
-    - category: Hunger
-    - category: Thirst
     - alertType: Magboots
     - alertType: Rooted
     - alertType: Pacified

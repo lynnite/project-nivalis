@@ -1,23 +1,19 @@
-using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Stamina;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.StatusEffectNew;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
 
 namespace Content.Server._Nivalis.Stamina;
 
-/// <summary>
-///     Handles exhaustion and sprint
-///     Sprinting drains <see cref="NivalisStaminaComponent"/>. When the pool falls below the
-///     exhaustion threshold the mob is slowed until it recovers above the threshold
-/// </summary>
 public sealed partial class NivalisStaminaSystem : EntitySystem
 {
     public static readonly EntProtoId ExhaustionEffect = "StatusEffectNivalisExhaustion";
 
     [Dependency] private MovementModStatusSystem _movementMod = default!;
     [Dependency] private StatusEffectsSystem _status = default!;
+    [Dependency] private IGameTiming _timing = default!;
     private EntityQuery<InputMoverComponent> _inputQuery = default!;
 
     public override void Initialize()
@@ -33,15 +29,14 @@ public sealed partial class NivalisStaminaSystem : EntitySystem
     private void OnMapInit(Entity<NivalisStaminaComponent> ent, ref MapInitEvent args)
     {
         ent.Comp.Current = ent.Comp.Max;
+        ent.Comp.Exhaustion = 0f;
         UpdateExhaustion(ent);
         Dirty(ent);
     }
 
     private void OnShutdown(Entity<NivalisStaminaComponent> ent, ref ComponentShutdown args)
     {
-        if (_status.TryRemoveStatusEffect(ent.Owner, ExhaustionEffect))
-        {
-        }
+        _status.TryRemoveStatusEffect(ent.Owner, ExhaustionEffect);
     }
 
     public override void Update(float frameTime)
@@ -56,36 +51,37 @@ public sealed partial class NivalisStaminaSystem : EntitySystem
 
             var sprinting = _inputQuery.TryGetComponent(uid, out var input) && input.Sprinting;
 
-            if (sprinting && !comp.Exhausted)
+            if (sprinting)
             {
-                TryComp<NivalisPerkComponent>(uid, out var perks);
-                var drain = comp.SprintDrain * (perks?.StaminaDrainMult ?? 1f);
-                comp.Current = MathF.Max(comp.ExhaustionThreshold * comp.Max, comp.Current - drain * frameTime);
-                if (comp.Current <= comp.ExhaustionThreshold * comp.Max)
-                    UpdateExhaustion((uid, comp), exhausted: true);
+                comp.Exhaustion = MathF.Min(comp.ExhaustionMax, comp.Exhaustion + comp.SprintExhaustionDrain * frameTime);
+                comp.LastExertion = _timing.CurTime;
             }
             else
             {
-                comp.Current = MathF.Min(comp.Max, comp.Current + comp.RecoveryRate * frameTime);
-                if (comp.Exhausted && comp.Current >= comp.ExhaustionThreshold * comp.Max)
-                    UpdateExhaustion((uid, comp), exhausted: false);
+                if (_timing.CurTime - comp.LastExertion >= TimeSpan.FromSeconds(comp.RegenDelay))
+                {
+                    comp.Current = MathF.Min(comp.Max, comp.Current + comp.RecoveryRate * frameTime);
+                    comp.Exhaustion = MathF.Max(0f, comp.Exhaustion - comp.ExhaustionRecoveryRate * frameTime);
+                }
             }
+
+            UpdateExhaustion((uid, comp));
 
             Dirty(uid, comp);
         }
     }
 
-    private void UpdateExhaustion(Entity<NivalisStaminaComponent> ent, bool? exhausted = null)
+    private void UpdateExhaustion(Entity<NivalisStaminaComponent> ent)
     {
-        var shouldBeExhausted = exhausted ?? ent.Comp.Current <= ent.Comp.ExhaustionThreshold * ent.Comp.Max;
-        if (ent.Comp.Exhausted == shouldBeExhausted)
+        var shouldBeExhausted = ent.Comp.Exhaustion >= ent.Comp.ExhaustionMax;
+        if (ent.Comp.Exhausted == shouldBeExhausted && !shouldBeExhausted)
             return;
 
         ent.Comp.Exhausted = shouldBeExhausted;
 
         if (shouldBeExhausted)
         {
-            _movementMod.TryAddMovementSpeedModDuration(ent.Owner, ExhaustionEffect, TimeSpan.FromSeconds(30), 0.6f, 0.8f);
+            _movementMod.TryAddMovementSpeedModDuration(ent.Owner, ExhaustionEffect, TimeSpan.FromSeconds(30), 0.8f, 0.6f);
         }
         else
         {

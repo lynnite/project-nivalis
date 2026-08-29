@@ -41,10 +41,10 @@
     projectile: NivalisBulletLight
     limbDamage:
       types:
-        Bullet: 8
+        Bullet: 16
     headshotDamage:
       types:
-        Bullet: 17
+        Bullet: 29
   - type: NivalisReload
     reloadDelay: 1.5
     breakOnMove: false

@@ -24,6 +24,7 @@ using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
+using Content.Shared.Movement.Components;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using Content.Shared.UserInterface;
@@ -158,6 +159,10 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         EnsureComp<NivalisSurvivalResourceComponent>(mob);
         EnsureComp<NivalisStaminaComponent>(mob);
         EnsureComp<NivalisMoraleComponent>(mob);
+
+        var mover = EnsureComp<InputMoverComponent>(mob);
+        mover.SprintInverted = true;
+        Dirty(mob, mover);
 
         _nivalisHands.EnsureHandCount(mob, 4);
 

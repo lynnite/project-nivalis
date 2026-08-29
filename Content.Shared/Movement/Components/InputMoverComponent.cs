@@ -78,12 +78,17 @@ namespace Content.Shared.Movement.Components
         [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
         public TimeSpan LerpTarget;
 
+        [DataField]
+        public bool SprintInverted;
+
         public const float LerpTime = 1.0f;
         public const float SprintingSoundModifier = 3.5f;
         public const float WalkingSoundModifier = 1.5f;
 
         [ViewVariables]
-        public bool Sprinting => (HeldMoveButtons & MoveButtons.Walk) == 0x0;
+        public bool Sprinting => SprintInverted
+            ? (HeldMoveButtons & MoveButtons.Walk) != 0x0
+            : (HeldMoveButtons & MoveButtons.Walk) == 0x0;
 
         [ViewVariables(VVAccess.ReadWrite)]
         public bool CanMove = true;
@@ -94,9 +99,11 @@ namespace Content.Shared.Movement.Components
     {
         public MoveButtons HeldMoveButtons;
         public NetEntity? RelativeEntity;
-        public Angle TargetRelativeRotation;
         public Angle RelativeRotation;
+        public Angle TargetRelativeRotation;
         public TimeSpan LerpTarget;
         public bool CanMove;
+        public bool SprintInverted;
     }
 }
+

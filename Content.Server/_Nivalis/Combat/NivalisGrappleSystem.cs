@@ -1,6 +1,7 @@
 using Content.Shared._Nivalis.Combat;
 using Content.Shared.DoAfter;
 using Content.Shared.Effects;
+using Content.Shared.IdentityManagement;
 using Content.Shared.Popups;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.Stunnable;
@@ -89,7 +90,7 @@ public sealed partial class NivalisGrappleSystem : EntitySystem
         {
             var filter = Filter.Pvs(target, entityManager: EntityManager);
             _color.RaiseEffect(GrappleColor, new List<EntityUid> { target }, filter);
-            _popup.PopupEntity(Loc.GetString("nivalis-grapple-caught"), target, target, PopupType.LargeCaution);
+            _popup.PopupEntity(Loc.GetString("nivalis-grapple-caught", ("target", Identity.Entity(target, EntityManager))), target, target, PopupType.LargeCaution);
         }
     }
 }

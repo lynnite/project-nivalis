@@ -6,14 +6,11 @@ namespace Content.Shared._Nivalis.Morale;
 public sealed partial class NivalisMoraleComponent : Component
 {
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public float Morale = 100f;
+    public int Morale = 0;
 
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public float MaxMorale = 100f;
+    public int MaxMorale = 4;
 
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public float DeathPenalty = 20f;
-
-    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public NivalisMoraleLevel Level = NivalisMoraleLevel.High;
+    public TimeSpan NextResetTime;
 }

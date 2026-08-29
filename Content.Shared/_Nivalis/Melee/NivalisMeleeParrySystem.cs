@@ -4,6 +4,7 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Effects;
 using Content.Shared.FixedPoint;
 using Content.Shared.Hands.EntitySystems;
+using Content.Shared.IdentityManagement;
 using Content.Shared.Popups;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.Stunnable;
@@ -218,7 +219,7 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
         Dirty(parryOwner, parry);
 
         if (_net.IsServer)
-            Popup.PopupEntity(Loc.GetString("nivalis-parry-ready"), uid, uid);
+            Popup.PopupEntity(Loc.GetString("nivalis-parry-ready", ("target", Identity.Entity(uid, EntityManager))), uid, uid);
     }
 
     private bool TryGetParryOwner(EntityUid uid, out EntityUid owner, [NotNullWhen(true)] out NivalisMeleeParryComponent? parry)
@@ -330,7 +331,7 @@ public abstract partial class SharedNivalisMeleeParrySystem : EntitySystem
         Dirty(parryOwner, parry);
 
         if (_net.IsServer)
-            Popup.PopupEntity(Loc.GetString("nivalis-parry-ready"), parryOwner, parryOwner);
+            Popup.PopupEntity(Loc.GetString("nivalis-parry-ready", ("target", Identity.Entity(parryOwner, EntityManager))), parryOwner, parryOwner);
 
         return true;
     }

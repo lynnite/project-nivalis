@@ -1,55 +1,63 @@
+using Content.Shared._Nivalis.Melee;
 using Content.Shared._Nivalis.Morale;
-using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Survivor.Components;
 using Content.Shared.Alert;
+using Content.Shared.Damage;
+using Content.Shared.Damage.Prototypes;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Systems;
-using Content.Shared.Movement.Systems;
-using Content.Shared.StatusEffectNew;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
 
 namespace Content.Server._Nivalis.Morale;
 
-/// <summary>
-///     Manages <see cref="NivalisMoraleComponent"/> for survs.
-///     Morale only drops when a teammate (an entity with <see cref="NivalisSurvivorComponent"/>)
-///     dies. Derived morale levels drive movement-modifier effects, broadcast a
-///     <see cref="NivalisMoraleChangedEvent"/> for other systems to react to
-/// </summary>
 public sealed partial class NivalisMoraleSystem : EntitySystem
 {
-    public static readonly EntProtoId LowMoraleEffect = "StatusEffectNivalisLowMorale";
     public static readonly ProtoId<AlertPrototype> MoraleAlert = "NivalisMorale";
+    public static readonly TimeSpan MoraleDuration = TimeSpan.FromMinutes(5);
 
-    private static (NivalisMoraleLevel Level, float Walk, float Sprint)[] _levelTable =
-    {
-        (NivalisMoraleLevel.High,    1.00f, 1.00f),
-        (NivalisMoraleLevel.Normal,  0.92f, 0.92f),
-        (NivalisMoraleLevel.Low,     0.82f, 0.82f),
-        (NivalisMoraleLevel.Critical,0.70f, 0.70f),
-    };
+    private static readonly float PenaltyPerStack = 0.10f;
+
+    private readonly Dictionary<int, DamageModifierSet> _meleeModSetCache = new();
+    private readonly Dictionary<int, float> _defenseMultCache = new();
 
     [Dependency] private AlertsSystem _alerts = default!;
     [Dependency] private MobStateSystem _mobState = default!;
-    [Dependency] private MovementModStatusSystem _movementMod = default!;
-    [Dependency] private StatusEffectsSystem _status = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeLocalEvent<NivalisMoraleComponent, MapInitEvent>(OnMapInit);
+        SubscribeLocalEvent<NivalisMoraleComponent, DamageModifyEvent>(OnDamageTaken);
         SubscribeLocalEvent<MobStateChangedEvent>(OnMobStateChanged);
+        SubscribeLocalEvent<NivalisMeleeHitEvent>(OnMeleeHit);
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+        var query = EntityQueryEnumerator<NivalisMoraleComponent>();
+        while (query.MoveNext(out var uid, out var comp))
+        {
+            if (comp.Morale <= 0)
+                continue;
+
+            if (_timing.CurTime < comp.NextResetTime)
+                continue;
+
+            ResetMorale((uid, comp));
+        }
     }
 
     private void OnMapInit(Entity<NivalisMoraleComponent> ent, ref MapInitEvent args)
     {
-        ent.Comp.Morale = ent.Comp.MaxMorale;
-        ent.Comp.Level = NivalisMoraleLevel.High;
-
-        _alerts.ShowAlert(ent.Owner, MoraleAlert, severity: (short) ent.Comp.Level);
-
-        RefreshMoraleModifier(ent);
+        ent.Comp.Morale = 0;
+        ent.Comp.NextResetTime = TimeSpan.Zero;
+        _alerts.ShowAlert(ent.Owner, MoraleAlert, severity: (short) ent.Comp.Morale);
         Dirty(ent);
     }
 
@@ -70,68 +78,115 @@ public sealed partial class NivalisMoraleSystem : EntitySystem
             if (!_mobState.IsAlive(uid))
                 continue;
 
-            var penalty = comp.DeathPenalty;
-            if (TryComp<NivalisPerkComponent>(uid, out var perks) && perks.MoralePenaltyReduction > 0f)
-                penalty *= (1f - perks.MoralePenaltyReduction);
-
-            comp.Morale = MathF.Max(0f, comp.Morale - penalty);
-            RefreshMoraleLevel((uid, comp));
-            Dirty(uid, comp);
+            AddMorale((uid, comp));
         }
     }
 
-    private void RefreshMoraleLevel(Entity<NivalisMoraleComponent> ent)
+    private void OnMeleeHit(NivalisMeleeHitEvent ev)
     {
-        var oldLevel = ent.Comp.Level;
-        var newLevel = ComputeLevel(ent.Comp.Morale, ent.Comp.MaxMorale);
-
-        if (oldLevel == newLevel)
+        if (!ev.IsHit)
             return;
 
-        ent.Comp.Level = newLevel;
-        RefreshMoraleModifier(ent);
-        _alerts.ShowAlert(ent.Owner, MoraleAlert, severity: (short) newLevel);
+        if (!TryComp<NivalisMoraleComponent>(ev.User, out var morale))
+            return;
 
-        var changeEv = new NivalisMoraleChangedEvent(ent.Owner, oldLevel, newLevel);
+        if (morale.Morale <= 0)
+            return;
+
+        ev.ModifiersList.Add(GetMeleeModifierSet(morale.Morale));
+    }
+
+    private void OnDamageTaken(Entity<NivalisMoraleComponent> ent, ref DamageModifyEvent args)
+    {
+        if (ent.Comp.Morale <= 0)
+            return;
+
+        args.Damage = args.Damage * GetDefenseMultiplier(ent.Comp.Morale);
+    }
+
+    private void AddMorale(Entity<NivalisMoraleComponent> ent)
+    {
+        if (ent.Comp.Morale >= ent.Comp.MaxMorale)
+            return;
+
+        var old = ent.Comp.Morale;
+        ent.Comp.Morale = Math.Min(ent.Comp.MaxMorale, ent.Comp.Morale + 1);
+        ent.Comp.NextResetTime = _timing.CurTime + MoraleDuration;
+
+        ShowAlert(ent);
+        Dirty(ent);
+
+        var changeEv = new NivalisMoraleChangedEvent(ent.Owner, old, ent.Comp.Morale);
         RaiseLocalEvent(ref changeEv);
     }
 
-    private static NivalisMoraleLevel ComputeLevel(float morale, float max)
+    private void ShowAlert(Entity<NivalisMoraleComponent> ent)
     {
-        var fraction = morale / MathF.Max(1f, max);
-        if (fraction >= 0.75f)
-            return NivalisMoraleLevel.High;
-        if (fraction >= 0.5f)
-            return NivalisMoraleLevel.Normal;
-        if (fraction >= 0.25f)
-            return NivalisMoraleLevel.Low;
-        return NivalisMoraleLevel.Critical;
+        _alerts.ShowAlert(ent.Owner, MoraleAlert, severity: (short) ent.Comp.Morale);
     }
 
-    private void RefreshMoraleModifier(Entity<NivalisMoraleComponent> ent)
+    private DamageModifierSet GetMeleeModifierSet(int stacks)
     {
-        foreach (var (level, walk, sprint) in _levelTable)
+        if (!_meleeModSetCache.TryGetValue(stacks, out var set))
         {
-            if (level == ent.Comp.Level)
-            {
-                if (MathHelper.CloseToPercent(walk, 1f))
-                {
-                    _status.TryRemoveStatusEffect(ent.Owner, LowMoraleEffect);
-                }
-                else
-                {
-                    _movementMod.TryAddMovementSpeedModDuration(ent.Owner, LowMoraleEffect, TimeSpan.FromSeconds(60), walk, sprint);
-                }
-                return;
-            }
+            var coefficient = 1f - PenaltyPerStack * stacks;
+            var coefficients = new Dictionary<ProtoId<DamageTypePrototype>, float>();
+
+            foreach (var type in _proto.EnumeratePrototypes<DamageTypePrototype>())
+                coefficients[new ProtoId<DamageTypePrototype>(type.ID)] = coefficient;
+
+            set = new DamageModifierSet { Coefficients = coefficients };
+            _meleeModSetCache[stacks] = set;
         }
+
+        return set;
     }
 
-    public void ModifyMorale(Entity<NivalisMoraleComponent> ent, float delta)
+    private float GetDefenseMultiplier(int stacks)
     {
-        ent.Comp.Morale = Math.Clamp(ent.Comp.Morale + delta, 0f, ent.Comp.MaxMorale);
-        RefreshMoraleLevel(ent);
+        if (!_defenseMultCache.TryGetValue(stacks, out var mult))
+        {
+            mult = 1f + PenaltyPerStack * stacks;
+            _defenseMultCache[stacks] = mult;
+        }
+
+        return mult;
+    }
+
+    public void ModifyMorale(Entity<NivalisMoraleComponent> ent, int delta)
+    {
+        if (delta == 0)
+            return;
+
+        var old = ent.Comp.Morale;
+        ent.Comp.Morale = Math.Clamp(ent.Comp.Morale + delta, 0, ent.Comp.MaxMorale);
+
+        if (old == ent.Comp.Morale)
+            return;
+
+        if (ent.Comp.Morale > 0)
+            ent.Comp.NextResetTime = _timing.CurTime + MoraleDuration;
+
+        ShowAlert(ent);
         Dirty(ent);
+
+        var changeEv = new NivalisMoraleChangedEvent(ent.Owner, old, ent.Comp.Morale);
+        RaiseLocalEvent(ref changeEv);
+    }
+
+    private void ResetMorale(Entity<NivalisMoraleComponent> ent)
+    {
+        if (ent.Comp.Morale <= 0)
+            return;
+
+        var old = ent.Comp.Morale;
+        ent.Comp.Morale = 0;
+        ent.Comp.NextResetTime = TimeSpan.Zero;
+
+        ShowAlert(ent);
+        Dirty(ent);
+
+        var changeEv = new NivalisMoraleChangedEvent(ent.Owner, old, ent.Comp.Morale);
+        RaiseLocalEvent(ref changeEv);
     }
 }
-

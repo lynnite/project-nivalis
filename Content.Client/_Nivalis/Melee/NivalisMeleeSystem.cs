@@ -3,6 +3,7 @@ using System.Numerics;
 using Content.Client.Gameplay;
 using Content.Shared._Nivalis.Melee;
 using Content.Shared._Nivalis.Melee.Events;
+using Content.Shared._Nivalis.Stamina;
 using Content.Shared.CombatMode;
 using Content.Shared.Effects;
 using Robust.Client.GameObjects;
@@ -71,6 +72,9 @@ public sealed partial class NivalisMeleeSystem : SharedNivalisMeleeSystem
             return false;
 
         if (Timing.CurTime < _nextShoveTime)
+            return false;
+
+        if (TryComp<NivalisStaminaComponent>(user, out var stamina) && stamina.Current < stamina.ShoveCost)
             return false;
 
         var hasWeapon = TryGetWeapon(user, out var weaponUid, out var weapon);

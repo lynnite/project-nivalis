@@ -243,7 +243,7 @@ public abstract partial class SharedMoverController : VirtualController
             var walkSpeed = moveSpeedComponent?.WeightlessWalkSpeed ?? MovementSpeedModifierComponent.DefaultBaseWalkSpeed;
             var sprintSpeed = moveSpeedComponent?.WeightlessSprintSpeed ?? MovementSpeedModifierComponent.DefaultBaseSprintSpeed;
 
-            wishDir = AssertValidWish(mover, walkSpeed, sprintSpeed);
+            wishDir = AssertValidWish(mover, walkSpeed, sprintSpeed, _transform.GetWorldRotation(xform));
 
             var ev = new CanWeightlessMoveEvent(uid);
             RaiseLocalEvent(uid, ref ev, true);
@@ -282,7 +282,7 @@ public abstract partial class SharedMoverController : VirtualController
             var walkSpeed = moveSpeedComponent?.CurrentWalkSpeed ?? MovementSpeedModifierComponent.DefaultBaseWalkSpeed;
             var sprintSpeed = moveSpeedComponent?.CurrentSprintSpeed ?? MovementSpeedModifierComponent.DefaultBaseSprintSpeed;
 
-            wishDir = AssertValidWish(mover, walkSpeed, sprintSpeed);
+            wishDir = AssertValidWish(mover, walkSpeed, sprintSpeed, _transform.GetWorldRotation(xform));
 
             if (wishDir != Vector2.Zero)
             {
@@ -620,7 +620,7 @@ public abstract partial class SharedMoverController : VirtualController
         return sound != null;
     }
 
-    private Vector2 AssertValidWish(InputMoverComponent mover, float walkSpeed, float sprintSpeed)
+    private Vector2 AssertValidWish(InputMoverComponent mover, float walkSpeed, float sprintSpeed, Angle facing)
     {
         var (walkDir, sprintDir) = GetVelocityInput(mover);
 
@@ -628,6 +628,17 @@ public abstract partial class SharedMoverController : VirtualController
 
         var parentRotation = GetParentGridAngle(mover);
         var wishDir = _relativeMovement ? parentRotation.RotateVec(total) : total;
+
+        if (mover.Sprinting && sprintDir != Vector2.Zero)
+        {
+            var worldMove = _relativeMovement ? parentRotation.RotateVec(sprintDir) : sprintDir;
+            var forward = Vector2.Dot(worldMove.Normalized(), facing.ToWorldVec());
+            if (forward < 0.25f)
+            {
+                total = walkDir * walkSpeed + sprintDir * walkSpeed;
+                wishDir = _relativeMovement ? parentRotation.RotateVec(total) : total;
+            }
+        }
 
         DebugTools.Assert(MathHelper.CloseToPercent(total.Length(), wishDir.Length()));
 

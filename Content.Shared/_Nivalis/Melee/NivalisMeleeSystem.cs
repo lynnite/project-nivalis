@@ -92,6 +92,12 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         if (!InRange(user, target, ShoveRange, session))
             return false;
 
+        if (TryComp<NivalisStaminaComponent>(user, out var shoveStamina) &&
+            shoveStamina.Current < shoveStamina.ShoveCost)
+        {
+            return false;
+        }
+
         var weaponUid = user;
         if (TryGetWeapon(user, out var wUid, out _))
             weaponUid = wUid;
@@ -147,6 +153,8 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         if (_net.IsServer)
         {
             PopupSystem.PopupEntity(Loc.GetString("nivalis-shove-popup"), target, user);
+            if (TryComp<NivalisStaminaComponent>(user, out var shoveDrain))
+                DrainStamina(user, shoveDrain.ShoveCost);
         }
 
         return true;
@@ -281,13 +289,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         if (!CombatMode.IsInCombatMode(user))
             return false;
 
-        if (!CanAffordStamina(user, weapon, attack is NivalisHeavyAttackEvent))
-        {
-            PopupSystem.PopupCursor(Loc.GetString(
-                attack is NivalisHeavyAttackEvent ? "nivalis-melee-no-stamina-heavy" : "nivalis-melee-no-stamina-light"),
-                user);
-            return false;
-        }
+        var lowStamina = !CanAffordStamina(user, weapon, attack is NivalisHeavyAttackEvent);
 
         EntityUid? target = null;
         switch (attack)
@@ -323,19 +325,24 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
 
             weapon.ComboHits++;
 
-            var cooldown = weapon.ComboHits >= weapon.LightComboCount
-                ? TimeSpan.FromSeconds(weapon.LightComboRecovery)
-                : TimeSpan.FromSeconds(weapon.LightComboInterval);
+            var cooldownSeconds = weapon.ComboHits >= weapon.LightComboCount
+                ? weapon.LightComboRecovery
+                : weapon.LightComboInterval;
+            if (lowStamina)
+                cooldownSeconds *= weapon.LowStaminaMultiplier;
 
-            weapon.NextAttack = curTime + cooldown;
+            weapon.NextAttack = curTime + TimeSpan.FromSeconds(cooldownSeconds);
 
             DirtyField(weaponUid, weapon, nameof(NivalisMeleeComponent.NextAttack));
             DirtyField(weaponUid, weapon, nameof(NivalisMeleeComponent.ComboHits));
         }
         else
         {
-            var fireRate = TimeSpan.FromSeconds(1f / MathF.Max(0.1f, weapon.AttackRate));
-            weapon.NextAttack = curTime + fireRate;
+            var fireRate = 1f / MathF.Max(0.1f, weapon.AttackRate);
+            if (lowStamina)
+                fireRate *= weapon.LowStaminaMultiplier;
+
+            weapon.NextAttack = curTime + TimeSpan.FromSeconds(fireRate);
             DirtyField(weaponUid, weapon, nameof(NivalisMeleeComponent.NextAttack));
         }
 
@@ -398,6 +405,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             return;
 
         stamina.Current = MathF.Max(0f, stamina.Current - cost);
+        stamina.LastExertion = Timing.CurTime;
         Dirty(user, stamina);
     }
 

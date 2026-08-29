@@ -22,7 +22,7 @@
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
-    fireRate: 2.8
+    fireRate: 10
     projectileSpeed: 90
     cameraRecoilScalar: 0.6
     minAngle: 0
@@ -37,14 +37,14 @@
   - type: NivalisPoolAmmoProvider
   - type: NivalisGun
     ammoType: Light
-    maxAmmo: 9
+    maxAmmo: 20
     projectile: NivalisBulletLight
     limbDamage:
       types:
-        Bullet: 10
+        Bullet: 15
     headshotDamage:
       types:
-        Bullet: 24
+        Bullet: 42
   - type: NivalisReload
     reloadDelay: 1.6
     breakOnMove: false

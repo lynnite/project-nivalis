@@ -13,16 +13,28 @@ public sealed partial class NivalisStaminaComponent : Component
     public float Max = 100f;
 
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public float SprintDrain = 15f;
+    public float ShoveCost = 25f;
 
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public float RecoveryRate = 12f;
+    public float RecoveryRate = 40f;
 
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public float ExhaustionThreshold = 0.2f;
+    public float Exhaustion;
+
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
+    public float ExhaustionMax = 200f;
+
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
+    public float SprintExhaustionDrain = 10f;
+
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
+    public float ExhaustionRecoveryRate = 25f;
+
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
+    public float RegenDelay = 3f;
 
     [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoPausedField]
-    public TimeSpan NextStaminaTick = TimeSpan.Zero;
+    public TimeSpan LastExertion = TimeSpan.Zero;
 
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
     public bool Exhausted;

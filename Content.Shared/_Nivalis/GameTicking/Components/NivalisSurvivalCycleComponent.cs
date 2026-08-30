@@ -21,7 +21,20 @@ public sealed partial class NivalisSurvivalCycleComponent : Component
     [DataField, ViewVariables(VVAccess.ReadWrite)]
     public float StormDuration = 600f;
 
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public float StormSpawnDelay = 10f;
+
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
     public int WavesCleared = 0;
+
+    [DataField]
+    public int CurrentWave = -1;
+
+    [DataField]
+    public bool WaveActive;
+
+    [DataField]
+    public TimeSpan NextWaveSpawn = TimeSpan.Zero;
+
 }
 

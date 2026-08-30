@@ -5,5 +5,30 @@
   - type: NivalisSurvivalCycle
     scavengeDuration: 150 # nivalis todo: make this a random time around 100-200 or something similar
     stormDuration: 600 # hard cap
-
+  - type: NivalisStormWave
+    waves:
+    - spawns:
+      - prototype: MobNivalisScavChaser
+        count: 2
+    - spawns:
+      - prototype: MobNivalisScavRusher
+        count: 2
+      - prototype: MobNivalisScavFreezie
+        count: 1
+    - spawns:
+      - prototype: MobNivalisScavChaser
+        count: 2
+      - prototype: MobNivalisScavRusher
+        count: 2
+      - prototype: MobNivalisScavFreezie
+        count: 1
+      - prototype: MobNivalisScavLeaper
+        count: 1
+    - spawns:
+      - prototype: MobNivalisScavGunner
+        count: 1
+      - prototype: MobNivalisScavLeaper
+        count: 1
+      - prototype: MobNivalisScavRusher
+        count: 2
 

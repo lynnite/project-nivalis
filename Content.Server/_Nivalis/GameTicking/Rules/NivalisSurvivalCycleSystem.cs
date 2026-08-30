@@ -12,15 +12,6 @@ using Robust.Shared.Timing;
 
 namespace Content.Server._Nivalis.GameTicking.Rules;
 
-/// <summary>
-///     Scavenge/storm cycle
-///     The phase advances between <see cref="NivalisSurvivalPhase.Scavenge"/> and
-///     <see cref="NivalisSurvivalPhase.Storm"/>, announcing the transition and raising a
-///     <see cref="NivalisSurvivalPhaseChangedEvent"/> for other systems to react to.
-///     When a storm begins, every mapped <see cref="NivalisStormSpawnerComponent"/> releases
-///     the horde. The storm persists until every living
-///     <see cref="NivalisStormEnemyComponent"/> has been killed
-/// </summary>
 public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisSurvivalCycleComponent>
 {
     [Dependency] private ChatSystem _chat = default!;
@@ -62,9 +53,88 @@ public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisS
                     break;
                 }
 
-                if (!AnyStormEnemiesAlive())
-                    AdvancePhase(uid, component);
+                UpdateStorm(uid, component);
                 break;
+        }
+    }
+
+    private void UpdateStorm(EntityUid uid, NivalisSurvivalCycleComponent cycle)
+    {
+        if (!TryComp<NivalisStormWaveComponent>(uid, out var waves))
+        {
+            if (!AnyStormEnemiesAlive())
+                AdvancePhase(uid, cycle);
+            return;
+        }
+
+        if (!cycle.WaveActive)
+        {
+            if (cycle.CurrentWave < 0)
+            {
+                cycle.CurrentWave = 0;
+                cycle.NextWaveSpawn = Timing.CurTime + TimeSpan.FromSeconds(cycle.StormSpawnDelay);
+                Dirty(uid, cycle);
+            }
+
+            if (Timing.CurTime < cycle.NextWaveSpawn)
+                return;
+
+            SpawnWave(waves, cycle.CurrentWave);
+            cycle.WaveActive = true;
+            Dirty(uid, cycle);
+            return;
+        }
+
+        if (AnyStormEnemiesAlive())
+            return;
+
+        cycle.CurrentWave++;
+        if (cycle.CurrentWave >= waves.Waves.Count)
+        {
+            cycle.WavesCleared++;
+            cycle.WaveActive = false;
+            cycle.CurrentWave = -1;
+            Dirty(uid, cycle);
+            AdvancePhase(uid, cycle);
+            return;
+        }
+
+        SpawnWave(waves, cycle.CurrentWave);
+        Dirty(uid, cycle);
+    }
+
+    private void SpawnWave(NivalisStormWaveComponent waves, int waveIndex)
+    {
+        if (waveIndex < 0 || waveIndex >= waves.Waves.Count)
+            return;
+
+        var spawned = 0;
+        var group = waves.Waves[waveIndex];
+        foreach (var spawn in group.Spawns)
+        {
+            var query = EntityQueryEnumerator<NivalisStormSpawnerComponent, TransformComponent>();
+            while (query.MoveNext(out _, out var spawner, out var xform))
+            {
+                for (var i = 0; i < spawn.Count; i++)
+                {
+                    var coords = xform.Coordinates;
+                    if (spawner.SpawnJitter > 0f)
+                    {
+                        var offset = new Angle(_random.NextDouble() * Math.Tau).ToWorldVec() * (_random.NextFloat() * spawner.SpawnJitter);
+                        coords = coords.Offset(offset);
+                    }
+
+                    Spawn(spawn.Prototype, coords);
+                    spawned++;
+                }
+            }
+        }
+
+        if (spawned > 0)
+        {
+            _chat.DispatchGlobalAnnouncement(
+                Loc.GetString("nivalis-storm-sensitive", ("count", spawned)),
+                colorOverride: Color.Crimson);
         }
     }
 
@@ -80,34 +150,6 @@ public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisS
         return false;
     }
 
-    private void SpawnStormEnemies(NivalisSurvivalCycleComponent component)
-    {
-        var spawned = 0;
-        var query = EntityQueryEnumerator<NivalisStormSpawnerComponent, TransformComponent>();
-        while (query.MoveNext(out _, out var spawner, out var xform))
-        {
-            var count = spawner.SpawnCount + component.WavesCleared * spawner.ThreatRampPerWave;
-            for (var i = 0; i < count; i++)
-            {
-                var coords = xform.Coordinates;
-                if (spawner.SpawnJitter > 0f)
-                {
-                    var offset = new Angle(_random.NextDouble() * Math.Tau).ToWorldVec() * (_random.NextFloat() * spawner.SpawnJitter);
-                    coords = coords.Offset(offset);
-                }
-
-                Spawn(spawner.SpawnPrototype, coords);
-                spawned++;
-            }
-        }
-
-        if (spawned > 0)
-        {
-            _chat.DispatchGlobalAnnouncement(
-                Loc.GetString("nivalis-storm-sensitive", ("count", spawned)),
-                colorOverride: Color.Crimson);
-        }
-    }
     private void OfferWaveTraits()
     {
         var query = EntityQueryEnumerator<NivalisPerkComponent>();
@@ -130,15 +172,16 @@ public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisS
                 component.Phase = NivalisSurvivalPhase.Storm;
                 component.NextPhaseChange = Timing.CurTime + TimeSpan.FromSeconds(component.StormDuration);
                 component.PhaseEndTime = component.NextPhaseChange;
+                component.WaveActive = false;
+                component.CurrentWave = -1;
+                Dirty(uid, component);
                 _chat.DispatchGlobalAnnouncement(Loc.GetString("nivalis-cycle-storm-start"), colorOverride: Color.DeepSkyBlue);
-                SpawnStormEnemies(component);
                 break;
 
             case NivalisSurvivalPhase.Storm:
                 component.Phase = NivalisSurvivalPhase.Scavenge;
                 component.NextPhaseChange = Timing.CurTime + TimeSpan.FromSeconds(component.ScavengeDuration);
                 component.PhaseEndTime = component.NextPhaseChange;
-                component.WavesCleared++;
                 Dirty(uid, component);
                 _chat.DispatchGlobalAnnouncement(Loc.GetString("nivalis-cycle-scavenge-start"), colorOverride: Color.Wheat);
                 OfferWaveTraits();

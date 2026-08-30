@@ -2,7 +2,7 @@
 nivalis-cycle-scavenge-start = The storm has passed.
 nivalis-cycle-storm-start = The storm is closing in.
 nivalis-storm-sensitive = You can see something moving... about {$count} dark figures..?
-
+nivalis-ghost-command-gated = You cannot use this command on this server.
 # morale alert
 nivalis-alert-morale-name = Morale
 nivalis-alert-morale-desc = Each teammate death grants a stack of morale, up to 4. Each stack reduces melee damage and defense by 10%, stacking up to -40%. Morale lasts 5 minutes.
@@ -57,3 +57,4 @@ nivalis-planet-vote-empty = No planets are available to vote on right now.
 
 # planet names
 nivalis-planet-ancient = Ancient
+

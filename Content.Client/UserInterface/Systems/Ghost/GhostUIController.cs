@@ -4,6 +4,7 @@ using Content.Client.UserInterface.Systems.Gameplay;
 using Content.Client.UserInterface.Systems.Ghost.Widgets;
 using Content.Shared.Ghost.Components;
 using Content.Shared.Ghost.Systems;
+using Content.Shared._Nivalis.GameTicking.Components;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
 
@@ -13,6 +14,7 @@ namespace Content.Client.UserInterface.Systems.Ghost;
 public sealed partial class GhostUIController : UIController, IOnSystemChanged<GhostSystem>
 {
     [Dependency] private IEntityNetworkManager _net = default!;
+    [Dependency] private IEntityManager _entityManager = default!;
 
     [UISystemDependency] private readonly GhostSystem? _system = default;
 
@@ -60,11 +62,14 @@ public sealed partial class GhostUIController : UIController, IOnSystemChanged<G
     public void UpdateGui()
     {
         if (Gui == null)
-        {
             return;
-        }
 
-        Gui.Visible = _system?.IsGhost ?? false;
+        var isNivalisSpectator = _system?.Player != null
+            && _entityManager.TryGetComponent<NivalisSpectatorComponent>(_system.Player.Owner, out var spec)
+            && !spec.IsAdmin;
+
+        var isGhost = _system?.IsGhost ?? false;
+        Gui.Visible = isGhost && !isNivalisSpectator;
         Gui.Update(_system?.AvailableGhostRoleCount, _system?.Player?.CanReturnToBody);
     }
 
@@ -176,3 +181,4 @@ public sealed partial class GhostUIController : UIController, IOnSystemChanged<G
         _system?.OpenGhostRoles();
     }
 }
+

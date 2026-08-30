@@ -1,6 +1,11 @@
 using Content.Server.GameTicking;
+using Content.Server.Administration.Managers;
+using Content.Shared.Actions;
+using Content.Shared.Administration;
 using Content.Server.GameTicking.Rules;
+using Content.Server.Ghost;
 using Content.Server.Hands.Systems;
+using Content.Shared.Follower;
 using Content.Server.Mind;
 using Content.Server.Roles;
 using Content.Server._Nivalis.Hands;
@@ -10,6 +15,7 @@ using Content.Server.Station.Events;
 using Content.Server.Station.Systems;
 using Content.Server._Nivalis.GameTicking.Rules.Components;
 using Content.Server._Nivalis.Survivor.Components;
+using Content.Shared._Nivalis.GameTicking;
 using Content.Shared._Nivalis.GameTicking.Components;
 using Content.Shared._Nivalis.Combat;
 using Content.Shared._Nivalis.Environment;
@@ -22,6 +28,7 @@ using Content.Shared._Nivalis.Traits;
 using Content.Shared._Nivalis.Weapons;
 using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
+using Content.Shared.Ghost.Components;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Components;
@@ -46,6 +53,12 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
     [Dependency] private StationJobsSystem _stationJobs = default!;
     [Dependency] private StationSpawningSystem _stationSpawning = default!;
     [Dependency] private NivalisHandsSystem _nivalisHands = default!;
+    [Dependency] private ISharedPlayerManager _playerManager = default!;
+    [Dependency] private FollowerSystem _follower = default!;
+    [Dependency] private GhostSystem _ghost = default!;
+    [Dependency] private SharedTransformSystem _transformSystem = default!;
+    [Dependency] private SharedActionsSystem _actions = default!;
+    [Dependency] private IAdminManager _admin = default!;
 
     public override void Initialize()
     {
@@ -54,6 +67,30 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         SubscribeLocalEvent<RulePlayerSpawningEvent>(OnPlayerSpawning);
         SubscribeLocalEvent<PlayerBeforeSpawnEvent>(OnBeforeSpawn);
         SubscribeLocalEvent<StationPostInitEvent>(OnStationPostInit);
+        SubscribeLocalEvent<NivalisSurvivalPhaseChangedEvent>(OnPhaseChanged);
+        SubscribeNetworkEvent<NivalisReturnToLobbyMessage>(OnReturnToLobby);
+        SubscribeNetworkEvent<NivalisJoinGameMessage>(OnJoinGame);
+        SubscribeNetworkEvent<NivalisSpectateCycleMessage>(OnSpectateCycle);
+    }
+
+    private void OnJoinGame(NivalisJoinGameMessage msg, EntitySessionEventArgs args)
+    {
+        var session = args.SenderSession;
+        if (GameTicker.UserHasJoinedGame(session))
+            return;
+
+        MakeSpectator(session);
+        GameTicker.PlayerJoinGame(session);
+    }
+
+    private void OnReturnToLobby(NivalisReturnToLobbyMessage msg, EntitySessionEventArgs args)
+    {
+        var session = args.SenderSession;
+        if (session.AttachedEntity is not { Valid: true } attached ||
+            !HasComp<NivalisSpectatorComponent>(attached))
+            return;
+
+        GameTicker.Respawn(session);
     }
 
     protected override void Started(EntityUid uid, NivalisSurvivorRuleComponent component, GameRuleComponent gameRule, GameRuleStartedEvent args)
@@ -123,18 +160,154 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
     private void OnBeforeSpawn(PlayerBeforeSpawnEvent ev)
     {
         var query = QueryActiveRules();
-        while (query.MoveNext(out var uid, out _, out var comp, out _))
+        while (query.MoveNext(out _, out _, out _, out _))
         {
-            var mob = SpawnAsSurvivor((uid, comp), ev.Player, ev.Profile);
-            if (mob != EntityUid.Invalid)
-            {
-                GameTicker.PlayersJoinedRoundNormally++;
-                RaiseLocalEvent(mob, new PlayerSpawnCompleteEvent(mob, ev.Player, null, ev.LateJoin, false,
-                    GameTicker.PlayersJoinedRoundNormally, ev.Station, ev.Profile), true);
-            }
-
+            MakeSpectator(ev.Player);
             ev.Handled = true;
             return;
+        }
+    }
+
+    private void MakeSpectator(ICommonSession session)
+    {
+        var mind = _mind.GetOrCreateMind(session.UserId);
+        _mind.SetUserId(mind, session.UserId);
+
+        var isAdmin = _admin.HasAdminFlag(session, AdminFlags.Admin);
+
+        var ghost = _ghost.SpawnGhost((mind.Owner, mind.Comp), canReturn: true);
+        if (ghost is not { Valid: true } ghostUid)
+            return;
+
+        var ghostComp = Comp<GhostComponent>(ghostUid);
+        _ghost.SetCanReturnToBody((ghostUid, ghostComp), false);
+        _ghost.SetCanGhostInteract((ghostUid, ghostComp), isAdmin);
+
+        if (!isAdmin)
+        {
+            _actions.RemoveAction(ghostUid, ghostComp.BooActionEntity);
+            _actions.RemoveAction(ghostUid, ghostComp.ToggleGhostHearingActionEntity);
+            _actions.RemoveAction(ghostUid, ghostComp.ToggleLightingActionEntity);
+            _actions.RemoveAction(ghostUid, ghostComp.ToggleFoVActionEntity);
+            _actions.RemoveAction(ghostUid, ghostComp.ToggleGhostsActionEntity);
+        }
+
+        var spect = EnsureComp<NivalisSpectatorComponent>(ghostUid);
+        spect.Player = session.UserId;
+        spect.IsAdmin = isAdmin;
+        Dirty(ghostUid, spect);
+
+        FollowSurvivor(ghostUid, spect);
+    }
+
+    private void OnSpectateCycle(NivalisSpectateCycleMessage msg, EntitySessionEventArgs args)
+    {
+        var session = args.SenderSession;
+        if (session.AttachedEntity is not { Valid: true } attached ||
+            !TryComp<NivalisSpectatorComponent>(attached, out var spect))
+            return;
+
+        CycleSpectator(attached, spect, msg.Next);
+    }
+
+    private void CycleSpectator(EntityUid ghostUid, NivalisSpectatorComponent spect, bool next)
+    {
+        List<EntityUid> alive = new();
+        var query = EntityQueryEnumerator<NivalisSurvivorComponent, TransformComponent, MobStateComponent>();
+        while (query.MoveNext(out var survivor, out _, out _, out var mobState))
+        {
+            if (_mobState.IsAlive(survivor, mobState) && !Deleted(survivor))
+                alive.Add(survivor);
+        }
+
+        if (alive.Count == 0)
+            return;
+
+        // Order by net entity id for a stable ordering that matches client display.
+        alive.Sort((a, b) => GetNetEntity(a).CompareTo(GetNetEntity(b)));
+
+        var index = alive.IndexOf(spect.FollowTarget);
+        if (index < 0)
+            index = -1;
+
+        index += next ? 1 : -1;
+        index = (index + alive.Count) % alive.Count;
+
+        spect.FollowTarget = alive[index];
+        Dirty(ghostUid, spect);
+        _follower.StartFollowingEntity(ghostUid, spect.FollowTarget);
+    }
+
+    private void FollowSurvivor(EntityUid ghostUid, NivalisSpectatorComponent spect)
+    {
+        if (TryFindSpectateTarget(out var target) && target != null)
+        {
+            spect.FollowTarget = target.Value;
+            _follower.StartFollowingEntity(ghostUid, target.Value);
+        }
+        else
+        {
+            spect.FollowTarget = EntityUid.Invalid;
+            if (TryGetSpawnCoordinates(out var coords))
+                _transformSystem.SetCoordinates(ghostUid, coords);
+        }
+
+        Dirty(ghostUid, spect);
+    }
+
+    private bool TryFindSpectateTarget(out EntityUid? target)
+    {
+        target = null;
+        var query = EntityQueryEnumerator<NivalisSurvivorComponent, TransformComponent, MobStateComponent>();
+        while (query.MoveNext(out var survivor, out _, out _, out var mobState))
+        {
+            if (_mobState.IsAlive(survivor, mobState))
+            {
+                target = survivor;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void OnPhaseChanged(ref NivalisSurvivalPhaseChangedEvent args)
+    {
+        if (args.OldPhase == args.NewPhase)
+            return;
+
+        RespawnSpectators();
+    }
+
+    private void RespawnSpectators()
+    {
+        var query = EntityQueryEnumerator<NivalisSpectatorComponent>();
+        while (query.MoveNext(out var uid, out var spect))
+        {
+            if (!_playerManager.TryGetSessionById(spect.Player, out var session))
+            {
+                QueueDel(uid);
+                continue;
+            }
+
+            _mind.WipeMind(session);
+            QueueDel(uid);
+
+            var active = QueryActiveRules();
+            while (active.MoveNext(out var ruleUid, out _, out var comp, out _))
+            {
+                var profile = GameTicker.GetPlayerProfile(session);
+                var mob = SpawnAsSurvivor((ruleUid, comp), session, profile);
+                if (mob != EntityUid.Invalid)
+                {
+                    GameTicker.PlayerJoinGame(session);
+                    GameTicker.PlayersJoinedRoundNormally++;
+                    RaiseLocalEvent(mob, new PlayerSpawnCompleteEvent(mob, session, null, true, false,
+                        GameTicker.PlayersJoinedRoundNormally, EntityUid.Invalid, profile), true);
+                }
+
+                break;
+            }
         }
     }
 

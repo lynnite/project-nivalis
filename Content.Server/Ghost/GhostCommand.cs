@@ -1,3 +1,4 @@
+using Content.Server.Administration.Managers;
 using Content.Server.Popups;
 using Content.Shared.Administration;
 using Content.Shared.GameTicking;
@@ -11,6 +12,7 @@ namespace Content.Server.Ghost
     public sealed partial class GhostCommand : IConsoleCommand
     {
         [Dependency] private IEntityManager _entities = default!;
+        [Dependency] private IAdminManager _adminManager = default!;
 
         public string Command => "ghost";
         public string Description => Loc.GetString("ghost-command-description");
@@ -22,6 +24,12 @@ namespace Content.Server.Ghost
             if (player == null)
             {
                 shell.WriteLine(Loc.GetString("ghost-command-no-session"));
+                return;
+            }
+
+            if (!_adminManager.HasAdminFlag(player, AdminFlags.Admin))
+            {
+                shell.WriteLine(Loc.GetString("nivalis-ghost-command-gated"));
                 return;
             }
 
@@ -57,3 +65,4 @@ namespace Content.Server.Ghost
         }
     }
 }
+

@@ -23,19 +23,18 @@ namespace Content.Server.GameTicking.Commands
                 return;
             }
 
+            if (!_adminManager.HasAdminFlag(player, AdminFlags.Admin))
+            {
+                shell.WriteError(Loc.GetString("nivalis-ghost-command-gated"));
+                return;
+            }
+
             var ticker = _e.System<GameTicker>();
 
             if (ticker.RunLevel == GameRunLevel.PreRoundLobby)
             {
                 shell.WriteError("Wait until the round starts.");
                 return;
-            }
-
-            var isAdminCommand = args.Length > 0 && args[0].ToLower() == "admin";
-
-            if (!isAdminCommand && _adminManager.IsAdmin(player))
-            {
-                _adminManager.DeAdmin(player);
             }
 
             if (ticker.PlayerGameStatuses.TryGetValue(player.UserId, out var status) &&
@@ -50,3 +49,4 @@ namespace Content.Server.GameTicking.Commands
         }
     }
 }
+

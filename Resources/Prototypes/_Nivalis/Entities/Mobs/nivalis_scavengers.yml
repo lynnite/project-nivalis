@@ -22,6 +22,11 @@
   - type: HTN
     rootTask:
       task: NivalisScavengerHostileCompound
+    blackboard:
+      VisionRadius: !type:Single
+        100
+      AggroVisionRadius: !type:Single
+        100
 
 
 - type: entity

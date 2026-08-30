@@ -17,6 +17,11 @@
   - type: HTN
     rootTask:
       task: SimpleHumanoidHostileCompound
+    blackboard:
+      VisionRadius: !type:Single
+        100
+      AggroVisionRadius: !type:Single
+        100
 
 - type: entity
   id: NivalisStormSpawner

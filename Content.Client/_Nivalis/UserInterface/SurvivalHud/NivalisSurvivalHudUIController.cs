@@ -14,7 +14,15 @@ public sealed partial class NivalisSurvivalHudUIController : UIController
         base.Initialize();
 
         var gameplayStateLoad = UIManager.GetUIController<GameplayStateLoadController>();
+        gameplayStateLoad.OnScreenLoad += OnScreenLoad;
         gameplayStateLoad.OnScreenUnload += OnScreenUnload;
+    }
+
+    private void OnScreenLoad()
+    {
+        var hud = Hud;
+        if (hud != null)
+            hud.Visible = true;
     }
 
     private void OnScreenUnload()
@@ -24,3 +32,4 @@ public sealed partial class NivalisSurvivalHudUIController : UIController
             hud.Visible = false;
     }
 }
+

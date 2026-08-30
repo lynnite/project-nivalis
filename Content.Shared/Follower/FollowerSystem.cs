@@ -11,6 +11,7 @@ using Content.Shared.Polymorph;
 using Content.Shared.Silicons.StationAi;
 using Content.Shared.Tag;
 using Content.Shared.Verbs;
+using Content.Shared._Nivalis.GameTicking.Components;
 using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Map;
@@ -133,7 +134,7 @@ public sealed partial class FollowerSystem : EntitySystem
 
     private void OnFollowerMove(EntityUid uid, FollowerComponent component, ref MoveInputEvent args)
     {
-        if (args.HasDirectionalMovement)
+        if (args.HasDirectionalMovement && !HasComp<NivalisSpectatorComponent>(uid))
             StopFollowingEntity(uid, component.Following);
     }
 

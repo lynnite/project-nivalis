@@ -39,3 +39,4 @@ public sealed class NivalisTraitDraftBoundUserInterface : BoundUserInterface
         _window = null;
     }
 }
+

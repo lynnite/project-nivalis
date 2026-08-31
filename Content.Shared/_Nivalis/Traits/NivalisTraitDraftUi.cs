@@ -1,4 +1,3 @@
-using Content.Shared._Nivalis.Perks;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
@@ -13,7 +12,7 @@ public enum NivalisTraitDraftUiKey : byte
 [Serializable, NetSerializable]
 public sealed class NivalisTraitDraftChoice
 {
-    public ProtoId<NivalisPerkPrototype> Id = default!;
+    public ProtoId<NivalisTraitPrototype> Id = default!;
     public string? Name;
     public string? Description;
 }
@@ -25,8 +24,7 @@ public sealed class NivalisTraitDraftUiState : BoundUserInterfaceState
 }
 
 [Serializable, NetSerializable]
-public sealed class NivalisTraitDraftSelectedMessage(ProtoId<NivalisPerkPrototype> traitId) : BoundUserInterfaceMessage
+public sealed class NivalisTraitDraftSelectedMessage(ProtoId<NivalisTraitPrototype> traitId) : BoundUserInterfaceMessage
 {
-    public ProtoId<NivalisPerkPrototype> TraitId = traitId;
+    public ProtoId<NivalisTraitPrototype> TraitId = traitId;
 }
-

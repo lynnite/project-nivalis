@@ -9,6 +9,7 @@ using Content.Shared.Follower;
 using Content.Server.Mind;
 using Content.Server.Roles;
 using Content.Server._Nivalis.Hands;
+using Content.Server._Nivalis.Traits;
 using Content.Server.RoundEnd;
 using Content.Server.Station.Components;
 using Content.Server.Station.Events;
@@ -20,7 +21,6 @@ using Content.Shared._Nivalis.GameTicking.Components;
 using Content.Shared._Nivalis.Combat;
 using Content.Shared._Nivalis.Environment;
 using Content.Shared._Nivalis.Morale;
-using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Stamina;
 using Content.Shared._Nivalis.Status;
 using Content.Shared._Nivalis.Survivor.Components;
@@ -37,6 +37,7 @@ using Content.Shared.Roles;
 using Content.Shared.UserInterface;
 using Robust.Server.Player;
 using Robust.Shared.GameObjects;
+using Robust.Shared.Network;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
@@ -59,6 +60,12 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
     [Dependency] private SharedTransformSystem _transformSystem = default!;
     [Dependency] private SharedActionsSystem _actions = default!;
     [Dependency] private IAdminManager _admin = default!;
+    [Dependency] private NivalisTraitSystem _traits = default!;
+
+    /// <summary>
+    ///     Traits the player selected in the lobby, applied when their survivor spawns.
+    /// </summary>
+    private readonly Dictionary<NetUserId, List<ProtoId<NivalisTraitPrototype>>> _pendingTraits = new();
 
     public override void Initialize()
     {
@@ -71,6 +78,12 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         SubscribeNetworkEvent<NivalisReturnToLobbyMessage>(OnReturnToLobby);
         SubscribeNetworkEvent<NivalisJoinGameMessage>(OnJoinGame);
         SubscribeNetworkEvent<NivalisSpectateCycleMessage>(OnSpectateCycle);
+        SubscribeNetworkEvent<NivalisTraitsSelectedMessage>(OnTraitsSelected);
+    }
+
+    private void OnTraitsSelected(NivalisTraitsSelectedMessage msg, EntitySessionEventArgs args)
+    {
+        _pendingTraits[args.SenderSession.UserId] = new List<ProtoId<NivalisTraitPrototype>>(msg.Traits);
     }
 
     private void OnJoinGame(NivalisJoinGameMessage msg, EntitySessionEventArgs args)
@@ -311,6 +324,18 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         }
     }
 
+    private void ApplySelectedTraits(EntityUid mob, NetUserId userId)
+    {
+        if (!_pendingTraits.TryGetValue(userId, out var selected))
+            return;
+
+        var ent = (Entity<NivalisTraitComponent?>)mob;
+        foreach (var traitId in selected)
+        {
+            _traits.AddTrait(ent, traitId);
+        }
+    }
+
     private EntityUid SpawnAsSurvivor(Entity<NivalisSurvivorRuleComponent> rule, ICommonSession session, HumanoidCharacterProfile profile)
     {
         if (!TryGetSpawnCoordinates(out var spawnCoords))
@@ -327,7 +352,9 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
 
         EnsureComp<NivalisEnvironmentImmunityComponent>(mob);
 
-        EnsureComp<NivalisPerkComponent>(mob);
+        EnsureComp<NivalisTraitComponent>(mob);
+
+        ApplySelectedTraits(mob, session.UserId);
 
         EnsureComp<NivalisSurvivalResourceComponent>(mob);
         EnsureComp<NivalisStaminaComponent>(mob);

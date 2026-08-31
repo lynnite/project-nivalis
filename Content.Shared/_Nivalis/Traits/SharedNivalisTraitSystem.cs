@@ -1,8 +1,8 @@
 using Robust.Shared.Prototypes;
 
-namespace Content.Shared._Nivalis.Perks;
+namespace Content.Shared._Nivalis.Traits;
 
-public abstract partial class SharedNivalisPerkSystem : EntitySystem
+public abstract partial class SharedNivalisTraitSystem : EntitySystem
 {
     [Dependency] private IPrototypeManager _proto = default!;
 
@@ -10,16 +10,16 @@ public abstract partial class SharedNivalisPerkSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<NivalisPerkComponent, MapInitEvent>(OnMapInit);
+        SubscribeLocalEvent<NivalisTraitComponent, MapInitEvent>(OnMapInit);
     }
 
-    private void OnMapInit(Entity<NivalisPerkComponent> ent, ref MapInitEvent args)
+    private void OnMapInit(Entity<NivalisTraitComponent> ent, ref MapInitEvent args)
     {
         Recalculate(ent);
         Dirty(ent);
     }
 
-    public bool Recalculate(Entity<NivalisPerkComponent> ent)
+    public bool Recalculate(Entity<NivalisTraitComponent> ent)
     {
         var oldDealt = ent.Comp.DamageDealtMult;
         var oldTaken = ent.Comp.DamageTakenMult;
@@ -37,21 +37,21 @@ public abstract partial class SharedNivalisPerkSystem : EntitySystem
         ent.Comp.StaminaDrainMult = 1f;
         ent.Comp.MoralePenaltyReduction = 0f;
 
-        foreach (var perkId in ent.Comp.Perks)
+        foreach (var traitId in ent.Comp.Traits)
         {
-            if (!_proto.TryIndex<NivalisPerkPrototype>(perkId, out var perk))
+            if (!_proto.TryIndex<NivalisTraitPrototype>(traitId, out var trait))
             {
-                Log.Error($"Unknown Nivalis perk '{perkId}' on {ToPrettyString(ent.Owner)}");
+                Log.Error($"Unknown Nivalis trait '{traitId}' on {ToPrettyString(ent.Owner)}");
                 continue;
             }
 
-            ent.Comp.DamageDealtMult *= perk.DamageDealtMult;
-            ent.Comp.DamageTakenMult *= perk.DamageTakenMult;
-            ent.Comp.SpeedMult *= perk.SpeedMult;
-            ent.Comp.HungerDecayMult *= perk.HungerDecayMult;
-            ent.Comp.ThirstDecayMult *= perk.ThirstDecayMult;
-            ent.Comp.StaminaDrainMult *= perk.StaminaDrainMult;
-            ent.Comp.MoralePenaltyReduction += perk.MoralePenaltyReduction;
+            ent.Comp.DamageDealtMult *= trait.DamageDealtMult;
+            ent.Comp.DamageTakenMult *= trait.DamageTakenMult;
+            ent.Comp.SpeedMult *= trait.SpeedMult;
+            ent.Comp.HungerDecayMult *= trait.HungerDecayMult;
+            ent.Comp.ThirstDecayMult *= trait.ThirstDecayMult;
+            ent.Comp.StaminaDrainMult *= trait.StaminaDrainMult;
+            ent.Comp.MoralePenaltyReduction += trait.MoralePenaltyReduction;
         }
 
         ent.Comp.DamageDealtMult = MathF.Max(0.1f, ent.Comp.DamageDealtMult);

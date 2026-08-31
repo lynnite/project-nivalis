@@ -37,6 +37,7 @@
                       MinWidth="230" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button Name="ReadyButton" Text="NOT READY" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="LoadoutButton" Text="LOADOUT" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <Button Name="TraitsButton" Text="TRAITS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="ChallengesButton" Text="CHALLENGES" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="QuartermasterButton" Text="QUARTERMASTER" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="PatreonButton" Text="PATREON" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
@@ -44,6 +45,20 @@
             <Control MinSize="0 12" />
             <Button Name="QuitButton" Text="QUIT" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
         </BoxContainer>
+
+        <PanelContainer Name="TraitsPanel" Visible="False" MinWidth="380" MinHeight="520">
+            <BoxContainer Orientation="Vertical" MinWidth="360"
+                          VerticalExpand="True" Margin="8">
+                <Label Name="TraitsCountValue" Text="TRAITS: 0/3" FontColorOverride="#8FA3B8"
+                       HorizontalAlignment="Center" Margin="0 0 8 0" />
+                <ScrollContainer Name="TraitsScroll" HScrollEnabled="False"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalExpand="True" MinHeight="440">
+                    <BoxContainer Name="ArcContainer" Orientation="Vertical"
+                                  HorizontalExpand="True" SeparationOverride="14" />
+                </ScrollContainer>
+            </BoxContainer>
+        </PanelContainer>
 
         <BoxContainer Name="ProgressionBox" Orientation="Vertical"
                       SeparationOverride="8" MinSize="300 0"

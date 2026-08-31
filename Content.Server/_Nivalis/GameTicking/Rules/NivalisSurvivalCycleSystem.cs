@@ -2,7 +2,7 @@ using Content.Server.Chat.Systems;
 using Content.Server.GameTicking.Rules;
 using Content.Server._Nivalis.Traits;
 using Content.Shared._Nivalis.GameTicking.Components;
-using Content.Shared._Nivalis.Perks;
+using Content.Shared._Nivalis.Traits;
 using Content.Shared.GameTicking.Components;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
@@ -152,13 +152,13 @@ public sealed partial class NivalisSurvivalCycleSystem : GameRuleSystem<NivalisS
 
     private void OfferWaveTraits()
     {
-        var query = EntityQueryEnumerator<NivalisPerkComponent>();
-        while (query.MoveNext(out var uid, out var perk))
+        var query = EntityQueryEnumerator<NivalisTraitComponent>();
+        while (query.MoveNext(out var uid, out var traits))
         {
-            if (perk.Perks.Count >= perk.MaxPerks)
+            if (traits.Traits.Count >= traits.MaxTraits)
                 continue;
 
-            _traitDraft.OpenTraitDraft(uid, perk, 3);
+            _traitDraft.OpenTraitDraft(uid, traits, 3);
         }
     }
 

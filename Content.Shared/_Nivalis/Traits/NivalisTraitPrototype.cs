@@ -1,9 +1,9 @@
 using Robust.Shared.Prototypes;
 
-namespace Content.Shared._Nivalis.Perks;
+namespace Content.Shared._Nivalis.Traits;
 
-[Prototype("perk")]
-public sealed partial class NivalisPerkPrototype : IPrototype
+[Prototype("nivalisTrait")]
+public sealed partial class NivalisTraitPrototype : IPrototype
 {
     [IdDataField]
     public string ID { get; private set; } = string.Empty;
@@ -35,3 +35,4 @@ public sealed partial class NivalisPerkPrototype : IPrototype
     [DataField]
     public float MoralePenaltyReduction = 0f;
 }
+

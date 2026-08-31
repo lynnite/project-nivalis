@@ -1,20 +1,17 @@
-using Content.Shared._Nivalis.Perks;
+using Content.Shared._Nivalis.Traits;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
-namespace Content.Shared._Nivalis.Perks;
+namespace Content.Shared._Nivalis.Traits;
 
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true), Access(typeof(SharedNivalisPerkSystem))]
-public sealed partial class NivalisPerkComponent : Component
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true), Access(typeof(SharedNivalisTraitSystem))]
+public sealed partial class NivalisTraitComponent : Component
 {
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public List<ProtoId<NivalisPerkPrototype>> Perks = new();
+    public List<ProtoId<NivalisTraitPrototype>> Traits = new();
 
-    /// <summary>
-    ///     Maximum number of perks a survivor may hold
-    /// </summary>
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
-    public int MaxPerks = 5;
+    public int MaxTraits = 3;
 
     [ViewVariables]
     public float DamageDealtMult = 1f;
@@ -31,4 +28,3 @@ public sealed partial class NivalisPerkComponent : Component
     [ViewVariables]
     public float MoralePenaltyReduction = 0f;
 }
-

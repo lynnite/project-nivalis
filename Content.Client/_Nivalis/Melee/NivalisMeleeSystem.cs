@@ -4,6 +4,7 @@ using Content.Client.Gameplay;
 using Content.Shared._Nivalis.Melee;
 using Content.Shared._Nivalis.Melee.Events;
 using Content.Shared._Nivalis.Stamina;
+using Content.Shared._Nivalis.Traits;
 using Content.Shared.CombatMode;
 using Content.Shared.Effects;
 using Robust.Client.GameObjects;
@@ -271,7 +272,8 @@ public sealed partial class NivalisMeleeSystem : SharedNivalisMeleeSystem
 
     private void ClientShove(EntityUid user, EntityUid target, EntityCoordinates coordinates, EntityUid weaponUid, NivalisMeleeComponent? weapon)
     {
-        _nextShoveTime = Timing.CurTime + TimeSpan.FromSeconds(1.5);
+        var shoveCooldown = 1.5 * GetTraitFloat(user, c => c.ShoveCooldownMult);
+        _nextShoveTime = Timing.CurTime + TimeSpan.FromSeconds(shoveCooldown);
 
         if (weapon != null)
         {

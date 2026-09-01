@@ -1,4 +1,5 @@
 using Content.Shared._Nivalis.Stamina;
+using Content.Shared._Nivalis.Traits;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.StatusEffectNew;
@@ -28,10 +29,19 @@ public sealed partial class NivalisStaminaSystem : EntitySystem
 
     private void OnMapInit(Entity<NivalisStaminaComponent> ent, ref MapInitEvent args)
     {
-        ent.Comp.Current = ent.Comp.Max;
+        ent.Comp.Current = GetEffectiveMax(ent.Owner, ent.Comp);
         ent.Comp.Exhaustion = 0f;
         UpdateExhaustion(ent);
         Dirty(ent);
+    }
+
+    private float GetEffectiveMax(EntityUid uid, NivalisStaminaComponent comp)
+    {
+        var bonus = 0f;
+        if (TryComp<NivalisTraitComponent>(uid, out var traits) && traits.MaxStaminaBonus > 0f)
+            bonus += traits.MaxStaminaBonus;
+
+        return comp.Max + bonus;
     }
 
     private void OnShutdown(Entity<NivalisStaminaComponent> ent, ref ComponentShutdown args)
@@ -55,12 +65,17 @@ public sealed partial class NivalisStaminaSystem : EntitySystem
             {
                 comp.Exhaustion = MathF.Min(comp.ExhaustionMax, comp.Exhaustion + comp.SprintExhaustionDrain * frameTime);
                 comp.LastExertion = _timing.CurTime;
+                var effMax = GetEffectiveMax(uid, comp);
+                if (comp.Current > effMax)
+                    comp.Current = effMax;
             }
             else
             {
                 if (_timing.CurTime - comp.LastExertion >= TimeSpan.FromSeconds(comp.RegenDelay))
                 {
-                    comp.Current = MathF.Min(comp.Max, comp.Current + comp.RecoveryRate * frameTime);
+                    var regenMult = TryComp<NivalisTraitComponent>(uid, out var traits) ? traits.StaminaRegenMult : 1f;
+                    var recovery = comp.RecoveryRate * regenMult;
+                    comp.Current = MathF.Min(GetEffectiveMax(uid, comp), comp.Current + recovery * frameTime);
                     comp.Exhaustion = MathF.Max(0f, comp.Exhaustion - comp.ExhaustionRecoveryRate * frameTime);
                 }
             }

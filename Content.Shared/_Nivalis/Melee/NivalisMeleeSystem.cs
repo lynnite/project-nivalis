@@ -4,6 +4,7 @@ using System.Numerics;
 using Content.Shared._Nivalis.Melee.Events;
 using Content.Shared._Nivalis.Stamina;
 using Content.Shared._Nivalis.Status;
+using Content.Shared._Nivalis.Traits;
 using Content.Shared.ActionBlocker;
 using Content.Shared.CombatMode;
 using Content.Shared.Damage;
@@ -331,6 +332,8 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             if (lowStamina)
                 cooldownSeconds *= weapon.LowStaminaMultiplier;
 
+            cooldownSeconds *= GetTraitFloat(user, c => c.LightSwingIntervalMult);
+
             weapon.NextAttack = curTime + TimeSpan.FromSeconds(cooldownSeconds);
 
             DirtyField(weaponUid, weapon, nameof(NivalisMeleeComponent.NextAttack));
@@ -341,6 +344,8 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             var fireRate = 1f / MathF.Max(0.1f, weapon.AttackRate);
             if (lowStamina)
                 fireRate *= weapon.LowStaminaMultiplier;
+
+            fireRate *= GetTraitFloat(user, c => c.HeavySwingIntervalMult);
 
             weapon.NextAttack = curTime + TimeSpan.FromSeconds(fireRate);
             DirtyField(weaponUid, weapon, nameof(NivalisMeleeComponent.NextAttack));
@@ -409,11 +414,39 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         Dirty(user, stamina);
     }
 
+    protected float GetTraitFloat(EntityUid user, Func<NivalisTraitComponent, float> getter)
+    {
+        return TryComp<NivalisTraitComponent>(user, out var traits) ? getter(traits) : 1f;
+    }
+
+    private bool IsFistAttack(EntityUid user, EntityUid weaponUid)
+    {
+        return weaponUid == user;
+    }
+
+    private DamageSpecifier ApplyMeleeDamageMultipliers(EntityUid user, EntityUid weaponUid, DamageSpecifier damage)
+    {
+        if (!TryComp<NivalisTraitComponent>(user, out var traits))
+            return damage;
+
+        var mult = traits.MeleeDamageMult;
+        if (IsFistAttack(user, weaponUid))
+            mult *= traits.FistDamageMult;
+
+        if (MathHelper.CloseTo(mult, 1f))
+            return damage;
+
+        return damage * mult;
+    }
+
     protected abstract bool InRange(EntityUid user, EntityUid target, float range, ICommonSession? session);
 
     protected virtual void DoLightAttack(EntityUid user, NivalisLightAttackEvent ev, EntityUid meleeUid, NivalisMeleeComponent component, ICommonSession? session)
     {
         var damage = component.LightDamage;
+
+        damage = ApplyMeleeDamageMultipliers(user, meleeUid, damage);
+
         var target = GetEntity(ev.Target);
         var resistanceBypass = false;
 
@@ -473,6 +506,9 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         var distance = MathF.Min(component.Range, direction.Length());
 
         var damage = component.HeavyDamage;
+
+        damage = ApplyMeleeDamageMultipliers(user, meleeUid, damage);
+
         var entities = GetEntityList(ev.Entities);
 
         if (entities.Count == 0)

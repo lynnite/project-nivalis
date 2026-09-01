@@ -82,8 +82,8 @@
         </BoxContainer>
 
         <BoxContainer Name="Header" Orientation="Vertical" HorizontalExpand="True">
-            <Label Name="TitleLabel" Text="PROJECT NIVALIS" FontColorOverride="#FFFFFF"
-                   Margin="0 2 0 0" />
+            <Label Name="TitleLabel" Text="NIVALIS" FontColorOverride="#FFFFFF"
+                         Margin="0 2 0 0" />
             <Label Text="i cant text, help" FontColorOverride="#B9C6D2" Margin="2 0 0 2" />
             <BoxContainer Orientation="Horizontal" SeparationOverride="26" Margin="0 10 0 0">
                 <BoxContainer Orientation="Horizontal" SeparationOverride="6">

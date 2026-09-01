@@ -1,5 +1,6 @@
 using System.Numerics;
 using Content.Shared.DoAfter;
+using Content.Shared._Nivalis.Traits;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Physics;
@@ -239,10 +240,14 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
 
     private bool StartReloadDoAfter(EntityUid gun, EntityUid user, NivalisReloadComponent reload)
     {
+        var delay = reload.ReloadDelay;
+        if (TryComp<NivalisTraitComponent>(user, out var traits) && traits.ReloadDelayMult != 1f)
+            delay *= traits.ReloadDelayMult;
+
         var doAfter = new DoAfterArgs(
             EntityManager,
             user,
-            reload.ReloadDelay,
+            delay,
             new NivalisReloadDoAfterEvent(),
             eventTarget: gun,
             used: gun)

@@ -27,4 +27,42 @@ public sealed partial class NivalisTraitComponent : Component
     public float StaminaDrainMult = 1f;
     [ViewVariables]
     public float MoralePenaltyReduction = 0f;
+
+    [ViewVariables]
+    public float LightSwingIntervalMult = 1f;
+    [ViewVariables]
+    public float HeavySwingIntervalMult = 1f;
+    [ViewVariables]
+    public float MeleeDamageMult = 1f;
+    [ViewVariables]
+    public float FistDamageMult = 1f;
+    [ViewVariables]
+    public float ShoveCooldownMult = 1f;
+
+    [ViewVariables]
+    public float SemiAutoFireRateMult = 1f;
+    [ViewVariables]
+    public float FanningFireRateMult = 1f;
+    [ViewVariables]
+    public float RecoilMult = 1f;
+    [ViewVariables]
+    public float HipFireSpreadMult = 1f;
+    [ViewVariables]
+    public float ReloadDelayMult = 1f;
+    [ViewVariables]
+    public float AimSpeedMult = 1f;
+    [ViewVariables]
+    public float FirearmExplosiveDamageTakenMult = 1f;
+
+    [ViewVariables]
+    public float MaxHealthBonus = 0f;
+    [ViewVariables]
+    public float MaxStaminaBonus = 0f;
+    [ViewVariables]
+    public float StaminaRegenMult = 1f;
+    [ViewVariables]
+    public float HealthRegenPerTick = 0f;
+    [ViewVariables]
+    public float HealthRegenInterval = 0f;
 }
+

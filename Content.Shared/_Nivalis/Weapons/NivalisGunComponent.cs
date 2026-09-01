@@ -28,9 +28,13 @@ public sealed partial class NivalisGunComponent : Component
     [DataField, AutoNetworkedField]
     public int ReloadAmount = 0;
 
+    [DataField, AutoNetworkedField]
+    public bool Fanning = false;
+
     [DataField]
     public DamageSpecifier? LimbDamage;
 
     [DataField]
     public DamageSpecifier? HeadshotDamage;
 }
+

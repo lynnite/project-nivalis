@@ -332,8 +332,9 @@ public sealed partial class NivalisLobbyControl : Control
 
             var pickButton = new Button
             {
-                HorizontalAlignment = HAlignment.Center,
+                HorizontalAlignment = HAlignment.Right,
                 MinSize = new Vector2(320, 70),
+                MaxSize = new Vector2(320, 70),
             };
 
             var content = new BoxContainer
@@ -446,6 +447,7 @@ public sealed partial class NivalisLobbyControl : Control
             var width = available * (1f - t * 0.18f);
             button.HorizontalAlignment = HAlignment.Right;
             button.MinSize = new Vector2(width, height);
+            button.MaxSize = new Vector2(width, height);
             button.Margin = new Thickness(0, -popUp, 0, popUp);
         }
     }

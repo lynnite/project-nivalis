@@ -28,6 +28,15 @@
     breakOnMove: false
     walkSpeedMultiplier: 0.6
     sprintSpeedMultiplier: 0.6
+  # Every Nivalis gun can aim down sights (right mouse button) to tighten its
+  # spread and zoom the viewport. The shotgun below overrides these with wider values.
+  - type: NivalisAim
+  - type: NivalisScatterDirection
+    maxLeft: 5
+    maxRight: 5
+  - type: NivalisAimedScatter
+    maxLeft: 1.5
+    maxRight: 1.5
 
 - type: entity
   parent: [BaseNivalisGun, BaseMinorContraband]

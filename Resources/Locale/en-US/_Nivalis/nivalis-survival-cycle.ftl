@@ -18,30 +18,50 @@ nivalis-hud-phase-scavenge = SCAVENGE
 nivalis-hud-phase-storm = STORM
 
 # survivor traits
-trait-risktaker-name = Risktaker
-trait-risktaker-desc = Deal 5% more damage, but take 5% more damage in return
+trait-violent-tendencies-name = Violent Tendencies
+trait-violent-tendencies-desc = Performs light swings with Melee Weapons 45% faster.
 
-trait-conservative-name = Conservative
-trait-conservative-desc = Take 6% less damage, consume 20% less food and water, and decrease 25% of morale loss
+trait-paranoid-name = Paranoid
+trait-paranoid-desc = Shoots semi-automatic firearms 50% faster. [bold]Snappy Aiming[/bold] - Increases ADS speed.
 
-trait-berserker-name = Berserker
-trait-berserker-desc = Deal 15% more damage, but take 15% more damage in return
+trait-impatient-name = Impatient
+trait-impatient-desc = Gains 15% more movement speed.
 
-trait-frenzied-name = Frenzied
-trait-frenzied-desc = Move 10% faster and drain stamina 10% slower
+trait-honorable-name = Honorable
+trait-honorable-desc = Double damage while using fists.
 
-trait-deep-wounds-name = Deep Wounds
-trait-deep-wounds-desc = Deal 10% more damage against any target
+trait-tormented-name = Tormented
+trait-tormented-desc = Max health increased by 20.
 
-trait-opportunist-name = Opportunist
-trait-opportunist-desc = Deal 5% more damage and consume 10% less food and water
+trait-dependable-name = Dependable
+trait-dependable-desc = Receive 15% less damage.
 
+trait-survivor-name = Survivor
+trait-survivor-desc = Restore 1 health every 10 seconds.
+trait-relentless-name = Relentless
+trait-relentless-desc = Faster stamina regeneration.
+
+trait-aggressive-behavior-name = Aggressive Behavior
+trait-aggressive-behavior-desc = Gain 25% more melee damage while using Fists and perform shoves 30% faster.
+
+trait-reliable-name = Reliable
+trait-reliable-desc = Performs reloads with firearms 65% faster. [bold]Faster Chambering[/bold] - Reload guns with chambers significantly faster.
+
+trait-manic-name = Manic
+trait-manic-desc = Perform heavy swings with melee weapons 45% faster.
+
+trait-fearless-name = Fearless
+trait-fearless-desc = Receives 25% less damage from firearms and explosives.
+
+trait-calm-name = Calm
+trait-calm-desc = Increases max stamina by 75.
 trait-lone-wolf-name = Lone Wolf
-trait-lone-wolf-desc = Deal 10% more damage and drain stamina 10% slower
+trait-lone-wolf-desc = Hip fire ranged weapons 65% more accurately. [bold]Fanning and Levering[/bold] - Fire revolvers and Winchester guns 50% faster.
+trait-methodical-name = Methodical
+trait-methodical-desc = Deal 15% more melee damage.
 
-trait-medic-name = Medic
-trait-medic-desc = Take 3% less damage and shrug off 50% of morale loss
-
+trait-professional-name = Professional
+trait-professional-desc = Reduce felt recoil from all firearms by 65%. [bold]Cleaner Aiming[/bold] - Reduce recoil while in ADS.
 # trait drafting
 nivalis-trait-draft-title = Choose a Trait
 nivalis-trait-draft-prompt = Choose a trait to add to your loadout:

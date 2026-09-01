@@ -1,5 +1,4 @@
-using Content.Server._Nivalis.Perks;
-using Content.Shared._Nivalis.Perks;
+using Content.Server._Nivalis.Traits;
 using Content.Shared._Nivalis.Traits;
 using Content.Shared.UserInterface;
 using Robust.Server.Player;
@@ -11,7 +10,7 @@ namespace Content.Server._Nivalis.Traits;
 
 public sealed partial class NivalisTraitDraftSystem : EntitySystem
 {
-    [Dependency] private NivalisPerkSystem _perks = default!;
+    [Dependency] private NivalisTraitSystem _traits = default!;
     [Dependency] private SharedUserInterfaceSystem _ui = default!;
     [Dependency] private IPrototypeManager _proto = default!;
     [Dependency] private IRobustRandom _random = default!;
@@ -27,9 +26,9 @@ public sealed partial class NivalisTraitDraftSystem : EntitySystem
             });
     }
 
-    public void OpenTraitDraft(EntityUid owner, NivalisPerkComponent perk, int count)
+    public void OpenTraitDraft(EntityUid owner, NivalisTraitComponent traits, int count)
     {
-        var candidates = _perks.GetDraftChoices((owner, perk), count, _random);
+        var candidates = _traits.GetDraftChoices((owner, traits), count, _random);
         if (candidates.Count == 0)
             return;
 
@@ -40,13 +39,13 @@ public sealed partial class NivalisTraitDraftSystem : EntitySystem
         var state = new NivalisTraitDraftUiState();
         foreach (var id in candidates)
         {
-            if (!_proto.TryIndex(id, out var perkProto))
+            if (!_proto.TryIndex(id, out var traitProto))
                 continue;
             state.Choices.Add(new NivalisTraitDraftChoice
             {
                 Id = id,
-                Name = Loc.GetString(perkProto.Name),
-                Description = Loc.GetString(perkProto.Description),
+                Name = Loc.GetString(traitProto.Name),
+                Description = Loc.GetString(traitProto.Description),
             });
         }
 
@@ -63,10 +62,9 @@ public sealed partial class NivalisTraitDraftSystem : EntitySystem
         if (args.Actor != ent.Owner)
             return;
 
-        var survivor = (Entity<NivalisPerkComponent?>)ent.Owner;
-        _perks.AddPerk(survivor, args.TraitId);
+        var survivor = (Entity<NivalisTraitComponent?>)ent.Owner;
+        _traits.AddTrait(survivor, args.TraitId);
         _ui.CloseUi(ent.Owner, NivalisTraitDraftUiKey.Key, (ICommonSession?)null);
         RemComp<NivalisTraitDraftComponent>(ent.Owner);
     }
 }
-

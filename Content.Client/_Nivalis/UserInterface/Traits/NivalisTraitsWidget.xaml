@@ -1,0 +1,8 @@
+<widgets:NivalisTraitsWidget xmlns="https://spacestation14.io"
+                              xmlns:widgets="clr-namespace:Content.Client._Nivalis.UserInterface.Traits"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Top"
+                              Margin="0 62 10 0">
+    <BoxContainer Name="TraitContainer" Orientation="Horizontal" SeparationOverride="4"/>
+</widgets:NivalisTraitsWidget>
+

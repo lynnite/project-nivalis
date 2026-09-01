@@ -6,7 +6,7 @@
     xmlns:chat="clr-namespace:Content.Client.UserInterface.Systems.Chat.Widgets"
     xmlns:alerts="clr-namespace:Content.Client.UserInterface.Systems.Alerts.Widgets"
     xmlns:nivalis="clr-namespace:Content.Client._Nivalis.UserInterface.SurvivalHud"
-    xmlns:nivalisperks="clr-namespace:Content.Client._Nivalis.UserInterface.Perks"
+    xmlns:nivalistraits="clr-namespace:Content.Client._Nivalis.UserInterface.Traits"
     xmlns:nivalishands="clr-namespace:Content.Client._Nivalis.UserInterface.Hands"
     xmlns:widgets="clr-namespace:Content.Client.UserInterface.Systems.Ghost.Widgets"
     xmlns:hotbar="clr-namespace:Content.Client.UserInterface.Systems.Hotbar.Widgets"
@@ -34,7 +34,7 @@
     <chat:ResizableChatBox Name="Chat" Access="Protected" />
     <alerts:AlertsUI Name="Alerts" Access="Protected" />
     <nivalis:NivalisSurvivalHud Name="SurvivalHud" Access="Protected" />
-    <nivalisperks:NivalisPerksWidget Name="PerksWidget" Access="Protected" />
+    <nivalistraits:NivalisTraitsWidget Name="TraitsWidget" Access="Protected" />
     <nivalishands:NivalisHandsBar Name="NivalisHandsBar" Access="Protected" />
 </screens:DefaultGameScreen>
 

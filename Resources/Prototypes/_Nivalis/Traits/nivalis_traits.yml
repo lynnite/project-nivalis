@@ -1,0 +1,101 @@
+- type: nivalisTrait
+  id: ViolentTendencies
+  name: trait-violent-tendencies-name
+  description: trait-violent-tendencies-desc
+  lightSwingIntervalMult: 0.69
+
+- type: nivalisTrait
+  id: Paranoid
+  name: trait-paranoid-name
+  description: trait-paranoid-desc
+  semiAutoFireRateMult: 1.5
+  aimSpeedMult: 0.6
+
+- type: nivalisTrait
+  id: Impatient
+  name: trait-impatient-name
+  description: trait-impatient-desc
+  speedMult: 1.15
+
+- type: nivalisTrait
+  id: Honorable
+  name: trait-honorable-name
+  description: trait-honorable-desc
+  fistDamageMult: 2.0
+
+- type: nivalisTrait
+  id: Tormented
+  name: trait-tormented-name
+  description: trait-tormented-desc
+  maxHealthBonus: 20
+
+- type: nivalisTrait
+  id: Dependable
+  name: trait-dependable-name
+  description: trait-dependable-desc
+  damageTakenMult: 0.85
+
+- type: nivalisTrait
+  id: Survivor
+  name: trait-survivor-name
+  description: trait-survivor-desc
+  healthRegenPerTick: 1.0
+  healthRegenInterval: 10
+
+- type: nivalisTrait
+  id: Relentless
+  name: trait-relentless-name
+  description: trait-relentless-desc
+  staminaRegenMult: 1.5
+
+- type: nivalisTrait
+  id: AggressiveBehavior
+  name: trait-aggressive-behavior-name
+  description: trait-aggressive-behavior-desc
+  fistDamageMult: 1.25
+  shoveCooldownMult: 0.7
+
+- type: nivalisTrait
+  id: Reliable
+  name: trait-reliable-name
+  description: trait-reliable-desc
+  reloadDelayMult: 0.35
+
+- type: nivalisTrait
+  id: Manic
+  name: trait-manic-name
+  description: trait-manic-desc
+  heavySwingIntervalMult: 0.69
+
+- type: nivalisTrait
+  id: Fearless
+  name: trait-fearless-name
+  description: trait-fearless-desc
+  firearmExplosiveDamageTakenMult: 0.75
+
+- type: nivalisTrait
+  id: Calm
+  name: trait-calm-name
+  description: trait-calm-desc
+  maxStaminaBonus: 75
+
+- type: nivalisTrait
+  id: LoneWolf
+  name: trait-lone-wolf-name
+  description: trait-lone-wolf-desc
+  hipFireSpreadMult: 0.35
+  fanningFireRateMult: 1.5
+
+- type: nivalisTrait
+  id: Methodical
+  name: trait-methodical-name
+  description: trait-methodical-desc
+  meleeDamageMult: 1.15
+
+- type: nivalisTrait
+  id: Professional
+  name: trait-professional-name
+  description: trait-professional-desc
+  recoilMult: 0.35
+
+

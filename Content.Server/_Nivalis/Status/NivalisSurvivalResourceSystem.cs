@@ -1,5 +1,5 @@
-using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Status;
+using Content.Shared._Nivalis.Traits;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.Damage.Components;
@@ -98,18 +98,18 @@ public sealed partial class NivalisSurvivalResourceSystem : EntitySystem
 
             var changed = false;
 
-            TryComp<NivalisPerkComponent>(uid, out var perks);
+            TryComp<NivalisTraitComponent>(uid, out var traits);
 
             if (comp.Hunger > 0f)
             {
-                var hungerDecay = comp.HungerDecay * (perks?.HungerDecayMult ?? 1f);
+                var hungerDecay = comp.HungerDecay * (traits?.HungerDecayMult ?? 1f);
                 comp.Hunger = MathF.Max(0f, comp.Hunger - hungerDecay * frameTime);
                 changed = true;
             }
 
             if (comp.Thirst > 0f)
             {
-                var thirstDecay = comp.ThirstDecay * (perks?.ThirstDecayMult ?? 1f);
+                var thirstDecay = comp.ThirstDecay * (traits?.ThirstDecayMult ?? 1f);
                 comp.Thirst = MathF.Max(0f, comp.Thirst - thirstDecay * frameTime);
                 changed = true;
             }

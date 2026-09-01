@@ -73,6 +73,7 @@ public sealed partial class NivalisLobbyControl : Control
     private Font _displayBold = null!;
     private Font _displayRegular = null!;
     private Font _displaySmall = null!;
+    private Font _displayTiny = null!;
     public NivalisLobbyControl()
     {
         IoCManager.InjectDependencies(this);
@@ -81,6 +82,7 @@ public sealed partial class NivalisLobbyControl : Control
         _displayBold = _resourceCache.GetFont("/Fonts/Orbitron/Orbitron-Bold.ttf", 28);
         _displayRegular = _resourceCache.GetFont("/Fonts/Orbitron/Orbitron-Regular.ttf", 15);
         _displaySmall = _resourceCache.GetFont("/Fonts/Orbitron/Orbitron-Regular.ttf", 11);
+        _displayTiny = _resourceCache.GetFont("/Fonts/Orbitron/Orbitron-Regular.ttf", 9);
         LayoutContainer.SetAnchorPreset(BackgroundViewport, LayoutContainer.LayoutPreset.Wide);
         LayoutContainer.SetAnchorAndMarginPreset(Header, LayoutContainer.LayoutPreset.TopWide, margin: 20);
         LayoutContainer.SetAnchorAndMarginPreset(ChatPanel, LayoutContainer.LayoutPreset.RightWide, margin: 18);
@@ -248,6 +250,10 @@ public sealed partial class NivalisLobbyControl : Control
             var scanlineBox = new ScrollingScanlineStyleBox
             {
                 Texture = _scanlineTexture,
+                BackgroundColor = Color.FromHex("#A9D8FF").WithAlpha(0.38f),
+                BorderColor = Color.FromHex("#D3EFFF").WithAlpha(0.5f),
+                BorderThickness = 1f,
+                InwardLean = 0.08f,
             };
 
             _navStyle[button] = scanlineBox;
@@ -346,9 +352,8 @@ public sealed partial class NivalisLobbyControl : Control
             {
                 Text = desc,
                 FontColorOverride = Color.FromHex("#8FA3B8"),
-                FontOverride = _displaySmall,
+                FontOverride = _displayTiny,
                 HorizontalExpand = true,
-                HorizontalAlignment = HAlignment.Left,
                 Margin = new Thickness(12, 0, 12, 6),
             };
             content.AddChild(header);
@@ -363,6 +368,8 @@ public sealed partial class NivalisLobbyControl : Control
             var scanlineBox = new ScrollingScanlineStyleBox
             {
                 Texture = _scanlineTexture,
+                InwardLean = -0.08f,
+                FadeRight = 0.55f,
             };
             _traitStyle[pickButton] = scanlineBox;
             pickButton.StyleBoxOverride = scanlineBox;
@@ -417,16 +424,11 @@ public sealed partial class NivalisLobbyControl : Control
         var baseH = 70f;
         var sep = 14f;
         var stride = baseH + sep;
-        var count = _traitPickButtons.Count;
 
         var available = Math.Max(TraitsScroll.Size.X - 16f, 1f);
-        var contentHeight = (count - 1) * stride + baseH;
-        var scrollRange = Math.Max(contentHeight - viewport, 1f);
-        var frac = Math.Clamp(scroll / scrollRange, 0f, 1f);
+        var halfSpan = Math.Max(viewport * 0.8f, 1f);
 
-        var firstCenter = baseH / 2f;
-        var focusCenter = firstCenter + frac * ((count - 1) * stride);
-        var halfSpan = Math.Max(viewport * 0.5f, 1f);
+        var focusCenter = scroll + viewport / 2f;
 
         foreach (var (button, _) in _traitPickButtons)
         {
@@ -440,7 +442,10 @@ public sealed partial class NivalisLobbyControl : Control
 
             var height = baseH * (1f + 0.2f * (1f - t));
             var popUp = (1f - t) * 3f;
-            button.MinSize = new Vector2(available, height);
+
+            var width = available * (1f - t * 0.18f);
+            button.HorizontalAlignment = HAlignment.Right;
+            button.MinSize = new Vector2(width, height);
             button.Margin = new Thickness(0, -popUp, 0, popUp);
         }
     }

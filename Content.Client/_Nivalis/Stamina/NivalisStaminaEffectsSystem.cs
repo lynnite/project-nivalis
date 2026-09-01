@@ -20,12 +20,6 @@ public sealed partial class NivalisStaminaEffectsSystem : EntitySystem
     private NivalisStaminaHeartbeatOverlay? _heartbeatOverlay;
     private float _currentZoom = 1.0f;
 
-    /// <summary>
-    ///     The exhaustion zoom scale factor currently being applied to the local player's eye.
-    ///     &gt;= 1.0 (zoom out) as stamina depletes / exhaustion builds. Defaults to 1.0 when the
-    ///     player has no <see cref="NivalisStaminaComponent"/>. Consumed by the ADS zoom system so
-    ///     that aiming-down-sights zoom stacks multiplicatively with exhaustion zoom.
-    /// </summary>
     public float CurrentExhaustionZoomScale { get; private set; } = 1.0f;
 
     private const float StaminaMaxZoom = 0.18f;

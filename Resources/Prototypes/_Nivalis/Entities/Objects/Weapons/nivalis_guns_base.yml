@@ -16,7 +16,7 @@
     availableModes:
     - SemiAuto
     fireRate: 4
-    projectileSpeed: 80 # Very fast bullet projectiles (default is 40)
+    projectileSpeed: 80
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/lmg.ogg
   - type: AmmoCounter
@@ -28,8 +28,6 @@
     breakOnMove: false
     walkSpeedMultiplier: 0.6
     sprintSpeedMultiplier: 0.6
-  # Every Nivalis gun can aim down sights (right mouse button) to tighten its
-  # spread and zoom the viewport. The shotgun below overrides these with wider values.
   - type: NivalisAim
   - type: NivalisScatterDirection
     maxLeft: 5
@@ -169,7 +167,6 @@
       types:
         Bullet: 7
 
-# Shell burst fired by Nivalis shotguns, carrying the shotgun muzzle flash.
 - type: entity
   parent: NivalisScatterPelletBurst
   id: NivalisScatterPelletBurstShell
@@ -178,7 +175,6 @@
   - type: Ammo
     muzzleFlash: NivalisMuzzleFlashShotgun
 
-# Medium ammunition projectile fired by rifle-class Nivalis guns, with the rifle muzzle flash.
 - type: entity
   parent: BallisticBulletBaseNivalis
   id: NivalisBulletMedium

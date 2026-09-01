@@ -15,12 +15,6 @@ using Robust.Shared.Timing;
 
 namespace Content.Client._Nivalis.Weapons;
 
-/// <summary>
-///     Binds the Nivalis aim key (right mouse button) to send aim input to the server.
-///     While aiming down sights, the camera leans slightly into the direction the player is
-///     aiming/facing (a small directed zoom rather than a symmetric one). The slight zoom
-///     multiplicatively stacks with exhaustion zoom (see <see cref="NivalisStaminaEffectsSystem"/>).
-/// </summary>
 public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
 {
     [Dependency] private IPlayerManager _player = default!;
@@ -31,15 +25,11 @@ public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
     [Dependency] private NivalisStaminaEffectsSystem _stamina = default!;
 
     private bool _localAiming;
-    private float _adsAmount;          // 0..1, how far into ADS we currently are (smoothed).
+    private float _adsAmount;
     private float _currentEyeZoom = 1.0f;
 
-    /// <summary>
-    ///     How far (world units) the camera leans toward the aim direction at full ADS.
-    /// </summary>
     private const float MaxAdsOffset = 0.6f;
 
-    /// <summary>The slight symmetric zoom-in applied while ADSing.</summary>
     private const float AdsMinZoomScale = 0.95f;
 
     private const float ZoomLerpSpeed = 8f;
@@ -48,11 +38,8 @@ public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
     {
         base.Initialize();
 
-        // Run after the stamina effects system so the ADS + exhaustion zoom stack correctly.
         UpdatesAfter.Add(typeof(NivalisStaminaEffectsSystem));
 
-        // Guard against duplicate (EyeComponent, GetEyeOffsetEvent) subscriptions: the stamina
-        // system already owns that event, so contribute our directed offset via the relayed event.
         SubscribeLocalEvent<EyeComponent, GetEyeOffsetRelayedEvent>(OnGetEyeOffset);
 
         CommandBinds.Builder
@@ -69,7 +56,6 @@ public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
     {
         base.FrameUpdate(frameTime);
 
-        // Reset local aim state if we no longer hold an aimable gun (e.g. swapped hands while ADS).
         if (_player.LocalEntity is { } owner)
         {
             var held = _hands.GetActiveItem((owner, null));
@@ -77,8 +63,6 @@ public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
                 _localAiming = false;
         }
 
-        // Smoothly ramp the ADS amount up/down. This drives both the directed camera offset
-        // (see OnGetEyeOffset) and the slight zoom below.
         var target = _localAiming ? 1f : 0f;
         _adsAmount += (target - _adsAmount) * MathF.Min(1f, frameTime * ZoomLerpSpeed);
         if (!_localAiming && MathF.Abs(_adsAmount) < 0.001f)
@@ -87,14 +71,12 @@ public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
         if (_player.LocalEntity is not { } pid)
             return;
 
-        // Only drive the zoom while ADS is contributing (including smoothly winding down from it).
         if (_adsAmount <= 0f)
         {
             _currentEyeZoom = _eyeManager.CurrentEye.Zoom.X;
             return;
         }
 
-        // Slight zoom-in that stacks multiplicatively with the exhaustion zoom scale.
         var zoomScale = _stamina.CurrentExhaustionZoomScale * (1f + (AdsMinZoomScale - 1f) * _adsAmount);
 
         var baseZoom = 1.0f;
@@ -113,7 +95,6 @@ public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
         if (ent.Owner != _player.LocalEntity)
             return;
 
-        // Lean the camera toward where the player is aiming/facing while ADSing.
         if (_adsAmount <= 0f)
             return;
 
@@ -140,7 +121,6 @@ public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
             return;
         }
 
-        // Only start/stop aiming if the active hand actually holds an aimable gun.
         var held = _hands.GetActiveItem((pid, null));
         if (held == null || !HasComp<NivalisAimComponent>(held.Value))
         {
@@ -148,8 +128,6 @@ public sealed partial class NivalisAimSystem : SharedNivalisAimSystem
             return;
         }
 
-        // Track the local aim state so the camera response is always immediate, even outside
-        // the first predicted tick. Only the network event is prediction-gated.
         _localAiming = active;
 
         if (!_timing.IsFirstTimePredicted)

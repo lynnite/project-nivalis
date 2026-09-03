@@ -10,6 +10,7 @@ using Content.Server.Mind;
 using Content.Server.Roles;
 using Content.Server._Nivalis.Hands;
 using Content.Server._Nivalis.Traits;
+using Content.Server._Nivalis.Perks;
 using Content.Server.RoundEnd;
 using Content.Server.Station.Components;
 using Content.Server.Station.Events;
@@ -25,6 +26,7 @@ using Content.Shared._Nivalis.Stamina;
 using Content.Shared._Nivalis.Status;
 using Content.Shared._Nivalis.Survivor.Components;
 using Content.Shared._Nivalis.Traits;
+using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Weapons;
 using Content.Shared.GameTicking;
 using Content.Shared.GameTicking.Components;
@@ -67,6 +69,10 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
     /// </summary>
     private readonly Dictionary<NetUserId, List<ProtoId<NivalisTraitPrototype>>> _pendingTraits = new();
 
+    [Dependency] private NivalisPerkSystem _perks = default!;
+
+    private readonly Dictionary<NetUserId, ProtoId<NivalisPerkPrototype>?> _pendingPerk = new();
+
     public override void Initialize()
     {
         base.Initialize();
@@ -79,6 +85,12 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         SubscribeNetworkEvent<NivalisJoinGameMessage>(OnJoinGame);
         SubscribeNetworkEvent<NivalisSpectateCycleMessage>(OnSpectateCycle);
         SubscribeNetworkEvent<NivalisTraitsSelectedMessage>(OnTraitsSelected);
+        SubscribeNetworkEvent<NivalisPerkSelectedMessage>(OnPerkSelected);
+    }
+
+    private void OnPerkSelected(NivalisPerkSelectedMessage msg, EntitySessionEventArgs args)
+    {
+        _pendingPerk[args.SenderSession.UserId] = msg.Perk;
     }
 
     private void OnTraitsSelected(NivalisTraitsSelectedMessage msg, EntitySessionEventArgs args)
@@ -336,6 +348,14 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         }
     }
 
+    private void ApplySelectedPerk(EntityUid mob, NetUserId userId)
+    {
+        if (!_pendingPerk.TryGetValue(userId, out var perk) || perk == null)
+            return;
+
+        _perks.SetPerk((Entity<NivalisPerkComponent?>)mob, perk.Value);
+    }
+
     private EntityUid SpawnAsSurvivor(Entity<NivalisSurvivorRuleComponent> rule, ICommonSession session, HumanoidCharacterProfile profile)
     {
         if (!TryGetSpawnCoordinates(out var spawnCoords))
@@ -355,6 +375,8 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         EnsureComp<NivalisTraitComponent>(mob);
 
         ApplySelectedTraits(mob, session.UserId);
+
+        ApplySelectedPerk(mob, session.UserId);
 
         EnsureComp<NivalisSurvivalResourceComponent>(mob);
         EnsureComp<NivalisStaminaComponent>(mob);

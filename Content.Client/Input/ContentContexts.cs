@@ -60,6 +60,7 @@ namespace Content.Client.Input
             human.AddFunction(ContentKeyFunctions.ToggleKnockdown);
             // Nivalis
             human.AddFunction(ContentKeyFunctions.NivalisParry);
+            human.AddFunction(ContentKeyFunctions.NivalisPerkAbility);
             human.AddFunction(ContentKeyFunctions.NivalisShove);
             human.AddFunction(ContentKeyFunctions.NivalisAim);
             human.AddFunction(ContentKeyFunctions.NivalisReload);

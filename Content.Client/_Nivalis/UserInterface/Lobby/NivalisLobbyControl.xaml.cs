@@ -73,6 +73,8 @@ public sealed partial class NivalisLobbyControl : Control
         public string Icon = string.Empty;
         public string Name = string.Empty;
         public string Description = string.Empty;
+        public List<string> Pros = new();
+        public List<string> Cons = new();
     }
 
     public event Action? TraitsChanged;
@@ -788,6 +790,218 @@ public sealed partial class NivalisLobbyControl : Control
         };
     }
 
+    private static string[] PerkPros(string name)
+    {
+        return name switch
+        {
+            "Survivalist" => new[]
+            {
+                "Start with all inventory slots (Backpack).",
+                "More resilient to hunger and thirst; ration buff applies above 75% bar, decay twice as slow.",
+                "Extra home supplies (+50 scrap).",
+                "Starts with rations (3 R.I Beans, 3 UlayCola, 1 M.R.E Lunchbox, 1 Aquafill Bottle).",
+            },
+            "Damned" => new[]
+            {
+                "Morale does not affect you.",
+                "Fearless: Hanger influence immunity, can shove the Skinner, can parry the Sickler.",
+            },
+            "Lazarus" => new[]
+            {
+                "+20 max health.",
+                "Immune to Bleeds.",
+            },
+            "Zealot" => new[]
+            {
+                "+35% damage resistance.",
+                "+35 max health.",
+            },
+            "Prophet" => new[]
+            {
+                "+20% walkspeed.",
+                "+50% faster harvesting.",
+                "No fall damage.",
+                "+50% faster crude crafting.",
+            },
+            "Sovereign" => new[]
+            {
+                "+50 stamina.",
+                "Cursed Dagger: shoving applies Hex and deals 10 damage.",
+            },
+            "Mindflayer" => new[]
+            {
+                "+20% walkspeed.",
+                "+25% shove speed.",
+            },
+            "Immolator" => new[]
+            {
+                "Immune to Burning.",
+                "+25% melee damage.",
+            },
+            "Vagabond" => new[]
+            {
+                "+30% attack speed.",
+                "+15% walkspeed.",
+                "+15% melee damage.",
+            },
+            "Arbiter" => new[]
+            {
+                "+30% melee damage.",
+                "Immune to Cripple.",
+                "+30 max health.",
+            },
+            "Executioner" => new[]
+            {
+                "+20% damage resistance.",
+                "+50 stamina.",
+                "+30% attack speed.",
+                "+25% shove speed.",
+            },
+            "Berserker" => new[]
+            {
+                "+25% melee damage.",
+                "+15% damage resistance.",
+                "Unable to be Grappled.",
+                "Immune to Fracture.",
+            },
+            "Artillerist" => new[]
+            {
+                "+50% reload speed.",
+                "+40% hipfire accuracy.",
+                "Scavenge ~33% more ammo.",
+            },
+            "Riskrunner" => new[]
+            {
+                "+80% hipfire accuracy.",
+                "+80% recoil control.",
+                "Unable to be Grappled.",
+            },
+            "Hivemind" => new[]
+            {
+                "Immune to Bleed.",
+                "HIVE Aura (area of insects that apply sickness to nearby enemies).",
+            },
+            "Blitzer" => new[]
+            {
+                "+65% aiming speed.",
+                "+30% damage with Explosives.",
+                "Immune to Explosive effects.",
+            },
+            "Tickspider" => new[]
+            {
+                "+30% damage with Explosives.",
+                "+50% trap deployment speed.",
+                "+40% recoil control.",
+            },
+            "Crosslink" => new[]
+            {
+                "+20% walkspeed.",
+                "+30% hipfire accuracy.",
+                "+50% trap deployment speed.",
+                "Does not set off traps.",
+            },
+            _ => Array.Empty<string>(),
+        };
+    }
+
+    private static string[] PerkCons(string name)
+    {
+        return name switch
+        {
+            "Survivalist" => Array.Empty<string>(),
+            "Damned" => new[]
+            {
+                "Reduced combat and movement (-40% melee, shove, attack, walkspeed, defense; -55% recoil, reload, hipfire).",
+                "Cannot aim with ranged weapons.",
+                "Starving.",
+                "No access to auxiliary equipment.",
+                "Start without scrap.",
+            },
+            "Lazarus" => new[]
+            {
+                "Drop ranged weapons on damage.",
+                "-25% reload speed.",
+                "-20% melee damage.",
+            },
+            "Zealot" => new[]
+            {
+                "-15% walkspeed.",
+                "-25% attack speed.",
+            },
+            "Prophet" => new[]
+            {
+                "-15% melee damage.",
+            },
+            "Sovereign" => new[]
+            {
+                "-15% melee damage.",
+                "-10% walkspeed.",
+            },
+            "Mindflayer" => new[]
+            {
+                "-15% recoil control.",
+                "-20% damage resistance.",
+            },
+            "Immolator" => new[]
+            {
+                "-15% reload speed.",
+            },
+            "Vagabond" => new[]
+            {
+                "-15 max health.",
+                "-10% damage resistance.",
+            },
+            "Arbiter" => new[]
+            {
+                "-65% reload speed.",
+                "-100% hipfire accuracy.",
+            },
+            "Executioner" => new[]
+            {
+                "-100% hipfire accuracy.",
+                "-30% recoil control.",
+            },
+            "Berserker" => new[]
+            {
+                "-100% recoil control.",
+                "-65% reload speed.",
+            },
+            "Artillerist" => new[]
+            {
+                "-15% damage resistance.",
+                "-25% shove speed.",
+            },
+            "Riskrunner" => new[]
+            {
+                "Inability to aim ranged weapons.",
+                "Scavenge ~75% (4x) less ammo.",
+                "-10% walkspeed.",
+            },
+            "Hivemind" => new[]
+            {
+                "-15 max health.",
+                "-20% recoil control.",
+                "-20 max stamina.",
+            },
+            "Blitzer" => new[]
+            {
+                "-15% melee damage.",
+                "-50% trap deployment speed.",
+            },
+            "Tickspider" => new[]
+            {
+                "-10% walkspeed.",
+                "-15% melee damage.",
+            },
+            "Crosslink" => new[]
+            {
+                "-10% melee damage.",
+                "-20% damage resistance.",
+            },
+            _ => Array.Empty<string>(),
+        };
+    }
+
     private Button MakePerkTileButton(PerkInfo perk)
     {
         var btn = new Button
@@ -828,6 +1042,12 @@ public sealed partial class NivalisLobbyControl : Control
         _showPerkInfo = true;
         PerksInfoNameLabel.Text = perk.Name;
         PerksInfoDescLabel.SetMessage($"{perk.Description}");
+        PerksInfoProsLabel.SetMessage(FormatPerkLines(perk.Pros, "8CFF9E"));
+        PerksInfoConsLabel.SetMessage(FormatPerkLines(perk.Cons, "FF9A9A"));
+        PerksProsHeaderLabel.Visible = perk.Pros.Count > 0;
+        PerksInfoProsLabel.Visible = perk.Pros.Count > 0;
+        PerksConsHeaderLabel.Visible = perk.Cons.Count > 0;
+        PerksInfoConsLabel.Visible = perk.Cons.Count > 0;
     }
 
     private void ClearPerksInfo()
@@ -835,6 +1055,26 @@ public sealed partial class NivalisLobbyControl : Control
         _showPerkInfo = false;
         PerksInfoNameLabel.Text = "—";
         PerksInfoDescLabel.SetMessage("");
+        PerksInfoProsLabel.SetMessage("");
+        PerksInfoConsLabel.SetMessage("");
+        PerksProsHeaderLabel.Visible = true;
+        PerksInfoProsLabel.Visible = true;
+        PerksConsHeaderLabel.Visible = true;
+        PerksInfoConsLabel.Visible = true;
+    }
+
+    private static string FormatPerkLines(IReadOnlyList<string> lines, string color)
+    {
+        if (lines == null || lines.Count == 0)
+            return string.Empty;
+        var markup = new System.Text.StringBuilder();
+        for (var i = 0; i < lines.Count; i++)
+        {
+            markup.Append($"[color=#{color}]• {lines[i]}[/color]");
+            if (i < lines.Count - 1)
+                markup.AppendLine();
+        }
+        return markup.ToString();
     }
 
     private void OnPerkPick(Button btn)
@@ -934,7 +1174,14 @@ public sealed partial class NivalisLobbyControl : Control
 
         foreach (var (icon, name) in PerkSeeds())
         {
-            var perk = new PerkInfo { Icon = icon, Name = name, Description = PerksFlavor(name) };
+            var perk = new PerkInfo
+            {
+                Icon = icon,
+                Name = name,
+                Description = PerksFlavor(name),
+                Pros = new List<string>(PerkPros(name)),
+                Cons = new List<string>(PerkCons(name)),
+            };
             var tile = MakePerkTileButton(perk);
             _perkBtns.Add(tile);
             _perkPickData[tile] = perk;

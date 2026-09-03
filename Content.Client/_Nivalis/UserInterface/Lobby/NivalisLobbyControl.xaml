@@ -81,6 +81,14 @@
                                    HorizontalAlignment="Center" Margin="0 0 0 6" />
                             <RichTextLabel Name="PerksInfoDescLabel" Text=""
                                            VerticalExpand="True" />
+                            <Label Name="PerksProsHeaderLabel" Text="PROS" FontColorOverride="#57E86B"
+                                   HorizontalAlignment="Center" Margin="0 6 0 0" />
+                            <RichTextLabel Name="PerksInfoProsLabel" Text=""
+                                           VerticalExpand="True" />
+                            <Label Name="PerksConsHeaderLabel" Text="CONS" FontColorOverride="#FF6B6B"
+                                   HorizontalAlignment="Center" Margin="0 6 0 0" />
+                            <RichTextLabel Name="PerksInfoConsLabel" Text=""
+                                           VerticalExpand="True" />
                         </BoxContainer>
                     </PanelContainer>
                 </BoxContainer>

@@ -173,6 +173,7 @@ namespace Content.Client.Options.UI.Tabs
             AddButton(ContentKeyFunctions.ToggleKnockdown);
             // Nivalis
             AddButton(ContentKeyFunctions.NivalisParry);
+            AddButton(ContentKeyFunctions.NivalisPerkAbility);
             AddButton(ContentKeyFunctions.NivalisShove);
             AddButton(ContentKeyFunctions.NivalisAim);
             AddButton(ContentKeyFunctions.NivalisReload);

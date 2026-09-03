@@ -54,6 +54,26 @@ public sealed partial class NivalisLobbyControl : Control
     private readonly List<ProtoId<NivalisTraitPrototype>> _selectedTraits = new();
     private readonly Dictionary<Button, ProtoId<NivalisTraitPrototype>> _traitPickButtons = new();
     private bool _traitsPanelOpen;
+    private bool _perksPanelOpen;
+    private PerkInfo? _selectedPerk;
+    private readonly List<Button> _perkBtns = new();
+    private readonly Dictionary<Button, PerkInfo> _perkPickData = new();
+    private readonly Dictionary<Button, ScrollingScanlineStyleBox> _perkStyle = new();
+    private readonly Dictionary<Button, ScrollingScanlineStyleBox> _perkSelectedStyle = new();
+    private Button? _hoveredPerkTile;
+    private ScrollingScanlineStyleBox _perksInfoBox = new();
+    private readonly Dictionary<Button, float> _perkEngaged = new();
+    private float _perkInfoAnim;
+    private bool _showPerkInfo;
+
+    private const string PerkIconDir = "/Textures/_Nivalis/Interface/perkicons.rsi/";
+
+    private sealed class PerkInfo
+    {
+        public string Icon = string.Empty;
+        public string Name = string.Empty;
+        public string Description = string.Empty;
+    }
 
     public event Action? TraitsChanged;
 
@@ -102,6 +122,7 @@ public sealed partial class NivalisLobbyControl : Control
         ReadyButton.OnPressed += OnReadyPressed;
         LoadoutButton.OnPressed += _ => NavigationPressed?.Invoke("loadout");
         TraitsButton.OnPressed += OnTraitsPressed;
+        PerksButton.OnPressed += OnPerksPressed;
         ChallengesButton.OnPressed += _ => NavigationPressed?.Invoke("challenges");
         QuartermasterButton.OnPressed += _ => NavigationPressed?.Invoke("quartermaster");
         PatreonButton.OnPressed += _ => _uriOpener.OpenUri("https://www.patreon.com/cw/lynnite");
@@ -111,6 +132,9 @@ public sealed partial class NivalisLobbyControl : Control
         SetupNavButtons();
         BuildTraitsMenu();
         PositionTraitsPanel();
+        BuildPerksMenu();
+        ClearPerksInfo();
+        PositionPerksPanel();
 
         TraitsChanged += OnTraitsChanged;
     }
@@ -231,7 +255,7 @@ public sealed partial class NivalisLobbyControl : Control
 
     private void SetupNavButtons()
     {
-        _navButtons = new[] { ReadyButton, LoadoutButton, TraitsButton, ChallengesButton, QuartermasterButton, PatreonButton, SettingsButton, QuitButton };
+        _navButtons = new[] { ReadyButton, LoadoutButton, TraitsButton, PerksButton, ChallengesButton, QuartermasterButton, PatreonButton, SettingsButton, QuitButton };
         for (var i = 0; i < _navButtons.Length; i++)
         {
             var button = _navButtons[i];
@@ -264,27 +288,61 @@ public sealed partial class NivalisLobbyControl : Control
         }
     }
 
+    private void CloseTraitsPanel()
+    {
+        _traitsPanelOpen = false;
+        TraitsPanel.Visible = false;
+    }
+
+    private void ClosePerksPanel()
+    {
+        _perksPanelOpen = false;
+        PerksPanel.Visible = false;
+    }
+
     private void OnTraitsPressed(BaseButton.ButtonEventArgs args)
     {
         if (_traitsPanelOpen)
         {
-            SetTraitsPanel(false);
+            CloseTraitsPanel();
+            DimNavButtons(false);
             return;
         }
 
-        SetTraitsPanel(true);
+        ClosePerksPanel();
+        _traitsPanelOpen = true;
+        TraitsPanel.Visible = true;
+        RebuildTraitMenu();
+        PositionTraitsPanel();
+        DimNavButtons(true);
     }
 
-    private void SetTraitsPanel(bool open)
+    private void OnPerksPressed(BaseButton.ButtonEventArgs args)
     {
-        _traitsPanelOpen = open;
-        TraitsPanel.Visible = open;
-        if (open)
+        if (_perksPanelOpen)
         {
-            RebuildTraitMenu();
-            PositionTraitsPanel();
+            ClosePerksPanel();
+            DimNavButtons(false);
+            return;
         }
-        DimNavButtons(open);
+
+        CloseTraitsPanel();
+        _perksPanelOpen = true;
+        PerksPanel.Visible = true;
+        PositionPerksPanel();
+        if (_selectedPerk == null)
+        {
+            ClearPerksInfo();
+            PerksInfoPanel.Modulate = new Color(1f, 1f, 1f, 0f);
+            _perkInfoAnim = 0f;
+        }
+        else
+        {
+            _showPerkInfo = true;
+            _perkInfoAnim = 0f;
+            PerksInfoPanel.Modulate = new Color(1f, 1f, 1f, 0f);
+        }
+        DimNavButtons(true);
     }
 
     private void RebuildTraitMenu()
@@ -455,12 +513,14 @@ public sealed partial class NivalisLobbyControl : Control
     private void DimNavButtons(bool dimmed)
     {
         var dim = dimmed ? Color.FromHex("#33333a") : Color.White;
+        var active = _traitsPanelOpen ? TraitsButton : _perksPanelOpen ? PerksButton : null;
+
         foreach (var button in _navStyle.Keys)
         {
-            if (button == TraitsButton)
+            if (ReferenceEquals(button, active))
                 continue;
 
-            _navStyle[button].Modulate = dim;
+            _navStyle[button].Modulate = dimmed ? dim : Color.White;
         }
     }
 
@@ -531,9 +591,21 @@ public sealed partial class NivalisLobbyControl : Control
             style.ScrollOffset += frameTime * IdleScrollSpeed;
         }
 
+        foreach (var style in _perkStyle.Values)
+        {
+            style.ScrollOffset += frameTime * IdleScrollSpeed;
+        }
+
         if (_traitsPanelOpen)
         {
             PositionTraitsPanel();
+            DimNavButtons(true);
+        }
+        else if (_perksPanelOpen)
+        {
+            _perksInfoBox.ScrollOffset += frameTime * IdleScrollSpeed;
+            UpdatePerksHoverHighlight(frameTime);
+            PositionPerksPanel();
             DimNavButtons(true);
         }
     }
@@ -626,6 +698,277 @@ public sealed partial class NivalisLobbyControl : Control
             SetReadyState(_areWeReady);
 
         UpdateNavAnimations(frameTime);
+    }
+
+    private void PositionPerksPanel()
+    {
+        var parent = PerksPanel.Parent;
+        if (parent == null)
+            return;
+
+        PerksPanel.PanelOverride = _traitsPanelBackground;
+
+        var parentSize = parent.Size;
+        if (parentSize.X <= 2 || parentSize.Y <= 2)
+        {
+            parentSize = new Vector2(1280, 720);
+        }
+
+        PerksPanel.Measure(parentSize);
+        var height = Math.Clamp(PerksPanel.DesiredSize.Y, PerksPanel.MinHeight, PerksPanel.MinHeight);
+        if (height <= 0)
+            height = 540;
+        height = Math.Clamp(height, 0, parentSize.Y - 40);
+
+        var perksY = PerksButton.GlobalPosition.Y + PerksButton.Height / 2f;
+        var left = PerksButton.GlobalPosition.X + PerksButton.Width + 14;
+        var top = perksY - height / 2f;
+
+        var width = (parentSize.X - left - 14) / 2;
+        width = Math.Max(width, PerksPanel.MinWidth);
+
+        left = Math.Clamp(left, 14, parentSize.X - width - 14);
+        top = Math.Clamp(top, 14, parentSize.Y - height - 14);
+
+        LayoutContainer.SetAnchorPreset(PerksPanel, LayoutContainer.LayoutPreset.TopLeft);
+        LayoutContainer.SetMarginLeft(PerksPanel, left);
+        LayoutContainer.SetMarginTop(PerksPanel, top);
+        LayoutContainer.SetMarginRight(PerksPanel, left + width);
+        LayoutContainer.SetMarginBottom(PerksPanel, top + height);
+    }
+
+    private static List<(string Icon, string Name)> PerkSeeds()
+    {
+        return new()
+        {
+            ("survivalist", "Survivalist"),
+            ("damned", "Damned"),
+            ("lazarus", "Lazarus"),
+            ("zealoth", "Zealot"),
+            ("prophet", "Prophet"),
+            ("sovereign", "Sovereign"),
+            ("mindflawyer", "Mindflayer"),
+            ("immolator", "Immolator"),
+            ("vagabond", "Vagabond"),
+            ("arbiter", "Arbiter"),
+            ("executioner", "Executioner"),
+            ("berserker", "Berserker"),
+            ("artillerist", "Artillerist"),
+            ("riskrunner", "Riskrunner"),
+            ("hivemind", "Hivemind"),
+            ("blitzer", "Blitzer"),
+            ("tickspider", "Tickspider"),
+            ("crosslink", "Crosslink"),
+        };
+    }
+
+    private static string PerksFlavor(string name)
+    {
+        return name switch
+        {
+            "Survivalist" => "You've learned that the only way to survive alone is to be prepared for everything.",
+            "Damned" => "Condemned and cursed, you've lost everything. The only way forward is to survive when all is lost.",
+            "Lazarus" => "Through the art of experience, you believe that self perseverance is the strongest motivator to survival.",
+            "Zealot" => "You believe that a strong bond is the true path to survival. Will and Dedication would only get you so far alone.",
+            "Prophet" => "A keen eye for supplies and tactical planning is the only way for survival; you intend to capitalize on that.",
+            "Sovereign" => "You believe in the truth of a higher power that will guide you not only to survival - but also true enlightenment.",
+            "Mindflayer" => "You believe that intellect and wits are the only way to truly survive; without planning ahead, others are lost.",
+            "Immolator" => "Cursing all as unclean, you firmly stand that the only way to survive is to light a torch to all that is unwelcome.",
+            "Vagabond" => "There is only one constant to surviving alone: taking matters into your own hands, no matter the costs.",
+            "Arbiter" => "You believe that taking initiative and setting things straight first is the only way for survival to succeed.",
+            "Executioner" => "You believe you have a job to do, and surviving only comes second to accomplishing what is due.",
+            "Berserker" => "Carving a path through relentless battles, you believe that survival is to overcome anything alone, no matter the odds.",
+            "Artillerist" => "One shot, one kill - an art form you believe in, with every shot capable of opening opportunities.",
+            "Riskrunner" => "You believe that overwhelming firepower is the only way to survive - to blaze through all odds.",
+            "Hivemind" => "We believe in the safety of us, in safety in numbers; survival is only second nature to being collective as one.",
+            "Blitzer" => "You believe in the brave and the risk takers who have survived through their commitment; you intend to be part of that list.",
+            "Tickspider" => "Trickery and cunningness are what let you survive on your own terms without relying on others.",
+            "Crosslink" => "An elegant dancer, from one wire to another on a razor-thin thread - you believe true finesse can carry you to the end.",
+            _ => string.Empty,
+        };
+    }
+
+    private Button MakePerkTileButton(PerkInfo perk)
+    {
+        var btn = new Button
+        {
+            HorizontalAlignment = HAlignment.Center,
+            VerticalAlignment = VAlignment.Center,
+        };
+
+        var iconRect = new TextureRect
+        {
+            Texture = _resourceCache.GetTexture(PerkIconDir + perk.Icon + ".png"),
+            Stretch = TextureRect.StretchMode.KeepAspectCovered,
+            HorizontalExpand = true,
+            VerticalExpand = true,
+            HorizontalAlignment = HAlignment.Center,
+            VerticalAlignment = VAlignment.Center,
+        };
+        btn.AddChild(iconRect);
+        return btn;
+    }
+
+    private void PerkTileHover(Button btn, bool hovering)
+    {
+        if (!_perkPickData.TryGetValue(btn, out var perk))
+            return;
+
+        if (hovering)
+            _hoveredPerkTile = btn;
+        else if (ReferenceEquals(_hoveredPerkTile, btn))
+            _hoveredPerkTile = null;
+
+        if (!hovering && _selectedPerk != perk)
+        {
+            ClearPerksInfo();
+            return;
+        }
+
+        _showPerkInfo = true;
+        PerksInfoNameLabel.Text = perk.Name;
+        PerksInfoDescLabel.SetMessage($"{perk.Description}");
+    }
+
+    private void ClearPerksInfo()
+    {
+        _showPerkInfo = false;
+        PerksInfoNameLabel.Text = "—";
+        PerksInfoDescLabel.SetMessage("");
+    }
+
+    private void OnPerkPick(Button btn)
+    {
+        if (!_perkPickData.TryGetValue(btn, out var perk))
+            return;
+
+        _selectedPerk = ReferenceEquals(_selectedPerk, perk) ? null : perk;
+
+        foreach (var b in _perkBtns)
+        {
+            var sel = _selectedPerk != null && ReferenceEquals(_selectedPerk, _perkPickData[b]);
+            if (sel && _perkSelectedStyle.TryGetValue(b, out var selectBox))
+                b.StyleBoxOverride = selectBox;
+            else if (_perkStyle.TryGetValue(b, out var normalBox))
+                b.StyleBoxOverride = normalBox;
+        }
+
+        RefreshPerksCount();
+        PerkTileHover(btn, false);
+    }
+
+    private void RefreshPerksCount()
+    {
+    }
+
+    private void UpdatePerksHoverHighlight(float delta)
+    {
+        if (_perkBtns.Count == 0)
+            return;
+
+        var ease = 1f - MathF.Exp(-14f * Math.Max(delta, 0.016f));
+
+        var viewport = Math.Max(PerksScroll.Size.Y, 1f);
+        var scroll = PerksScroll.VScroll;
+        const float baseS = 92f;
+        const float sep = 12f;
+        const float stride = baseS + sep;
+        var halfSpan = Math.Max(viewport * 0.78f, 1f);
+        var focus = scroll + viewport / 2f;
+
+        var available = Math.Max(PerksScroll.Size.X - 16f, 1f);
+
+        for (var i = 0; i < _perkBtns.Count; i++)
+        {
+            var b = _perkBtns[i];
+            var rowCenter = i * stride + stride / 2f;
+            var t = Math.Clamp(Math.Abs(rowCenter - focus) / halfSpan, 0f, 1f);
+            t = t * t * (3f - 2f * t);
+
+            var engagedNow = ReferenceEquals(b, _hoveredPerkTile)
+                || (_selectedPerk != null && ReferenceEquals(_selectedPerk, _perkPickData[b]));
+
+            _perkEngaged.TryGetValue(b, out var curE);
+            var targetE = engagedNow ? 1f : 0f;
+            var e = curE + (targetE - curE) * ease;
+            _perkEngaged[b] = e;
+
+            var effT = Math.Clamp(t * (1f - 0.92f * e), 0f, 1f);
+
+            var bright = 1.12f - effT * 0.45f;
+            b.Modulate = new Color(bright, bright, bright, 1f);
+
+            var height = baseS * (1f + 0.45f * (1f - effT));
+            var width = Math.Max(available * (1f - effT * 0.28f), 32f);
+            var popUp = (1f - effT) * 6f;
+
+            b.HorizontalAlignment = HAlignment.Center;
+            b.MinSize = new Vector2(width, height);
+            b.MaxSize = new Vector2(width, height);
+            b.Margin = new Thickness(0, -popUp, 0, popUp);
+        }
+
+        var infoTarget = _showPerkInfo ? 1f : 0f;
+        _perkInfoAnim += (infoTarget - _perkInfoAnim) * ease;
+        var animA = Math.Clamp(_perkInfoAnim, 0f, 1f);
+        PerksInfoPanel.Modulate = new Color(1f, 1f, 1f, animA);
+    }
+
+    private void BuildPerksMenu()
+    {
+        PerkArcContainer.RemoveAllChildren();
+        _perkBtns.Clear();
+        _perkPickData.Clear();
+        _perkStyle.Clear();
+        _perkSelectedStyle.Clear();
+
+        _perksInfoBox = new ScrollingScanlineStyleBox
+        {
+            Texture = _scanlineTexture,
+            BackgroundColor = Color.FromHex("#4a82bf"),
+            BorderColor = Color.FromHex("#bfe3ff").WithAlpha(0.7f),
+            BorderThickness = 1.5f,
+            InwardLean = 0.05f,
+        };
+        PerksInfoPanel.PanelOverride = _perksInfoBox;
+
+        foreach (var (icon, name) in PerkSeeds())
+        {
+            var perk = new PerkInfo { Icon = icon, Name = name, Description = PerksFlavor(name) };
+            var tile = MakePerkTileButton(perk);
+            _perkBtns.Add(tile);
+            _perkPickData[tile] = perk;
+
+            var normal = new ScrollingScanlineStyleBox
+            {
+                Texture = _scanlineTexture,
+                BackgroundColor = Color.FromHex("#4a82bf"),
+                BorderColor = Color.FromHex("#bfe3ff").WithAlpha(0.7f),
+                BorderThickness = 1.5f,
+                InwardLean = 0.05f,
+            };
+            var selectedBox = new ScrollingScanlineStyleBox
+            {
+                Texture = _scanlineTexture,
+                BackgroundColor = Color.FromHex("#eefbff"),
+                BorderColor = Color.FromHex("#ffffff"),
+                BorderThickness = 3f,
+                InwardLean = 0.05f,
+            };
+
+            _perkStyle[tile] = normal;
+            _perkSelectedStyle[tile] = selectedBox;
+            tile.StyleBoxOverride = normal;
+
+            tile.OnPressed += _ => OnPerkPick(tile);
+            tile.OnMouseEntered += _ => PerkTileHover(tile, true);
+            tile.OnMouseExited += _ => PerkTileHover(tile, false);
+
+            PerkArcContainer.AddChild(tile);
+        }
+
+        RefreshPerksCount();
+        UpdatePerksHoverHighlight(0.016f);
     }
 
     protected override void Dispose(bool disposing)

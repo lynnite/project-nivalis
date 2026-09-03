@@ -38,6 +38,7 @@
             <Button Name="ReadyButton" Text="NOT READY" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="LoadoutButton" Text="LOADOUT" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="TraitsButton" Text="TRAITS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <Button Name="PerksButton" Text="PERKS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="ChallengesButton" Text="CHALLENGES" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="QuartermasterButton" Text="QUARTERMASTER" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Button Name="PatreonButton" Text="PATREON" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
@@ -57,6 +58,32 @@
                     <BoxContainer Name="ArcContainer" Orientation="Vertical"
                                   HorizontalExpand="True" SeparationOverride="14" />
                 </ScrollContainer>
+            </BoxContainer>
+        </PanelContainer>
+
+        <PanelContainer Name="PerksPanel" Visible="False" MinWidth="760" MinHeight="540">
+            <BoxContainer Orientation="Vertical" MinWidth="500"
+                          VerticalExpand="True" HorizontalExpand="True" Margin="8">
+                <BoxContainer Orientation="Horizontal" VerticalExpand="True" HorizontalExpand="True">
+                    <BoxContainer Orientation="Vertical" VerticalExpand="True" MinWidth="320"
+                                  HorizontalAlignment="Center" SeparationOverride="14">
+                        <ScrollContainer Name="PerksScroll" HScrollEnabled="False"
+                                         HorizontalAlignment="Center" MinWidth="188"
+                                         VerticalExpand="True" MinHeight="420">
+                            <BoxContainer Name="PerkArcContainer" Orientation="Vertical"
+                                          HorizontalExpand="True" SeparationOverride="10" />
+                        </ScrollContainer>
+                    </BoxContainer>
+                    <PanelContainer Name="PerksInfoPanel" MinWidth="320" MaxWidth="320"
+                                    MinHeight="150" Margin="12 0 0 0" VerticalAlignment="Top">
+                        <BoxContainer Orientation="Vertical" Margin="12">
+                            <Label Name="PerksInfoNameLabel" Text="—" FontColorOverride="#FFFFFF"
+                                   HorizontalAlignment="Center" Margin="0 0 0 6" />
+                            <RichTextLabel Name="PerksInfoDescLabel" Text=""
+                                           VerticalExpand="True" />
+                        </BoxContainer>
+                    </PanelContainer>
+                </BoxContainer>
             </BoxContainer>
         </PanelContainer>
 

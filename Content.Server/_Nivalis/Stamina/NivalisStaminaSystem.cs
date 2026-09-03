@@ -1,3 +1,4 @@
+using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Stamina;
 using Content.Shared._Nivalis.Traits;
 using Content.Shared.Movement.Components;
@@ -41,7 +42,7 @@ public sealed partial class NivalisStaminaSystem : EntitySystem
         if (TryComp<NivalisTraitComponent>(uid, out var traits) && traits.MaxStaminaBonus > 0f)
             bonus += traits.MaxStaminaBonus;
 
-        return comp.Max + bonus;
+        return comp.Max + bonus + (TryComp<NivalisPerkComponent>(uid, out var perks) ? perks.MaxStaminaBonus : 0f);
     }
 
     private void OnShutdown(Entity<NivalisStaminaComponent> ent, ref ComponentShutdown args)
@@ -74,6 +75,8 @@ public sealed partial class NivalisStaminaSystem : EntitySystem
                 if (_timing.CurTime - comp.LastExertion >= TimeSpan.FromSeconds(comp.RegenDelay))
                 {
                     var regenMult = TryComp<NivalisTraitComponent>(uid, out var traits) ? traits.StaminaRegenMult : 1f;
+                    if (TryComp<NivalisPerkComponent>(uid, out var perks))
+                        regenMult *= perks.StaminaRegenMult;
                     var recovery = comp.RecoveryRate * regenMult;
                     comp.Current = MathF.Min(GetEffectiveMax(uid, comp), comp.Current + recovery * frameTime);
                     comp.Exhaustion = MathF.Max(0f, comp.Exhaustion - comp.ExhaustionRecoveryRate * frameTime);

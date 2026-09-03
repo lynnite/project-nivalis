@@ -1,3 +1,4 @@
+using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Traits;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
@@ -26,28 +27,58 @@ public abstract partial class SharedNivalisScatterSystem : EntitySystem
 
         var holder = FindHolder(uid);
         NivalisTraitComponent? traits = null;
+        NivalisPerkComponent? perks = null;
         if (holder != null)
+        {
             TryComp<NivalisTraitComponent>(holder.Value, out traits);
+            TryComp<NivalisPerkComponent>(holder.Value, out perks);
+        }
 
         if (traits != null)
         {
             if (TryComp<NivalisGunComponent>(uid, out var nivalisGun))
             {
-                if (nivalisGun.Fanning && traits.FanningFireRateMult != 1f)
-                    args.FireRate *= traits.FanningFireRateMult;
-                else if (ent.Comp.SelectedMode == SelectiveFire.SemiAuto && traits.SemiAutoFireRateMult != 1f)
-                    args.FireRate *= traits.SemiAutoFireRateMult;
+                if (nivalisGun.Fanning)
+                {
+                    args.FireRate *= traits.FanningFireRateMult * (perks?.FanningFireRateMult ?? 1f);
+                }
+                else if (ent.Comp.SelectedMode == SelectiveFire.SemiAuto)
+                {
+                    args.FireRate *= traits.SemiAutoFireRateMult * (perks?.SemiAutoFireRateMult ?? 1f);
+                }
             }
-            else if (ent.Comp.SelectedMode == SelectiveFire.SemiAuto && traits.SemiAutoFireRateMult != 1f)
+            else if (ent.Comp.SelectedMode == SelectiveFire.SemiAuto)
             {
-                args.FireRate *= traits.SemiAutoFireRateMult;
+                args.FireRate *= traits.SemiAutoFireRateMult * (perks?.SemiAutoFireRateMult ?? 1f);
             }
 
-            if (traits.RecoilMult != 1f)
+            var recoilMult = traits.RecoilMult * (perks?.RecoilMult ?? 1f);
+            if (!MathHelper.CloseTo(recoilMult, 1f))
             {
-                args.CameraRecoilScalar *= traits.RecoilMult;
+                args.CameraRecoilScalar *= recoilMult;
                 if (IsAiming(uid))
-                    args.AngleIncrease *= traits.RecoilMult;
+                    args.AngleIncrease *= recoilMult;
+            }
+        }
+        else if (perks != null)
+        {
+            if (TryComp<NivalisGunComponent>(uid, out var nivalisGun2))
+            {
+                if (nivalisGun2.Fanning)
+                    args.FireRate *= perks.FanningFireRateMult;
+                else if (ent.Comp.SelectedMode == SelectiveFire.SemiAuto)
+                    args.FireRate *= perks.SemiAutoFireRateMult;
+            }
+            else if (ent.Comp.SelectedMode == SelectiveFire.SemiAuto)
+            {
+                args.FireRate *= perks.SemiAutoFireRateMult;
+            }
+
+            if (!MathHelper.CloseTo(perks.RecoilMult, 1f))
+            {
+                args.CameraRecoilScalar *= perks.RecoilMult;
+                if (IsAiming(uid))
+                    args.AngleIncrease *= perks.RecoilMult;
             }
         }
 
@@ -70,9 +101,11 @@ public abstract partial class SharedNivalisScatterSystem : EntitySystem
                 args.MaxAngle = Math.Max(args.MaxAngle, Angle.FromDegrees(maxDeg * 2));
         }
 
-        if (!aiming && traits?.HipFireSpreadMult != null && traits.HipFireSpreadMult != 1f)
+        if (!aiming)
         {
-            args.MaxAngle = Angle.FromDegrees(args.MaxAngle.Degrees * traits.HipFireSpreadMult);
+            var hipFireMult = (traits?.HipFireSpreadMult ?? 1f) * (perks?.HipFireSpreadMult ?? 1f);
+            if (!MathHelper.CloseTo(hipFireMult, 1f))
+                args.MaxAngle = Angle.FromDegrees(args.MaxAngle.Degrees * hipFireMult);
         }
     }
 

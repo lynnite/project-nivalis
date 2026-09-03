@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 using Content.Shared._Nivalis.Melee.Events;
+using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Stamina;
 using Content.Shared._Nivalis.Status;
 using Content.Shared._Nivalis.Traits;
@@ -333,6 +334,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
                 cooldownSeconds *= weapon.LowStaminaMultiplier;
 
             cooldownSeconds *= GetTraitFloat(user, c => c.LightSwingIntervalMult);
+            cooldownSeconds *= GetPerkFloat(user, c => c.LightSwingIntervalMult);
 
             weapon.NextAttack = curTime + TimeSpan.FromSeconds(cooldownSeconds);
 
@@ -346,6 +348,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
                 fireRate *= weapon.LowStaminaMultiplier;
 
             fireRate *= GetTraitFloat(user, c => c.HeavySwingIntervalMult);
+            fireRate *= GetPerkFloat(user, c => c.HeavySwingIntervalMult);
 
             weapon.NextAttack = curTime + TimeSpan.FromSeconds(fireRate);
             DirtyField(weaponUid, weapon, nameof(NivalisMeleeComponent.NextAttack));
@@ -419,6 +422,11 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         return TryComp<NivalisTraitComponent>(user, out var traits) ? getter(traits) : 1f;
     }
 
+    protected float GetPerkFloat(EntityUid user, Func<NivalisPerkComponent, float> getter)
+    {
+        return TryComp<NivalisPerkComponent>(user, out var perk) ? getter(perk) : 1f;
+    }
+
     private bool IsFistAttack(EntityUid user, EntityUid weaponUid)
     {
         return weaponUid == user;
@@ -426,12 +434,22 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
 
     private DamageSpecifier ApplyMeleeDamageMultipliers(EntityUid user, EntityUid weaponUid, DamageSpecifier damage)
     {
-        if (!TryComp<NivalisTraitComponent>(user, out var traits))
-            return damage;
+        var mult = 1f;
+        if (TryComp<NivalisTraitComponent>(user, out var traits))
+        {
+            mult *= traits.MeleeDamageMult;
+            if (IsFistAttack(user, weaponUid))
+                mult *= traits.FistDamageMult;
+        }
+        if (TryComp<NivalisPerkComponent>(user, out var perks))
+        {
+            mult *= perks.MeleeDamageMult;
+            if (IsFistAttack(user, weaponUid))
+                mult *= perks.FistDamageMult;
 
-        var mult = traits.MeleeDamageMult;
-        if (IsFistAttack(user, weaponUid))
-            mult *= traits.FistDamageMult;
+            if (perks.MeleeDamageCap > 0f)
+                mult = MathF.Min(mult, perks.MeleeDamageCap);
+        }
 
         if (MathHelper.CloseTo(mult, 1f))
             return damage;

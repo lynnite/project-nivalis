@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-4.0",
+  "copyright": "by lynnite",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "arbiter"
+    },
+    {
+      "name": "artillerist"
+    },
+    {
+      "name": "berserker"
+    },
+    {
+      "name": "blitzer"
+    },
+    {
+      "name": "crosslink"
+    },
+    {
+      "name": "damned"
+    },
+    {
+      "name": "executioner"
+    },
+    {
+      "name": "hivemind"
+    },
+    {
+      "name": "immolator"
+    },
+    {
+      "name": "lazarus"
+    },
+    {
+      "name": "mindflawyer"
+    },
+    {
+      "name": "prophet"
+    },
+    {
+      "name": "riskrunner"
+    },
+    {
+      "name": "sovereign"
+    },
+    {
+      "name": "survivalist"
+    },
+    {
+      "name": "tickspider"
+    },
+    {
+      "name": "vagabond"
+    },
+    {
+      "name": "zealoth"
+    }
+  ]
+}
+

@@ -29,14 +29,13 @@ public abstract partial class SharedHandsSystem : EntitySystem
         SubscribeLocalEvent<HandsComponent, GetUsedEntityEvent>(OnGetUsedEntity);
         SubscribeLocalEvent<HandsComponent, ExaminedEvent>(HandleExamined);
 
-        CommandBinds.Builder
+        var builder = CommandBinds.Builder
             .Bind(ContentKeyFunctions.UseItemInHand, InputCmdHandler.FromDelegate(HandleUseItem, handle: false, outsidePrediction: false))
             .Bind(ContentKeyFunctions.AltUseItemInHand, InputCmdHandler.FromDelegate(HandleAltUseInHand, handle: false, outsidePrediction: false))
             .Bind(ContentKeyFunctions.SwapHands, InputCmdHandler.FromDelegate(SwapHandsPressed, handle: false, outsidePrediction: false))
             .Bind(ContentKeyFunctions.SwapHandsReverse, InputCmdHandler.FromDelegate(SwapHandsReversePressed, handle: false, outsidePrediction: false))
             .Bind(ContentKeyFunctions.Drop, new PointerInputCmdHandler(DropPressed));
 
-        var builder = CommandBinds.Builder;
         var keys = ContentKeyFunctions.GetNivalisHandKeys();
         for (var i = 0; i < keys.Length; i++)
         {

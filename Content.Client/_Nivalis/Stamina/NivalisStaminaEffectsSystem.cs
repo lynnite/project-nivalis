@@ -20,6 +20,8 @@ public sealed partial class NivalisStaminaEffectsSystem : EntitySystem
     private NivalisStaminaHeartbeatOverlay? _heartbeatOverlay;
     private float _currentZoom = 1.0f;
 
+    public float CurrentExhaustionZoomScale { get; private set; } = 1.0f;
+
     private const float StaminaMaxZoom = 0.18f;
     private const float ExhaustionStartRatio = 0.85f;
     private const float ExhaustionMaxZoom = 0.20f;
@@ -59,12 +61,14 @@ public sealed partial class NivalisStaminaEffectsSystem : EntitySystem
                 baseZoom = Math.Max(SharedContentEyeSystem.MinZoom.X, contentEye.TargetZoom.X);
 
             var targetZoom = baseZoom / zoomScale;
+            CurrentExhaustionZoomScale = zoomScale;
             SetZoom(targetZoom, frameTime);
 
             heartbeat = stamina.Exhausted || staminaRatio <= CriticalStaminaRatio;
         }
         else
         {
+            CurrentExhaustionZoomScale = 1.0f;
             _currentZoom = _eyeManager.CurrentEye.Zoom.X;
         }
 

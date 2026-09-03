@@ -71,6 +71,7 @@ public abstract partial class SharedNivalisPerkSystem : EntitySystem
         ent.Comp.CanAimRanged = true;
         ent.Comp.CanShoveSpecial = false;
         ent.Comp.NoFallDamage = false;
+        ent.Comp.AbilityCooldown = 0f;
 
         if (ent.Comp.Perk is not { } perkId)
             return !MathHelper.CloseTo(1f, oldSpeed) || !MathHelper.CloseTo(1f, oldTaken);
@@ -128,6 +129,7 @@ public abstract partial class SharedNivalisPerkSystem : EntitySystem
         ent.Comp.CanAimRanged = perk.CanAimRanged;
         ent.Comp.CanShoveSpecial = perk.ImmuneToCripple && perk.ImmuneToFracture;
         ent.Comp.NoFallDamage = perk.NoFallDamage;
+        ent.Comp.AbilityCooldown = perk.AbilityCooldown;
 
         return !MathHelper.CloseTo(oldSpeed, ent.Comp.SpeedMult)
                || !MathHelper.CloseTo(oldTaken, ent.Comp.DamageTakenMult)

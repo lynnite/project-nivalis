@@ -11,6 +11,14 @@ public sealed partial class NivalisPerkComponent : Component
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
     public ProtoId<NivalisPerkPrototype>? Perk;
 
+    /// <summary>Time at which the equipped perk ability can be used again.</summary>
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
+    public TimeSpan NextAbilityUse = TimeSpan.Zero;
+
+    /// <summary>Seconds the equipped perk ability cooldown lasts.</summary>
+    [DataField, ViewVariables(VVAccess.ReadWrite)]
+    public float AbilityCooldown;
+
     [ViewVariables] public float DamageDealtMult = 1f;
     [ViewVariables] public float DamageTakenMult = 1f;
     [ViewVariables] public float SpeedMult = 1f;

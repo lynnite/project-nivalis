@@ -58,6 +58,9 @@ public sealed partial class NivalisPerkPrototype : IPrototype
     [DataField] public float DefenseMult = 1f;
     [DataField] public float MeleeDamageCap = 0f;
 
+    /// <summary>Seconds the perk's active ability (F) must cool down between uses.</summary>
+    [DataField] public float AbilityCooldown = 0f;
+
     [DataField] public bool ImmuneToBleed;
     [DataField] public bool ImmuneToBurn;
     [DataField] public bool ImmuneToCripple;

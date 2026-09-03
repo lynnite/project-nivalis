@@ -24,6 +24,24 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
 
         SubscribeLocalEvent<NivalisPerkComponent, DamageModifyEvent>(OnDamageTaken);
         SubscribeLocalEvent<NivalisPerkComponent, ComponentShutdown>(OnShutdown);
+        SubscribeNetworkEvent<NivalisPerkAbilityPressedMessage>(OnAbilityPressed);
+    }
+
+    private void OnAbilityPressed(NivalisPerkAbilityPressedMessage msg, EntitySessionEventArgs args)
+    {
+        if (args.SenderSession.AttachedEntity is not { } uid)
+            return;
+
+        if (!TryComp<NivalisPerkComponent>(uid, out var perk) || perk.Perk == null)
+            return;
+
+        if (_timing.CurTime < perk.NextAbilityUse)
+            return;
+
+        perk.NextAbilityUse = _timing.CurTime + TimeSpan.FromSeconds(perk.AbilityCooldown);
+        Dirty(uid, perk);
+
+        RaiseLocalEvent(uid, new NivalisPerkUsedEvent(perk.Perk.Value));
     }
 
     private void OnShutdown(Entity<NivalisPerkComponent> ent, ref ComponentShutdown args)

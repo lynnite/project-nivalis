@@ -1,0 +1,37 @@
+# A single thin, glowing yellow "streak" filament cast by a Blitzer airburst detonation.
+#
+# The user supplied a 1-px-wide vertical light streak image; it is stored as an RSI so the game can
+# draw it. Each spark of the burst is one of these filaments, oriented along its own flight ray so
+# it reads as a flying particle drawing a thin glowing yellow line outward from the blast before it
+# fades and vanishes. Cheap: only a small handful per burst, short-lived.
+
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: NivalisGlowStreakBase
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: TimedDespawn
+    lifetime: 0.6
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+- type: entity
+  parent: NivalisGlowStreakBase
+  id: NivalisGlowStreak
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    scale: "0.22, 1.4"
+    layers:
+    - shader: unshaded
+      sprite: _Nivalis/Effects/streak.rsi
+      state: streak
+      color: "#ffe14d"
+  - type: PointLight
+    enabled: true
+    color: "#ffcf3d"
+    radius: 1.2
+    energy: 2.8

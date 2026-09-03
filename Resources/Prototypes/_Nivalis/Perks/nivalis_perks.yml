@@ -159,6 +159,8 @@
   immuneToExplosive: true
   meleeDamageMult: 0.85
   trapDeploySpeedMult: 0.5
+  # Active 'Izbucni' bombs are costed by the Blitzer's charge gauge (see NivalisBlitzerSystem),
+  # not by the generic perk abilityCooldown field.
 
 - type: nivalisPerk
   id: Tickspider

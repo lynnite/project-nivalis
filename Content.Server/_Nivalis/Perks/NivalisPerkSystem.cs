@@ -35,13 +35,16 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
         if (!TryComp<NivalisPerkComponent>(uid, out var perk) || perk.Perk == null)
             return;
 
+        if (perk.Perk.Value.Id == NivalisBlitzerSystem.BlitzerPerk)
+            return;
+
         if (_timing.CurTime < perk.NextAbilityUse)
             return;
 
         perk.NextAbilityUse = _timing.CurTime + TimeSpan.FromSeconds(perk.AbilityCooldown);
         Dirty(uid, perk);
 
-        RaiseLocalEvent(uid, new NivalisPerkUsedEvent(perk.Perk.Value));
+        RaiseLocalEvent(new NivalisPerkUsedEvent(uid, perk.Perk.Value));
     }
 
     private void OnShutdown(Entity<NivalisPerkComponent> ent, ref ComponentShutdown args)

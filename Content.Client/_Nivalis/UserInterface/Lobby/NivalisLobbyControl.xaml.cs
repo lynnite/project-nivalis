@@ -1071,7 +1071,7 @@ public sealed partial class NivalisLobbyControl : Control
         var markup = new System.Text.StringBuilder();
         for (var i = 0; i < lines.Count; i++)
         {
-            markup.Append($"[color=#{color}]• {lines[i]}[/color]");
+            markup.Append($"{lines[i]}");
             if (i < lines.Count - 1)
                 markup.AppendLine();
         }

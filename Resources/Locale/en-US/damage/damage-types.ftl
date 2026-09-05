@@ -15,4 +15,5 @@ damage-type-slash = Slash
 damage-type-structural = Structural
 damage-type-holy = Holy
 damage-type-storm = Storm
+damage-type-explosive = Explosive
 

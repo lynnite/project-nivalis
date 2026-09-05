@@ -1,4 +1,3 @@
-# Armor examines
 armor-examinable-verb-text = Armor
 armor-examinable-verb-message = Examine the armor values.
 armor-examine = It provides the following protection:
@@ -20,3 +19,5 @@ armor-damage-type-poison = Poison
 armor-damage-type-shock = Shock
 armor-damage-type-structural = Structural
 armor-damage-type-holy = Holy
+armor-damage-type-explosive = Explosive
+

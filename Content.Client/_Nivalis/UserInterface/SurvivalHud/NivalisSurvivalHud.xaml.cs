@@ -1,3 +1,4 @@
+using Content.Shared._Nivalis.Perks;
 using Content.Shared.Ghost.Components;
 using Content.Shared._Nivalis.GameTicking;
 using Content.Shared._Nivalis.GameTicking.Components;
@@ -58,6 +59,7 @@ public sealed partial class NivalisSurvivalHud : UIWidget
             ThirstBar.Value = component.Thirst;
 
             UpdateStormHud();
+            UpdateExecutionerHud(localUid);
             return;
         }
 
@@ -116,10 +118,43 @@ public sealed partial class NivalisSurvivalHud : UIWidget
 
     private static string FormatCountdown(TimeSpan time)
     {
-        var totalSeconds = (int) Math.Ceiling(time.TotalSeconds);
+        var totalSeconds = (int)Math.Ceiling(time.TotalSeconds);
         var minutes = totalSeconds / 60;
         var seconds = totalSeconds % 60;
         return $"{minutes:00}:{seconds:00}";
+    }
+
+    private void UpdateExecutionerHud(EntityUid localUid)
+    {
+        if (!_entity.TryGetComponent<NivalisPerkComponent>(localUid, out var perk) ||
+            perk.Perk?.Id != "Executioner")
+        {
+            ExecutionerBox.Visible = false;
+            return;
+        }
+
+        ExecutionerBox.Visible = true;
+
+        var durability = 100f;
+        var bounty = 0;
+        var broken = false;
+        var live = false;
+
+        if (_entity.TryGetComponent<NivalisExecutionerComponent>(localUid, out var exec))
+        {
+            durability = exec.Durability;
+            bounty = exec.BountyCount;
+            broken = exec.Broken;
+            live = exec.Live;
+        }
+
+        ExecutionerRemoveLabel.Visible = broken && live;
+
+        NvgChargeBar.MaxValue = 100f;
+        NvgChargeBar.Value = Math.Clamp(durability, 0f, 100f);
+        NvgPctLabel.Text = $"{(int)MathF.Round(durability)}%";
+
+        BountyLabel.Text = $"{bounty}x";
     }
 }
 

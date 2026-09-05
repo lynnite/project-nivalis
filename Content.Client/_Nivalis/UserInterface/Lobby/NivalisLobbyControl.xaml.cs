@@ -350,7 +350,7 @@ public sealed partial class NivalisLobbyControl : Control
 
     private void RebuildTraitMenu()
     {
-            BuildTraitsMenu();
+        BuildTraitsMenu();
     }
 
     private readonly StyleBoxFlat _traitSelectedBox = new()
@@ -687,7 +687,7 @@ public sealed partial class NivalisLobbyControl : Control
 
         RespawnTimerValue.Text = respawnRemaining <= TimeSpan.Zero
             ? "0:00"
-            : $"{(int) Math.Ceiling(respawnRemaining.TotalSeconds) / 60}:{(int) Math.Ceiling(respawnRemaining.TotalSeconds) % 60:00}";
+            : $"{(int)Math.Ceiling(respawnRemaining.TotalSeconds) / 60}:{(int)Math.Ceiling(respawnRemaining.TotalSeconds) % 60:00}";
 
         CycleValue.Text = cycle.ToString();
     }

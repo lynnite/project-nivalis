@@ -48,15 +48,15 @@ public sealed partial class NivalisArbiterSystem : EntitySystem
     private static readonly EntProtoId ImpactEffect = "NivalisArbiterImpact";
     private static readonly EntProtoId BeamEffect = "NivalisArbiterBeam";
 
-    [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly MobStateSystem _mobState = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly StatusEffectsSystem _status = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly PhysicsSystem _physics = default!;
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
-    [Dependency] private readonly SharedTransformSystem _xform = default!;
-    [Dependency] private readonly SharedScaleVisualsSystem _scaleVisuals = default!;
+    [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private StatusEffectsSystem _status = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private PhysicsSystem _physics = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
+    [Dependency] private SharedTransformSystem _xform = default!;
+    [Dependency] private SharedScaleVisualsSystem _scaleVisuals = default!;
 
     public override void Initialize()
     {

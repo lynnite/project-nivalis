@@ -23,6 +23,7 @@ using Content.Shared._Nivalis.Combat;
 using Content.Shared._Nivalis.Environment;
 using Content.Shared._Nivalis.Morale;
 using Content.Shared._Nivalis.Stamina;
+using Content.Shared._Nivalis.Scrap;
 using Content.Shared._Nivalis.Status;
 using Content.Shared._Nivalis.Survivor.Components;
 using Content.Shared._Nivalis.Traits;
@@ -354,6 +355,9 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
             return;
 
         _perks.SetPerk((Entity<NivalisPerkComponent?>)mob, perk.Value);
+
+        if (perk.Value.Id == NivalisExecutionerSystem.ExecutionerPerk)
+            EnsureComp<NivalisExecutionerComponent>(mob);
     }
 
     private EntityUid SpawnAsSurvivor(Entity<NivalisSurvivorRuleComponent> rule, ICommonSession session, HumanoidCharacterProfile profile)
@@ -381,6 +385,8 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
         EnsureComp<NivalisSurvivalResourceComponent>(mob);
         EnsureComp<NivalisStaminaComponent>(mob);
         EnsureComp<NivalisMoraleComponent>(mob);
+
+        EnsureComp<NivalisScrapComponent>(mob);
 
         var mover = EnsureComp<InputMoverComponent>(mob);
         mover.SprintInverted = true;

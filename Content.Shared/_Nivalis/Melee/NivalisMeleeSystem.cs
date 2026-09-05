@@ -447,6 +447,13 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             if (IsFistAttack(user, weaponUid))
                 mult *= perks.FistDamageMult;
 
+            if (perks.Perk?.Id == "Executioner" &&
+                TryComp<NivalisExecutionerComponent>(user, out var exec) &&
+                exec.Live && !exec.Broken)
+            {
+                mult *= 1f + exec.BountyCount * exec.MeleeDamagePerBounty;
+            }
+
             if (perks.MeleeDamageCap > 0f)
                 mult = MathF.Min(mult, perks.MeleeDamageCap);
         }

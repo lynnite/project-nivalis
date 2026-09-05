@@ -12,7 +12,7 @@ namespace Content.Server._Nivalis.Perks;
 public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
 {
     [Dependency] private DamageableSystem _damageable = default!;
-    
+
     [Dependency] private MobStateSystem _mobState = default!;
     [Dependency] private IGameTiming _timing = default!;
 
@@ -39,6 +39,9 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
             return;
 
         if (perk.Perk.Value.Id == NivalisArbiterSystem.ArbiterPerk)
+            return;
+
+        if (perk.Perk.Value.Id == NivalisExecutionerSystem.ExecutionerPerk)
             return;
 
         if (_timing.CurTime < perk.NextAbilityUse)

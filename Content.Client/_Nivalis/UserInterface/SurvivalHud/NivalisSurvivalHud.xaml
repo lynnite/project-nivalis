@@ -37,7 +37,22 @@
                     </ProgressBar.BackgroundStyleBoxOverride>
                 </ProgressBar>
             </BoxContainer>
-        </BoxContainer>
+            <BoxContainer Name="ExecutionerBox" Orientation="Horizontal" SeparationOverride="6" HorizontalAlignment="Right" Visible="False">
+                <Label Text="{Loc 'nivalis-executioner-hud-icon'}" MinWidth="18" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall" FontColorOverride="#E74C3C"/>
+                <ProgressBar Name="NvgChargeBar" MinWidth="96" MaxValue="100" Value="100" SetHeight="14">
+                    <ProgressBar.ForegroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#B33A3A" ContentMarginLeftOverride="4" ContentMarginRightOverride="4"/>
+                    </ProgressBar.ForegroundStyleBoxOverride>
+                    <ProgressBar.BackgroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#00000088"/>
+                    </ProgressBar.BackgroundStyleBoxOverride>
+                </ProgressBar>
+                <Label Name="NvgPctLabel" Text="100%" MinWidth="36" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+                <Label Name="BountyLabel" Text="0x" MinWidth="26" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+            </BoxContainer>
+            <Label Name="ExecutionerRemoveLabel" Text="{Loc 'nivalis-executioner-remove-goggles'}" HorizontalAlignment="Right" Visible="False" StyleClasses="LabelSmall" FontColorOverride="#FF2222"/>
+    </BoxContainer>
     </BoxContainer>
 </widgets:NivalisSurvivalHud>
+
 

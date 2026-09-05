@@ -1,0 +1,53 @@
+- type: entity
+  id: NivalisArbiterMuzzle
+  parent: BaseItem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: TimedDespawn
+    lifetime: 0.3
+  - type: Sprite
+    drawdepth: Effects
+    scale: "1.0, 1.0"
+    layers:
+    - shader: unshaded
+      sprite: _Nivalis/Effects/arbiterlaser.rsi
+      state: arbitermuzzle
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+- type: entity
+  id: NivalisArbiterImpact
+  parent: BaseItem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: TimedDespawn
+    lifetime: 0.5
+  - type: Sprite
+    drawdepth: Effects
+    scale: "1.0, 1.0"
+    layers:
+    - shader: unshaded
+      sprite: _Nivalis/Effects/arbiterlaser.rsi
+      state: arbiterimpact
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+- type: entity
+  id: NivalisArbiterBeam
+  parent: BaseItem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: TimedDespawn
+    lifetime: 0.4
+  - type: Sprite
+    drawdepth: Effects
+    scale: "1.0, 1.0"
+    layers:
+    - shader: unshaded
+      sprite: _Nivalis/Effects/arbiterlaser.rsi
+      state: arbiterbeam
+  - type: Tag
+    tags:
+    - HideContextMenu

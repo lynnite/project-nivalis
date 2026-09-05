@@ -38,6 +38,9 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
         if (perk.Perk.Value.Id == NivalisBlitzerSystem.BlitzerPerk)
             return;
 
+        if (perk.Perk.Value.Id == NivalisArbiterSystem.ArbiterPerk)
+            return;
+
         if (_timing.CurTime < perk.NextAbilityUse)
             return;
 
@@ -130,5 +133,4 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
         Dirty(safe);
     }
 }
-
 

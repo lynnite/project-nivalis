@@ -8,6 +8,7 @@
     - Bullet
     - Melee
     - Storm
+    - Explosive
 
 - type: damageGroup
   id: Burn
@@ -51,4 +52,5 @@
   name: damage-group-metaphysical
   damageTypes:
   - Holy
+
 

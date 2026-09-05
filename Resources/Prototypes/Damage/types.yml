@@ -99,6 +99,12 @@
   armorCoefficientPrice: 2
   armorFlatPrice: 10
 
+- type: damageType
+  id: Explosive
+  name: damage-type-explosive
+  armorCoefficientPrice: 2
+  armorFlatPrice: 10
+
 # Damage represent structures internal integrity.
 # Exclusive for structures such as walls, airlocks and others.
 - type: damageType

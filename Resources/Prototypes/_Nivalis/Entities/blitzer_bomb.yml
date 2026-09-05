@@ -1,0 +1,21 @@
+# A deployed 'Izbucni' airburst bomb for the Blitzer perk.
+#
+# It is rendered with a C-4 block sprite as a visible placeholder while flying through the air
+# (thrown as a normal SS14 item so it arcs and lands) and while sitting inert on the floor
+# waiting to be detonated. Actual charge/detonation is managed by the server-only
+# NivalisBlitzerSystem; this entity is just the physical, visible payload.
+- type: entity
+  parent: BaseItem
+  id: NivalisBlitzerBomb
+  categories: [ HideSpawnMenu ]
+  name: Izbucni airburst bomb
+  description: A glowing, volatile charge. Its owner can order it to detonate.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Bombs/c4.rsi
+    state: icon
+  - type: TimedDespawn
+    lifetime: 165
+  - type: Tag
+    tags:
+    - HideContextMenu

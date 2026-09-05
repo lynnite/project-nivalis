@@ -1,0 +1,183 @@
+- type: nivalisPerk
+  id: Survivalist
+  name: perk-survivalist-name
+  description: perk-survivalist-desc
+  hungerDecayMult: 0.5
+  thirstDecayMult: 0.5
+
+- type: nivalisPerk
+  id: Damned
+  name: perk-damned-name
+  description: perk-damned-desc
+  unaffectedByMorale: true
+  meleeDamageMult: 0.6
+  fistDamageMult: 0.6
+  speedMult: 0.6
+  damageTakenMult: 1.4
+  lightSwingIntervalMult: 1.4
+  heavySwingIntervalMult: 1.4
+  recoilMult: 1.55
+  reloadDelayMult: 1.55
+  aimSpeedMult: 1.55
+  hipFireSpreadMult: 1.55
+  canAimRanged: false
+
+- type: nivalisPerk
+  id: Lazarus
+  name: perk-lazarus-name
+  description: perk-lazarus-desc
+  maxHealthBonus: 20
+  immuneToBleed: true
+  reloadDelayMult: 1.25
+  meleeDamageMult: 0.8
+
+- type: nivalisPerk
+  id: Zealot
+  name: perk-zealot-name
+  description: perk-zealot-desc
+  damageTakenMult: 0.65
+  maxHealthBonus: 35
+  speedMult: 0.85
+  lightSwingIntervalMult: 1.25
+  heavySwingIntervalMult: 1.25
+
+- type: nivalisPerk
+  id: Prophet
+  name: perk-prophet-name
+  description: perk-prophet-desc
+  speedMult: 1.2
+  harvestMult: 1.5
+  craftingMult: 1.5
+  meleeDamageMult: 0.85
+  noFallDamage: true
+
+- type: nivalisPerk
+  id: Sovereign
+  name: perk-sovereign-name
+  description: perk-sovereign-desc
+  maxStaminaBonus: 50
+  meleeDamageMult: 0.85
+  speedMult: 0.9
+
+- type: nivalisPerk
+  id: Mindflayer
+  name: perk-mindflayer-name
+  description: perk-mindflayer-desc
+  speedMult: 1.2
+  shoveSpeedMult: 1.25
+  recoilMult: 1.15
+  damageTakenMult: 1.2
+
+- type: nivalisPerk
+  id: Immolator
+  name: perk-immolator-name
+  description: perk-immolator-desc
+  immuneToBurn: true
+  meleeDamageMult: 1.25
+  reloadDelayMult: 1.15
+
+- type: nivalisPerk
+  id: Vagabond
+  name: perk-vagabond-name
+  description: perk-vagabond-desc
+  lightSwingIntervalMult: 0.7
+  heavySwingIntervalMult: 0.7
+  speedMult: 1.15
+  meleeDamageMult: 1.15
+  maxHealthBonus: -15
+  damageTakenMult: 1.1
+
+- type: nivalisPerk
+  id: Arbiter
+  name: perk-arbiter-name
+  description: perk-arbiter-desc
+  meleeDamageMult: 1.3
+  maxHealthBonus: 30
+  reloadDelayMult: 1.65
+  hipFireSpreadMult: 2.0
+  immuneToCripple: true
+
+- type: nivalisPerk
+  id: Executioner
+  name: perk-executioner-name
+  description: perk-executioner-desc
+  damageTakenMult: 0.8
+  maxStaminaBonus: 50
+  lightSwingIntervalMult: 0.7
+  heavySwingIntervalMult: 0.7
+  shoveSpeedMult: 1.25
+  hipFireSpreadMult: 2.0
+  recoilMult: 1.3
+
+- type: nivalisPerk
+  id: Berserker
+  name: perk-berserker-name
+  description: perk-berserker-desc
+  meleeDamageMult: 1.25
+  damageTakenMult: 0.85
+  recoilMult: 2.0
+  reloadDelayMult: 1.65
+  immuneToGrapple: true
+  immuneToFracture: true
+
+- type: nivalisPerk
+  id: Artillerist
+  name: perk-artillerist-name
+  description: perk-artillerist-desc
+  reloadDelayMult: 0.5
+  hipFireSpreadMult: 0.6
+  ammoScavengeMult: 1.33
+  damageTakenMult: 1.15
+  shoveSpeedMult: 0.75
+
+- type: nivalisPerk
+  id: Riskrunner
+  name: perk-riskrunner-name
+  description: perk-riskrunner-desc
+  hipFireSpreadMult: 0.2
+  recoilMult: 0.2
+  canAimRanged: false
+  ammoScavengeMult: 0.25
+  speedMult: 0.9
+  immuneToGrapple: true
+
+- type: nivalisPerk
+  id: Hivemind
+  name: perk-hivemind-name
+  description: perk-hivemind-desc
+  immuneToBleed: true
+  maxHealthBonus: -15
+  recoilMult: 1.2
+  maxStaminaBonus: -20
+
+- type: nivalisPerk
+  id: Blitzer
+  name: perk-blitzer-name
+  description: perk-blitzer-desc
+  aimSpeedMult: 0.35
+  explosiveDamageMult: 1.3
+  immuneToExplosive: true
+  meleeDamageMult: 0.85
+  trapDeploySpeedMult: 0.5
+  # Active 'Izbucni' bombs are costed by the Blitzer's charge gauge (see NivalisBlitzerSystem),
+  # not by the generic perk abilityCooldown field.
+
+- type: nivalisPerk
+  id: Tickspider
+  name: perk-tickspider-name
+  description: perk-tickspider-desc
+  explosiveDamageMult: 1.3
+  trapDeploySpeedMult: 1.5
+  recoilMult: 0.6
+  speedMult: 0.9
+  meleeDamageMult: 0.85
+
+- type: nivalisPerk
+  id: Crosslink
+  name: perk-crosslink-name
+  description: perk-crosslink-desc
+  speedMult: 1.2
+  hipFireSpreadMult: 0.7
+  trapDeploySpeedMult: 1.5
+  meleeDamageMult: 0.9
+  damageTakenMult: 1.2

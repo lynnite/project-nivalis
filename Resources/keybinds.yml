@@ -550,7 +550,10 @@ binds:
   key: C
 - function: NivalisParry
   type: State
-  key: N
+  key: R
+- function: NivalisPerkAbility
+  type: State
+  key: F
 - function: NivalisShove
   type: State
   key: Q

@@ -1,5 +1,6 @@
 using System.Numerics;
 using Content.Shared.DoAfter;
+using Content.Shared._Nivalis.Perks;
 using Content.Shared._Nivalis.Traits;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Systems;
@@ -243,6 +244,8 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
         var delay = reload.ReloadDelay;
         if (TryComp<NivalisTraitComponent>(user, out var traits) && traits.ReloadDelayMult != 1f)
             delay *= traits.ReloadDelayMult;
+        if (TryComp<NivalisPerkComponent>(user, out var perks) && perks.ReloadDelayMult != 1f)
+            delay *= perks.ReloadDelayMult;
 
         var doAfter = new DoAfterArgs(
             EntityManager,

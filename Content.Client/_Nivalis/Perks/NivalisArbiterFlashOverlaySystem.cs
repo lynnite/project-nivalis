@@ -11,8 +11,8 @@ namespace Content.Client._Nivalis.Perks;
 /// </summary>
 public sealed partial class NivalisArbiterFlashOverlaySystem : EntitySystem
 {
-    [Dependency] private readonly IOverlayManager _overlay = default!;
-    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private IOverlayManager _overlay = default!;
+    [Dependency] private IPlayerManager _player = default!;
 
     private NivalisArbiterFlashOverlay? _instance;
 

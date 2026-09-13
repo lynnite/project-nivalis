@@ -64,6 +64,19 @@
                 <Label Name="KiraPctLabel" Text="100%" MinWidth="36" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
                 <Label Name="DogTagLabel" Text="0x" MinWidth="26" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
             </BoxContainer>
+            <BoxContainer Name="CrosslinkBox" Orientation="Horizontal" SeparationOverride="6" HorizontalAlignment="Right" Visible="False">
+                <Label Text="{Loc 'nivalis-crosslink-hud-icon'}" MinWidth="18" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall" FontColorOverride="#9FD3E8"/>
+                <ProgressBar Name="CrosslinkChargeBar" MinWidth="96" MaxValue="100" Value="100" SetHeight="14">
+                    <ProgressBar.ForegroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#5FA8C8" ContentMarginLeftOverride="4" ContentMarginRightOverride="4"/>
+                    </ProgressBar.ForegroundStyleBoxOverride>
+                    <ProgressBar.BackgroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#00000088"/>
+                    </ProgressBar.BackgroundStyleBoxOverride>
+                </ProgressBar>
+                <Label Name="CrosslinkPctLabel" Text="100%" MinWidth="36" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+                <Label Name="CrosslinkKnifeLabel" Text="5x" MinWidth="26" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+            </BoxContainer>
     </BoxContainer>
     </BoxContainer>
 </widgets:NivalisSurvivalHud>

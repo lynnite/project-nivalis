@@ -1,0 +1,50 @@
+- type: entity
+  parent: BaseItem
+  id: NivalisCrosslinkKnife
+  categories: [ HideSpawnMenu ]
+  name: crosslink knife
+  description: A slim, weighty throwing knife with a spool of wire anchored to its hilt.
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Effects/crosslink.rsi
+    state: pole
+    drawdepth: Items
+  - type: TimedDespawn
+    lifetime: 90
+  - type: Tag
+    tags:
+    - HideContextMenu
+  - type: NivalisCrosslinkKnife
+  - type: NivalisCrosslinkKnifeMarker
+
+- type: entity
+  id: NivalisCrosslinkWire
+  categories: [ HideSpawnMenu ]
+  name: crosslink wire
+  description: A razor-thin wire strung between two anchored blades.
+  components:
+  - type: Transform
+  - type: Sprite
+    sprite: _Nivalis/Effects/crosslink.rsi
+    state: wire-horizontal
+    drawdepth: BelowMobs
+  - type: Tag
+    tags:
+    - HideContextMenu
+  - type: NivalisCrosslinkWire
+
+- type: entity
+  id: NivalisCrosslinkRecallSegment
+  categories: [ HideSpawnMenu ]
+  name: crosslink wire
+  description: A razor-thin wire being drawn back to its spool.
+  components:
+  - type: Transform
+  - type: Sprite
+    sprite: _Nivalis/Effects/crosslink.rsi
+    state: wire-horizontal
+    drawdepth: BelowMobs
+  - type: Tag
+    tags:
+    - HideContextMenu
+

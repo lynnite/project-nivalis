@@ -61,6 +61,7 @@ public sealed partial class NivalisSurvivalHud : UIWidget
             UpdateStormHud();
             UpdateExecutionerHud(localUid);
             UpdateVagabondHud(localUid);
+            UpdateCrosslinkHud(localUid);
             return;
         }
 
@@ -183,6 +184,33 @@ public sealed partial class NivalisSurvivalHud : UIWidget
         KiraPctLabel.Text = $"{(int)MathF.Round(percent)}%";
 
         DogTagLabel.Text = $"{dogTags}x";
+    }
+
+    private void UpdateCrosslinkHud(EntityUid localUid)
+    {
+        if (!_entity.TryGetComponent<NivalisPerkComponent>(localUid, out var perk) ||
+            perk.Perk?.Id != "Crosslink")
+        {
+            CrosslinkBox.Visible = false;
+            return;
+        }
+
+        CrosslinkBox.Visible = true;
+
+        var percent = 100f;
+        var knives = 5;
+
+        if (_entity.TryGetComponent<NivalisCrosslinkComponent>(localUid, out var cross))
+        {
+            percent = cross.Charge;
+            knives = Math.Max(0, (int)MathF.Floor(cross.Charge / cross.KnifeCost + 0.001f));
+        }
+
+        CrosslinkChargeBar.MaxValue = 100f;
+        CrosslinkChargeBar.Value = Math.Clamp(percent, 0f, 100f);
+        CrosslinkPctLabel.Text = $"{(int)MathF.Round(percent)}%";
+
+        CrosslinkKnifeLabel.Text = $"{knives}x";
     }
 }
 

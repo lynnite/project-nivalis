@@ -47,6 +47,9 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
         if (perk.Perk.Value.Id == NivalisVagabondSystem.VagabondPerk)
             return;
 
+        if (perk.Perk.Value.Id == NivalisCrosslinkSystem.CrosslinkPerk)
+            return;
+
         if (_timing.CurTime < perk.NextAbilityUse)
             return;
 

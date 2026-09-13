@@ -1,9 +1,11 @@
-namespace Content.Server._Nivalis.Perks;
+using Robust.Shared.GameStates;
 
-[RegisterComponent, Access(typeof(NivalisBlitzerSystem))]
+namespace Content.Shared._Nivalis.Perks;
+
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true)]
 public sealed partial class NivalisBlitzerComponent : Component
 {
-    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
     public float Charge;
 
     [ViewVariables(VVAccess.ReadOnly)]
@@ -18,5 +20,6 @@ public sealed partial class NivalisBlitzerComponent : Component
     [ViewVariables(VVAccess.ReadOnly)]
     public bool Initialised;
 
+    [ViewVariables(VVAccess.ReadOnly)]
     public List<EntityUid> Bombs = new();
 }

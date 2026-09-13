@@ -1,0 +1,5 @@
+- type: entity
+  parent: StatusEffectSlowdown
+  id: StatusEffectNivalisLazarusSlowed
+  name: lazarus slowed
+  description: A concussive ARTIK-NCU pulse has slowed you.

@@ -28,6 +28,7 @@
   description: perk-lazarus-desc
   maxHealthBonus: 20
   immuneToBleed: true
+  dropRangedOnDamage: true
   reloadDelayMult: 1.25
   meleeDamageMult: 0.8
 

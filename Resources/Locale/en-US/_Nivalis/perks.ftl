@@ -34,3 +34,7 @@ perk-tickspider-name = Tickspider
 perk-tickspider-desc = Trickery and cunningness are what let you survive on your own terms without relying on others.
 perk-crosslink-name = Crosslink
 perk-crosslink-desc = An elegant dancer, from one wire to another on a razor-thin thread - you believe true finesse can carry you to the end.
+
+nivalis-lazarus-hud-icon = NCU
+nivalis-blitzer-hud-icon = BLITZ
+nivalis-arbiter-hud-icon = KNUCKLE

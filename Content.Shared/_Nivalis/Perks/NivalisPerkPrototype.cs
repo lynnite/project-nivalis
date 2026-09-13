@@ -71,5 +71,7 @@ public sealed partial class NivalisPerkPrototype : IPrototype
     [DataField] public bool UnaffectedByMorale;
     [DataField] public bool CanAimRanged = true;
     [DataField] public bool NoFallDamage;
+
+    [DataField] public bool DropRangedOnDamage;
 }
 

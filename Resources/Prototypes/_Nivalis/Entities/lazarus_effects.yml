@@ -1,0 +1,21 @@
+- type: entity
+  id: NivalisLazarusShot
+  parent: BaseItem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    scale: "0.8, 0.8"
+    layers:
+    - shader: unshaded
+      sprite: _Nivalis/Effects/arbiterlaser.rsi
+      state: arbitermuzzle
+  - type: PointLight
+    radius: 2.5
+    energy: 2.5
+    color: "#33d1ff"
+  - type: Tag
+    tags:
+    - HideContextMenu
+  - type: NivalisLazarusShot
+

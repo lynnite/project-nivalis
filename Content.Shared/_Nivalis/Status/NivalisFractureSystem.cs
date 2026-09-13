@@ -91,6 +91,11 @@ public sealed partial class NivalisFractureSystem : EntitySystem
         return HasFracture(uid, LegEffect);
     }
 
+    public bool HasArmFracturePain(EntityUid uid)
+    {
+        return !HasComp<Content.Shared._Nivalis.Perks.NivalisLazarusBuffComponent>(uid) && HasArmFracture(uid);
+    }
+
     private bool HasFracture(EntityUid uid, EntProtoId effect)
     {
         return _status.HasStatusEffect(uid, effect);
@@ -118,6 +123,7 @@ public sealed partial class NivalisFractureSystem : EntitySystem
                 RemComp<NivalisFractureComponent>(uid);
                 _movementSpeed.RefreshMovementSpeedModifiers(uid);
             }
+
             return;
         }
 
@@ -142,5 +148,4 @@ public sealed partial class NivalisFractureSystem : EntitySystem
             _movementSpeed.RefreshMovementSpeedModifiers(uid);
     }
 }
-
 

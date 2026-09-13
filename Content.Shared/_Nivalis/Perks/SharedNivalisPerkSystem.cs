@@ -71,6 +71,7 @@ public abstract partial class SharedNivalisPerkSystem : EntitySystem
         ent.Comp.CanAimRanged = true;
         ent.Comp.CanShoveSpecial = false;
         ent.Comp.NoFallDamage = false;
+        ent.Comp.DropRangedOnDamage = false;
         ent.Comp.AbilityCooldown = 0f;
 
         if (ent.Comp.Perk is not { } perkId)

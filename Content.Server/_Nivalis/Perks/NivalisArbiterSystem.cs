@@ -1,6 +1,7 @@
 using System.Numerics;
 using Content.Shared._Nivalis.Perks;
 using Content.Shared.Damage;
+using Content.Shared.Interaction;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs.Components;
@@ -86,6 +87,7 @@ public sealed partial class NivalisArbiterSystem : EntitySystem
         {
             arb.Comp.Charge = 100f;
             arb.Comp.Initialised = true;
+            Dirty(arb);
         }
 
         if (arb.Comp.Charge < arb.Comp.BlastCost - 0.0001f)
@@ -123,7 +125,10 @@ public sealed partial class NivalisArbiterSystem : EntitySystem
             if (Deleted(uid) || Terminating(uid))
                 continue;
 
+            var oldPercent = (int) arb.Charge;
             arb.Charge = Math.Clamp(arb.Charge + arb.RechargeRate * frameTime, 0f, 100f);
+            if ((int) arb.Charge != oldPercent)
+                Dirty(uid, arb);
 
             if (arb.LongReady && now - arb.LongWindupAt >= TimeSpan.FromSeconds(LongshotWindUp))
             {
@@ -161,6 +166,7 @@ public sealed partial class NivalisArbiterSystem : EntitySystem
     private void FireShortshot(EntityUid uid, NivalisArbiterComponent arb)
     {
         arb.Charge = MathF.Max(0f, arb.Charge - arb.BlastCost);
+        Dirty(uid, arb);
         _audio.PlayPvs(new SoundPathSpecifier("/Audio/Weapons/Guns/Gunshots/shotgun.ogg"), uid);
         FireBlast(uid, arb.ShortAim, ShortDistance, ShortAoe, ShortDamage, RecoilShort);
     }
@@ -168,6 +174,7 @@ public sealed partial class NivalisArbiterSystem : EntitySystem
     private void FireLongshot(EntityUid uid, NivalisArbiterComponent arb)
     {
         arb.Charge = MathF.Max(0f, arb.Charge - arb.BlastCost);
+        Dirty(uid, arb);
         _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/explosion6.ogg"), uid);
         SendFlash(uid, 255, 255, 255, 0.15f, 0.35f);
         FireBlast(uid, arb.LongAim, LongDistance, LongAoe, LongDamage, RecoilLong);
@@ -184,7 +191,19 @@ public sealed partial class NivalisArbiterSystem : EntitySystem
         var mapId = mapCoords.MapId;
 
         var muzzlePos = origin + aim * 0.5f;
-        var impactPos = origin + aim * distance;
+
+        var travel = distance;
+        if (aim.LengthSquared() > 0.0001f)
+        {
+            var hit = FindBlastCollision(user, origin, aim, distance, mapId);
+            if (hit is { } hitUid)
+            {
+                var hitPos = _xform.GetWorldPosition(hitUid);
+                travel = Vector2.Dot(hitPos - origin, aim);
+            }
+        }
+
+        var impactPos = origin + aim * travel;
 
         var muzzle = Spawn(MuzzleEffect, new MapCoordinates(muzzlePos, mapId));
         var impact = Spawn(ImpactEffect, new MapCoordinates(impactPos, mapId));
@@ -238,6 +257,43 @@ public sealed partial class NivalisArbiterSystem : EntitySystem
 
             _status.TryAddStatusEffectDuration(ent, SharedStunSystem.StunId, TimeSpan.FromSeconds(1f));
         }
+    }
+
+    private EntityUid? FindBlastCollision(EntityUid user, Vector2 origin, Vector2 aim, float distance, MapId mapId)
+    {
+        const float hitRadius = 0.6f;
+
+        var query = EntityQueryEnumerator<DamageableComponent, MobStateComponent, TransformComponent>();
+        EntityUid? best = null;
+        var bestAlong = float.MaxValue;
+
+        while (query.MoveNext(out var ent, out _, out _, out var xform))
+        {
+            if (ent == user || _mobState.IsDead(ent))
+                continue;
+
+            if (xform.MapID != mapId)
+                continue;
+
+            var entPos = _xform.GetWorldPosition(xform);
+            var toEnt = entPos - origin;
+
+            var along = Vector2.Dot(toEnt, aim);
+            if (along < 0.001f || along > distance)
+                continue;
+
+            var lateral = (toEnt - aim * along).Length();
+            if (lateral > hitRadius)
+                continue;
+
+            if (along < bestAlong)
+            {
+                bestAlong = along;
+                best = ent;
+            }
+        }
+
+        return best;
     }
 
     private void SendFlash(EntityUid uid, byte red, byte green, byte blue, float holdTime, float fadeTime)

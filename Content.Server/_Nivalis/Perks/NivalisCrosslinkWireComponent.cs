@@ -10,7 +10,7 @@ public sealed partial class NivalisCrosslinkWireComponent : Component
     public EntityUid? KnifeB;
 
     [ViewVariables(VVAccess.ReadWrite)]
-    public EntityUid? Owner;
+    public EntityUid? OwnerPlayer;
 
     [ViewVariables(VVAccess.ReadOnly)]
     public readonly Dictionary<EntityUid, TimeSpan> SnaredTargets = new();

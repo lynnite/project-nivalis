@@ -271,7 +271,7 @@ public sealed partial class NivalisCrosslinkSystem : EntitySystem
         var wireComp = EnsureComp<NivalisCrosslinkWireComponent>(wire);
         wireComp.KnifeA = a;
         wireComp.KnifeB = b;
-        wireComp.Owner = owner;
+        wireComp.OwnerPlayer = owner;
 
         if (TryComp<NivalisCrosslinkKnifeComponent>(a, out var kac))
             kac.Wires.Add(wire);
@@ -569,7 +569,7 @@ public sealed partial class NivalisCrosslinkSystem : EntitySystem
             if (xform.MapID != mapId || _mobState.IsDead(ent))
                 continue;
 
-            if (wire.Owner is { } owner && ent == owner)
+            if (wire.OwnerPlayer is { } owner && ent == owner)
                 continue;
 
             if (wire.SnaredTargets.ContainsKey(ent))

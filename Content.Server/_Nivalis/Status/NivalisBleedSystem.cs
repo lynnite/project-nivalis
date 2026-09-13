@@ -75,6 +75,12 @@ public sealed partial class NivalisBleedSystem : EntitySystem
         Dirty(target, active);
     }
 
+    public void CleanseBleedStatusOnly(EntityUid target)
+    {
+        _status.TryRemoveStatusEffect(target, BleedEffect);
+        RemComp<NivalisBleedActiveComponent>(target);
+    }
+
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
@@ -103,4 +109,3 @@ public sealed partial class NivalisBleedSystem : EntitySystem
         }
     }
 }
-

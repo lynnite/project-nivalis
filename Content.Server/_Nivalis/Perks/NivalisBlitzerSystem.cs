@@ -69,6 +69,7 @@ public sealed partial class NivalisBlitzerSystem : EntitySystem
         {
             blitz.Charge = 100f;
             blitz.Initialised = true;
+            Dirty(uid, blitz);
         }
 
         if (_timing.CurTime < blitz.NextActionAt)
@@ -97,6 +98,7 @@ public sealed partial class NivalisBlitzerSystem : EntitySystem
     private void DeployBomb(EntityUid user, NivalisBlitzerComponent blitz, Vector2 throwDir)
     {
         blitz.Charge -= blitz.BombCost;
+        Dirty(user, blitz);
 
         var spawnCoords = Transform(user).Coordinates.Offset(throwDir * 0.4f);
         var bomb = Spawn(BombPrototype, spawnCoords);
@@ -116,6 +118,7 @@ public sealed partial class NivalisBlitzerSystem : EntitySystem
 
         var detonated = new List<EntityUid>(blitz.Bombs);
         blitz.Bombs.Clear();
+        Dirty(user, blitz);
 
         _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/explosion2.ogg"), user);
         foreach (var bomb in detonated)
@@ -207,12 +210,19 @@ public sealed partial class NivalisBlitzerSystem : EntitySystem
         var query = EntityQueryEnumerator<NivalisBlitzerComponent>();
         while (query.MoveNext(out var uid, out var blitz))
         {
+            var oldPercent = (int) blitz.Charge;
             blitz.Charge = Math.Clamp(blitz.Charge + blitz.RechargeRate * frameTime, 0f, 100f);
 
-            if (blitz.Bombs.Count == 0)
+            if (blitz.Bombs.Count > 0)
+            {
+                var removed = blitz.Bombs.RemoveAll(b => Deleted(b) || !HasComp<NivalisBlitzerBombComponent>(b));
+                if (removed > 0 || (int) blitz.Charge != oldPercent)
+                    Dirty(uid, blitz);
                 continue;
+            }
 
-            blitz.Bombs.RemoveAll(b => Deleted(b) || !HasComp<NivalisBlitzerBombComponent>(b));
+            if ((int) blitz.Charge != oldPercent)
+                Dirty(uid, blitz);
         }
     }
 }

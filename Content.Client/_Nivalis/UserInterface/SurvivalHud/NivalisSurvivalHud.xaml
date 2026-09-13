@@ -77,6 +77,44 @@
                 <Label Name="CrosslinkPctLabel" Text="100%" MinWidth="36" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
                 <Label Name="CrosslinkKnifeLabel" Text="5x" MinWidth="26" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
             </BoxContainer>
+            <BoxContainer Name="LazarusBox" Orientation="Horizontal" SeparationOverride="6" HorizontalAlignment="Right" Visible="False">
+                <Label Text="{Loc 'nivalis-lazarus-hud-icon'}" MinWidth="18" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall" FontColorOverride="#6FD9C8"/>
+                <ProgressBar Name="LazarusChargeBar" MinWidth="96" MaxValue="100" Value="100" SetHeight="14">
+                    <ProgressBar.ForegroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#3FB8A8" ContentMarginLeftOverride="4" ContentMarginRightOverride="4"/>
+                    </ProgressBar.ForegroundStyleBoxOverride>
+                    <ProgressBar.BackgroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#00000088"/>
+                    </ProgressBar.BackgroundStyleBoxOverride>
+                </ProgressBar>
+                <Label Name="LazarusPctLabel" Text="100%" MinWidth="36" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+                <Label Name="LazarusShotLabel" Text="2x" MinWidth="26" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+            </BoxContainer>
+            <BoxContainer Name="BlitzerBox" Orientation="Horizontal" SeparationOverride="6" HorizontalAlignment="Right" Visible="False">
+                <Label Text="{Loc 'nivalis-blitzer-hud-icon'}" MinWidth="18" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall" FontColorOverride="#E8A24B"/>
+                <ProgressBar Name="BlitzerChargeBar" MinWidth="96" MaxValue="100" Value="100" SetHeight="14">
+                    <ProgressBar.ForegroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#C87A2B" ContentMarginLeftOverride="4" ContentMarginRightOverride="4"/>
+                    </ProgressBar.ForegroundStyleBoxOverride>
+                    <ProgressBar.BackgroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#00000088"/>
+                    </ProgressBar.BackgroundStyleBoxOverride>
+                </ProgressBar>
+                <Label Name="BlitzerPctLabel" Text="100%" MinWidth="36" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+                <Label Name="BlitzerBombLabel" Text="0x" MinWidth="26" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+            </BoxContainer>
+            <BoxContainer Name="ArbiterBox" Orientation="Horizontal" SeparationOverride="6" HorizontalAlignment="Right" Visible="False">
+                <Label Text="{Loc 'nivalis-arbiter-hud-icon'}" MinWidth="18" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall" FontColorOverride="#F0D040"/>
+                <ProgressBar Name="ArbiterChargeBar" MinWidth="96" MaxValue="100" Value="100" SetHeight="14">
+                    <ProgressBar.ForegroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#D4B318" ContentMarginLeftOverride="4" ContentMarginRightOverride="4"/>
+                    </ProgressBar.ForegroundStyleBoxOverride>
+                    <ProgressBar.BackgroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#00000088"/>
+                    </ProgressBar.BackgroundStyleBoxOverride>
+                </ProgressBar>
+                <Label Name="ArbiterPctLabel" Text="100%" MinWidth="36" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+            </BoxContainer>
     </BoxContainer>
     </BoxContainer>
 </widgets:NivalisSurvivalHud>

@@ -78,4 +78,6 @@ public sealed partial class NivalisPerkComponent : Component
     public bool CanShoveSpecial;
     [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
     public bool NoFallDamage;
+    [DataField, AutoNetworkedField, ViewVariables(VVAccess.ReadWrite)]
+    public bool DropRangedOnDamage;
 }

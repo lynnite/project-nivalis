@@ -88,7 +88,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
         if (!CombatMode.IsInCombatMode(user) || !Blocker.CanAttack(user, target))
             return false;
 
-        if (_fracture.HasArmFracture(user))
+        if (_fracture.HasArmFracturePain(user))
             return false;
 
         if (!InRange(user, target, ShoveRange, session))

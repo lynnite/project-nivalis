@@ -62,6 +62,9 @@ public sealed partial class NivalisSurvivalHud : UIWidget
             UpdateExecutionerHud(localUid);
             UpdateVagabondHud(localUid);
             UpdateCrosslinkHud(localUid);
+            UpdateLazarusHud(localUid);
+            UpdateBlitzerHud(localUid);
+            UpdateArbiterHud(localUid);
             return;
         }
 
@@ -211,6 +214,81 @@ public sealed partial class NivalisSurvivalHud : UIWidget
         CrosslinkPctLabel.Text = $"{(int)MathF.Round(percent)}%";
 
         CrosslinkKnifeLabel.Text = $"{knives}x";
+    }
+
+    private void UpdateLazarusHud(EntityUid localUid)
+    {
+        if (!_entity.TryGetComponent<NivalisPerkComponent>(localUid, out var perk) ||
+            perk.Perk?.Id != "Lazarus")
+        {
+            LazarusBox.Visible = false;
+            return;
+        }
+
+        LazarusBox.Visible = true;
+
+        var percent = 100f;
+        var shots = 2;
+
+        if (_entity.TryGetComponent<NivalisLazarusComponent>(localUid, out var laz))
+        {
+            percent = laz.Charge;
+            shots = laz.Shots;
+        }
+
+        LazarusChargeBar.MaxValue = 100f;
+        LazarusChargeBar.Value = Math.Clamp(percent, 0f, 100f);
+        LazarusPctLabel.Text = $"{(int)MathF.Round(percent)}%";
+
+        LazarusShotLabel.Text = $"{shots}x";
+    }
+
+    private void UpdateBlitzerHud(EntityUid localUid)
+    {
+        if (!_entity.TryGetComponent<NivalisPerkComponent>(localUid, out var perk) ||
+            perk.Perk?.Id != "Blitzer")
+        {
+            BlitzerBox.Visible = false;
+            return;
+        }
+
+        BlitzerBox.Visible = true;
+
+        var percent = 100f;
+        var bombs = 0;
+
+        if (_entity.TryGetComponent<NivalisBlitzerComponent>(localUid, out var blitz))
+        {
+            percent = blitz.Charge;
+            bombs = blitz.Bombs.Count;
+        }
+
+        BlitzerChargeBar.MaxValue = 100f;
+        BlitzerChargeBar.Value = Math.Clamp(percent, 0f, 100f);
+        BlitzerPctLabel.Text = $"{(int)MathF.Round(percent)}%";
+
+        BlitzerBombLabel.Text = $"{bombs}x";
+    }
+
+    private void UpdateArbiterHud(EntityUid localUid)
+    {
+        if (!_entity.TryGetComponent<NivalisPerkComponent>(localUid, out var perk) ||
+            perk.Perk?.Id != "Arbiter")
+        {
+            ArbiterBox.Visible = false;
+            return;
+        }
+
+        ArbiterBox.Visible = true;
+
+        var percent = 100f;
+
+        if (_entity.TryGetComponent<NivalisArbiterComponent>(localUid, out var arb))
+            percent = arb.Charge;
+
+        ArbiterChargeBar.MaxValue = 100f;
+        ArbiterChargeBar.Value = Math.Clamp(percent, 0f, 100f);
+        ArbiterPctLabel.Text = $"{(int)MathF.Round(percent)}%";
     }
 }
 

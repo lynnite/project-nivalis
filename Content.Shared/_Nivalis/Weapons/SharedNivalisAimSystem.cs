@@ -26,7 +26,7 @@ public abstract partial class SharedNivalisAimSystem : EntitySystem
         if (user == null)
             return;
 
-        if (msg.Active && _fracture.HasArmFracture(user.Value))
+        if (msg.Active && _fracture.HasArmFracturePain(user.Value))
             return;
 
         var held = _hands.GetActiveItem((user.Value, null));

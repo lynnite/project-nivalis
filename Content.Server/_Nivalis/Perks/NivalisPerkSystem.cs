@@ -2,8 +2,12 @@ using Content.Shared._Nivalis.Perks;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
+using Content.Shared.FixedPoint;
+using Content.Shared.Hands.Components;
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
+using Content.Shared.Weapons.Ranged.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
@@ -14,6 +18,7 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
     [Dependency] private DamageableSystem _damageable = default!;
 
     [Dependency] private MobStateSystem _mobState = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private IGameTiming _timing = default!;
 
     private readonly Dictionary<EntityUid, TimeSpan> _nextHealthRegen = new();
@@ -50,6 +55,9 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
         if (perk.Perk.Value.Id == NivalisCrosslinkSystem.CrosslinkPerk)
             return;
 
+        if (perk.Perk.Value.Id == NivalisLazarusSystem.LazarusPerk)
+            return;
+
         if (_timing.CurTime < perk.NextAbilityUse)
             return;
 
@@ -68,6 +76,21 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
     {
         if (ent.Comp.DamageTakenMult != 1f)
             args.Damage = args.Damage * ent.Comp.DamageTakenMult;
+
+        if (ent.Comp.DropRangedOnDamage && args.Damage.GetTotal() > FixedPoint2.Zero)
+            DropRangedWeapons(ent.Owner);
+    }
+
+    private void DropRangedWeapons(EntityUid uid)
+    {
+        if (!TryComp<HandsComponent>(uid, out var hands))
+            return;
+
+        foreach (var held in _hands.EnumerateHeld((uid, hands)))
+        {
+            if (HasComp<GunComponent>(held))
+                _hands.TryDrop((uid, hands), held);
+        }
     }
 
     public override void Update(float frameTime)

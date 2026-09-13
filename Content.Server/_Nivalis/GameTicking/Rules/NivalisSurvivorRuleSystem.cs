@@ -358,6 +358,9 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
 
         if (perk.Value.Id == NivalisExecutionerSystem.ExecutionerPerk)
             EnsureComp<NivalisExecutionerComponent>(mob);
+
+        if (perk.Value.Id == NivalisVagabondSystem.VagabondPerk)
+            EnsureComp<NivalisVagabondComponent>(mob);
     }
 
     private EntityUid SpawnAsSurvivor(Entity<NivalisSurvivorRuleComponent> rule, ICommonSession session, HumanoidCharacterProfile profile)

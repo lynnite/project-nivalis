@@ -1,0 +1,18 @@
+- type: entity
+  id: NivalisKiraSlash
+  parent: BaseItem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: TimedDespawn
+    lifetime: 0.5
+  - type: Sprite
+    drawdepth: Effects
+    scale: "1.0, 1.0"
+    layers:
+    - shader: unshaded
+      sprite: _Nivalis/Effects/slash.rsi
+      state: slash
+  - type: Tag
+    tags:
+    - HideContextMenu
+

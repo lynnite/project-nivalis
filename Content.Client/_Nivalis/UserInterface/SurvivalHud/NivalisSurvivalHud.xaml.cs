@@ -60,6 +60,7 @@ public sealed partial class NivalisSurvivalHud : UIWidget
 
             UpdateStormHud();
             UpdateExecutionerHud(localUid);
+            UpdateVagabondHud(localUid);
             return;
         }
 
@@ -155,6 +156,33 @@ public sealed partial class NivalisSurvivalHud : UIWidget
         NvgPctLabel.Text = $"{(int)MathF.Round(durability)}%";
 
         BountyLabel.Text = $"{bounty}x";
+    }
+
+    private void UpdateVagabondHud(EntityUid localUid)
+    {
+        if (!_entity.TryGetComponent<NivalisPerkComponent>(localUid, out var perk) ||
+            perk.Perk?.Id != "Vagabond")
+        {
+            VagabondBox.Visible = false;
+            return;
+        }
+
+        VagabondBox.Visible = true;
+
+        var percent = 100f;
+        var dogTags = 0;
+
+        if (_entity.TryGetComponent<NivalisVagabondComponent>(localUid, out var vag))
+        {
+            percent = vag.AbilityPercent;
+            dogTags = vag.DogTags;
+        }
+
+        KiraChargeBar.MaxValue = 100f;
+        KiraChargeBar.Value = Math.Clamp(percent, 0f, 100f);
+        KiraPctLabel.Text = $"{(int)MathF.Round(percent)}%";
+
+        DogTagLabel.Text = $"{dogTags}x";
     }
 }
 

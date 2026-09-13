@@ -44,6 +44,9 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
         if (perk.Perk.Value.Id == NivalisExecutionerSystem.ExecutionerPerk)
             return;
 
+        if (perk.Perk.Value.Id == NivalisVagabondSystem.VagabondPerk)
+            return;
+
         if (_timing.CurTime < perk.NextAbilityUse)
             return;
 

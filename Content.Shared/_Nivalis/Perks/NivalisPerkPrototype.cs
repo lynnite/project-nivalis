@@ -73,5 +73,10 @@ public sealed partial class NivalisPerkPrototype : IPrototype
     [DataField] public bool NoFallDamage;
 
     [DataField] public bool DropRangedOnDamage;
-}
 
+    [DataField] public EntProtoId? SignatureWeapon;
+
+    [DataField] public EntProtoId? SummonWeapon;
+
+    [DataField] public float SummonDuration;
+}

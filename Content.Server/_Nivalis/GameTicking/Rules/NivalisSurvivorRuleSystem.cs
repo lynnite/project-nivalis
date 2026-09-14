@@ -361,6 +361,8 @@ public sealed partial class NivalisSurvivorRuleSystem : GameRuleSystem<NivalisSu
 
         if (perk.Value.Id == NivalisVagabondSystem.VagabondPerk)
             EnsureComp<NivalisVagabondComponent>(mob);
+
+        _perks.GrantSignatureWeapon(mob, perk.Value);
     }
 
     private EntityUid SpawnAsSurvivor(Entity<NivalisSurvivorRuleComponent> rule, ICommonSession session, HumanoidCharacterProfile profile)

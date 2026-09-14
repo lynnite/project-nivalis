@@ -38,3 +38,7 @@ perk-crosslink-desc = An elegant dancer, from one wire to another on a razor-thi
 nivalis-lazarus-hud-icon = NCU
 nivalis-blitzer-hud-icon = BLITZ
 nivalis-arbiter-hud-icon = KNUCKLE
+nivalis-riskrunner-hud-icon = RR
+
+nivalis-riskrunner-hand-full = You need an empty hand to summon your weapon.
+nivalis-riskrunner-low-charge = Your flux charge is too low to summon (requires { $percent }%).

@@ -6,7 +6,7 @@ namespace Content.Shared._Nivalis.Perks;
 public sealed partial class NivalisRiskrunnerWeaponComponent : Component
 {
     [DataField, AutoNetworkedField]
-    public EntityUid? Owner;
+    public new EntityUid? Owner;
 
     [DataField, AutoNetworkedField]
     public float ShotCost = 1f;

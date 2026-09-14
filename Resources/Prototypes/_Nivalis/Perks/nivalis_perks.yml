@@ -130,6 +130,7 @@
   ammoScavengeMult: 1.33
   damageTakenMult: 1.15
   shoveSpeedMult: 0.75
+  signatureWeapon: NivalisMagnumImpuscaVana
 
 - type: nivalisPerk
   id: Riskrunner
@@ -141,6 +142,7 @@
   ammoScavengeMult: 0.25
   speedMult: 0.9
   immuneToGrapple: true
+  summonWeapon: NivalisRiskrunner
 
 - type: nivalisPerk
   id: Hivemind

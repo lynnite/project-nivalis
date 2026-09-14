@@ -65,6 +65,7 @@ public sealed partial class NivalisSurvivalHud : UIWidget
             UpdateLazarusHud(localUid);
             UpdateBlitzerHud(localUid);
             UpdateArbiterHud(localUid);
+            UpdateRiskrunnerHud(localUid);
             return;
         }
 
@@ -289,6 +290,27 @@ public sealed partial class NivalisSurvivalHud : UIWidget
         ArbiterChargeBar.MaxValue = 100f;
         ArbiterChargeBar.Value = Math.Clamp(percent, 0f, 100f);
         ArbiterPctLabel.Text = $"{(int)MathF.Round(percent)}%";
+    }
+
+    private void UpdateRiskrunnerHud(EntityUid localUid)
+    {
+        if (!_entity.TryGetComponent<NivalisPerkComponent>(localUid, out var perk) ||
+            perk.Perk?.Id != "Riskrunner")
+        {
+            RiskrunnerBox.Visible = false;
+            return;
+        }
+
+        RiskrunnerBox.Visible = true;
+
+        var percent = 100f;
+
+        if (_entity.TryGetComponent<NivalisRiskrunnerComponent>(localUid, out var risk))
+            percent = risk.Charge;
+
+        RiskrunnerChargeBar.MaxValue = 100f;
+        RiskrunnerChargeBar.Value = Math.Clamp(percent, 0f, 100f);
+        RiskrunnerPctLabel.Text = $"{(int)MathF.Round(percent)}%";
     }
 }
 

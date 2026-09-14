@@ -48,6 +48,9 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
         SubscribeLocalEvent<NivalisPoolAmmoProviderComponent, TakeAmmoEvent>(OnTakeAmmo);
         SubscribeLocalEvent<NivalisPoolAmmoProviderComponent, GetAmmoCountEvent>(OnGetAmmoCount);
 
+        SubscribeLocalEvent<NivalisRiskrunnerWeaponComponent, TakeAmmoEvent>(OnRiskrunnerTakeAmmo);
+        SubscribeLocalEvent<NivalisRiskrunnerWeaponComponent, GetAmmoCountEvent>(OnRiskrunnerAmmoCount);
+
         SubscribeLocalEvent<NivalisGunComponent, MapInitEvent>(OnGunMapInit);
 
         SubscribeLocalEvent<NivalisReloadComponent, NivalisReloadDoAfterEvent>(OnReloadDoAfter);
@@ -137,6 +140,9 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
 
     private void OnTakeAmmo(Entity<NivalisPoolAmmoProviderComponent> provider, ref TakeAmmoEvent args)
     {
+        if (HasComp<NivalisRiskrunnerWeaponComponent>(provider))
+            return;
+
         if (!TryComp<NivalisGunComponent>(provider, out var gun))
             return;
 
@@ -156,11 +162,69 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
 
     private void OnGetAmmoCount(Entity<NivalisPoolAmmoProviderComponent> provider, ref GetAmmoCountEvent args)
     {
+        if (HasComp<NivalisRiskrunnerWeaponComponent>(provider))
+            return;
+
         if (!TryComp<NivalisGunComponent>(provider, out var gun))
             return;
 
         args.Capacity = gun.MaxAmmo;
         args.Count = gun.MagazineCount;
+    }
+
+    private void OnRiskrunnerTakeAmmo(Entity<NivalisRiskrunnerWeaponComponent> weapon, ref TakeAmmoEvent args)
+    {
+        if (!TryComp<NivalisGunComponent>(weapon, out var gun))
+            return;
+
+        if (weapon.Comp.Owner is not { } owner ||
+            !TryComp<NivalisRiskrunnerComponent>(owner, out var charge))
+        {
+            args.Reason = "nivalis-riskrunner-no-charge";
+            return;
+        }
+
+        var cost = weapon.Comp.ShotCost;
+        if (cost <= 0f)
+            cost = 1f;
+
+        var available = (int)MathF.Floor(charge.Charge / cost + 0.0001f);
+        if (available <= 0)
+        {
+            args.Reason = "nivalis-riskrunner-no-charge";
+            return;
+        }
+
+        var toFire = Math.Min(available, args.Shots);
+        for (var i = 0; i < toFire; i++)
+        {
+            var ammoEnt = Spawn(gun.Projectile, args.Coordinates);
+            args.Ammo.Add((ammoEnt, EnsureShootable(ammoEnt)));
+        }
+
+        if (toFire > 0)
+        {
+            charge.Charge = MathF.Max(0f, charge.Charge - toFire * cost);
+            Dirty(owner, charge);
+        }
+    }
+
+    private void OnRiskrunnerAmmoCount(Entity<NivalisRiskrunnerWeaponComponent> weapon, ref GetAmmoCountEvent args)
+    {
+        var max = weapon.Comp.MaxCharge;
+        var cost = weapon.Comp.ShotCost;
+        if (cost <= 0f)
+            cost = 1f;
+
+        var current = 0f;
+        if (weapon.Comp.Owner is { } owner &&
+            TryComp<NivalisRiskrunnerComponent>(owner, out var charge))
+        {
+            current = charge.Charge;
+        }
+
+        args.Capacity = (int)MathF.Floor(max / cost + 0.0001f);
+        args.Count = (int)MathF.Floor(MathF.Max(0f, current) / cost + 0.0001f);
     }
 
     private void OnReloadInput(NivalisReloadEvent msg, EntitySessionEventArgs args)
@@ -176,7 +240,10 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
         if (held == null || !TryComp<NivalisGunComponent>(held, out _))
             return;
 
-        TryReload((EntityUid) held, user.Value);
+        if (HasComp<NivalisRiskrunnerWeaponComponent>(held))
+            return;
+
+        TryReload((EntityUid)held, user.Value);
     }
 
     private void OnUnloadInput(NivalisUnloadEvent msg, EntitySessionEventArgs args)
@@ -189,12 +256,18 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
         if (held == null || !TryComp<NivalisGunComponent>(held, out _))
             return;
 
-        UnloadGunIntoPool((EntityUid) held, user.Value);
+        if (HasComp<NivalisRiskrunnerWeaponComponent>(held))
+            return;
+
+        UnloadGunIntoPool((EntityUid)held, user.Value);
     }
 
     public bool UnloadGunIntoPool(EntityUid gun, EntityUid user)
     {
         if (!TryComp<NivalisGunComponent>(gun, out var gunComp))
+            return false;
+
+        if (HasComp<NivalisRiskrunnerWeaponComponent>(gun))
             return false;
 
         if (!TryComp<NivalisAmmoPoolComponent>(user, out var pool))
@@ -222,6 +295,9 @@ public abstract partial class SharedNivalisWeaponsSystem : EntitySystem
     public bool TryReload(EntityUid gun, EntityUid user)
     {
         if (!TryComp<NivalisGunComponent>(gun, out var gunComp))
+            return false;
+
+        if (HasComp<NivalisRiskrunnerWeaponComponent>(gun))
             return false;
 
         if (gunComp.MagazineCount >= gunComp.MaxAmmo)

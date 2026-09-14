@@ -20,6 +20,7 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
     [Dependency] private MobStateSystem _mobState = default!;
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IPrototypeManager _proto = default!;
 
     private readonly Dictionary<EntityUid, TimeSpan> _nextHealthRegen = new();
 
@@ -154,6 +155,15 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
         return Resolve(ent, ref ent.Comp, false) && ent.Comp!.Perk != null;
     }
 
+    public void GrantSignatureWeapon(EntityUid mob, ProtoId<NivalisPerkPrototype> perk)
+    {
+        if (!_proto.TryIndex(perk, out var proto) || proto.SignatureWeapon is not { } weaponProto)
+            return;
+
+        var weapon = Spawn(weaponProto, Transform(mob).Coordinates);
+        _hands.TryPickupAnyHand(mob, weapon, checkActionBlocker: false);
+    }
+
     public void ClearPerk(Entity<NivalisPerkComponent?> ent)
     {
         if (!Resolve(ent, ref ent.Comp, false))
@@ -165,4 +175,3 @@ public sealed partial class NivalisPerkSystem : SharedNivalisPerkSystem
         Dirty(safe);
     }
 }
-

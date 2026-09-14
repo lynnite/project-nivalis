@@ -1,0 +1,50 @@
+- type: entity
+  parent: [BaseNivalisGun]
+  id: NivalisRiskrunner
+  name: "R.R. 'Fluxwave'"
+  suffix: Nivalis, Riskrunner
+  description: A blisteringly fast fient fient fient gun.
+  components:
+  - type: Sprite
+    sprite: _Nivalis/Objects/Weapons/Guns/Small/riskrunner.rsi
+    layers:
+    - state: icon
+  - type: Item
+    size: Normal
+    sprite: _Nivalis/Objects/Weapons/Guns/Small/riskrunner.rsi
+  - type: Gun
+    selectedMode: FullAuto
+    availableModes:
+    - SemiAuto
+    - FullAuto
+    fireRate: 16
+    projectileSpeed: 90
+    cameraRecoilScalar: 0.7
+    minAngle: 0
+    maxAngle: 7
+    angleIncrease: 3
+    angleDecay: 8
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/smg.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/empty.ogg
+  - type: AmmoCounter
+  - type: NivalisGun
+    ammoType: Small
+    maxAmmo: 25
+    projectile: NivalisBulletSmall
+    limbDamage:
+      types:
+        Bullet: 18
+    headshotDamage:
+      types:
+        Bullet: 18
+  - type: NivalisReload
+    reloadDelay: 2.2
+    breakOnMove: false
+    walkSpeedMultiplier: 0.65
+    sprintSpeedMultiplier: 0.65
+  - type: NivalisRiskrunnerWeapon
+    shotCost: 1
+    maxCharge: 100
+

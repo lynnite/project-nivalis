@@ -115,6 +115,18 @@
                 </ProgressBar>
                 <Label Name="ArbiterPctLabel" Text="100%" MinWidth="36" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
             </BoxContainer>
+            <BoxContainer Name="RiskrunnerBox" Orientation="Horizontal" SeparationOverride="6" HorizontalAlignment="Right" Visible="False">
+                <Label Text="{Loc 'nivalis-riskrunner-hud-icon'}" MinWidth="18" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall" FontColorOverride="#E86A2B"/>
+                <ProgressBar Name="RiskrunnerChargeBar" MinWidth="96" MaxValue="100" Value="100" SetHeight="14">
+                    <ProgressBar.ForegroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#C84A2B" ContentMarginLeftOverride="4" ContentMarginRightOverride="4"/>
+                    </ProgressBar.ForegroundStyleBoxOverride>
+                    <ProgressBar.BackgroundStyleBoxOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#00000088"/>
+                    </ProgressBar.BackgroundStyleBoxOverride>
+                </ProgressBar>
+                <Label Name="RiskrunnerPctLabel" Text="100%" MinWidth="36" HorizontalAlignment="Right" VerticalAlignment="Center" StyleClasses="LabelSmall"/>
+            </BoxContainer>
     </BoxContainer>
     </BoxContainer>
 </widgets:NivalisSurvivalHud>

@@ -19,6 +19,8 @@ public sealed class ScrollingScanlineStyleBox : StyleBox
 
     public float InwardLean { get; set; }
 
+    public float SlantPixels { get; set; }
+
     public float FadeRight { get; set; }
 
     public float ScrollOffset { get; set; }
@@ -29,15 +31,23 @@ public sealed class ScrollingScanlineStyleBox : StyleBox
         var halfH = box.Height / 2f;
         var lean = Math.Clamp(InwardLean, -0.4f, 0.4f);
 
-        var lTop = midY - halfH * (1f - lean);
-        var lBot = midY + halfH * (1f - lean);
-        var rTop = midY - halfH * (1f + lean);
-        var rBot = midY + halfH * (1f + lean);
+        var lHalf = halfH * (1f - lean);
+        var rHalf = halfH * (1f + lean);
 
-        lTop = Math.Clamp(lTop, box.Top, box.Bottom);
-        lBot = Math.Clamp(lBot, box.Top, box.Bottom);
-        rTop = Math.Clamp(rTop, box.Top, box.Bottom);
-        rBot = Math.Clamp(rBot, box.Top, box.Bottom);
+        var shift = SlantPixels * uiScale;
+
+        var lTop = midY - lHalf;
+        var lBot = midY + lHalf;
+        var rTop = midY - rHalf + shift;
+        var rBot = midY + rHalf + shift;
+
+        if (shift == 0f)
+        {
+            lTop = Math.Clamp(lTop, box.Top, box.Bottom);
+            lBot = Math.Clamp(lBot, box.Top, box.Bottom);
+            rTop = Math.Clamp(rTop, box.Top, box.Bottom);
+            rBot = Math.Clamp(rBot, box.Top, box.Bottom);
+        }
 
         var fade = Math.Clamp(FadeRight, 0f, 1f);
         var baseColor = BackgroundColor * Modulate;
@@ -47,8 +57,8 @@ public sealed class ScrollingScanlineStyleBox : StyleBox
         var segments = 24;
         for (var s = 0; s < segments; s++)
         {
-            var s0 = s / (float) segments;
-            var s1 = (s + 1) / (float) segments;
+            var s0 = s / (float)segments;
+            var s1 = (s + 1) / (float)segments;
             var mid = (s0 + s1) / 2f;
 
             var xa = box.Left + (box.Right - box.Left) * s0;

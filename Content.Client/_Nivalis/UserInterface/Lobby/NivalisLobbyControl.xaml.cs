@@ -42,7 +42,6 @@ public sealed partial class NivalisLobbyControl : Control
     [Dependency] private IPrototypeManager _proto = default!;
 
     private readonly Dictionary<Button, ScrollingScanlineStyleBox> _navStyle = new();
-    private readonly Dictionary<Button, Vector2> _navBaseSize = new();
     private readonly Dictionary<Button, Vector2> _navCurrentSize = new();
     private readonly Dictionary<Button, Vector2> _navTargetSize = new();
     private readonly Dictionary<Button, bool> _navHover = new();
@@ -85,13 +84,15 @@ public sealed partial class NivalisLobbyControl : Control
     private bool _areWeReady;
     private Texture? _scanlineTexture;
 
-    private const float HoverScale = 1.08f;
+    private const float HoverScaleX = 1.03f;
+    private const float HoverScaleY = 1.0f;
+    private const float HoverNudgeX = 6f;
     private const float HoverLerpSpeed = 9f;
-
     private const float IdleScrollSpeed = 9f;
     private const float HoverScrollSpeed = 26f;
 
-    private const float NeighborShrinkScale = 0.96f;
+    private const float NavInwardLean = 0f;
+    private const float NavSlantPixels = 7f;
 
     private Font _displayBold = null!;
     private Font _displayRegular = null!;
@@ -262,14 +263,15 @@ public sealed partial class NivalisLobbyControl : Control
         for (var i = 0; i < _navButtons.Length; i++)
         {
             var button = _navButtons[i];
-            button.Margin = new Thickness(i * 5, 0, 0, 4);
+            button.Margin = new Thickness(i * 4, 0, 0, 3);
             button.HorizontalExpand = false;
             button.HorizontalAlignment = HAlignment.Left;
 
-            var baseSize = new Vector2(button.MinWidth, button.MinHeight);
-            _navBaseSize[button] = baseSize;
-            _navCurrentSize[button] = baseSize;
-            _navTargetSize[button] = baseSize;
+            if (button is SlantedButton slanted)
+                slanted.Shear = NavSlantPixels;
+
+            _navCurrentSize[button] = Vector2.One;
+            _navTargetSize[button] = Vector2.One;
             _navHover[button] = false;
             _navHoverAmount[button] = 0f;
             _navIndex[button] = i;
@@ -280,7 +282,7 @@ public sealed partial class NivalisLobbyControl : Control
                 BackgroundColor = Color.FromHex("#A9D8FF").WithAlpha(0.38f),
                 BorderColor = Color.FromHex("#D3EFFF").WithAlpha(0.5f),
                 BorderThickness = 1f,
-                InwardLean = 0.08f,
+                InwardLean = NavInwardLean,
             };
 
             _navStyle[button] = scanlineBox;
@@ -546,22 +548,18 @@ public sealed partial class NivalisLobbyControl : Control
 
         foreach (var button in _navButtons)
         {
-            var baseSize = _navBaseSize[button];
             var idx = _navIndex[button];
             var isHovered = idx == hoveredIndex;
-            var isNeighbor = hoveredIndex >= 0 && Math.Abs(idx - hoveredIndex) == 1;
 
             if (isHovered)
             {
-                _navTargetSize[button] = new Vector2(baseSize.X * HoverScale, baseSize.Y * HoverScale);
-            }
-            else if (isNeighbor)
-            {
-                _navTargetSize[button] = new Vector2(baseSize.X, baseSize.Y * NeighborShrinkScale);
+                // Pop out to the right more than up/down.
+                _navTargetSize[button] = new Vector2(HoverScaleX, HoverScaleY);
             }
             else
             {
-                _navTargetSize[button] = baseSize;
+                // Neighbours (and everything else) stay put.
+                _navTargetSize[button] = Vector2.One;
             }
         }
 
@@ -580,7 +578,12 @@ public sealed partial class NivalisLobbyControl : Control
                 current.X + (target.X - current.X) * lerp,
                 current.Y + (target.Y - current.Y) * lerp);
             _navCurrentSize[button] = newSize;
-            button.MinSize = newSize;
+
+            if (button is SlantedButton slanted)
+            {
+                slanted.VisualScale = newSize;
+                slanted.VisualOffset = new Vector2(HoverNudgeX * amount, 0f);
+            }
 
             var speed = _navHover[button] ? HoverScrollSpeed : IdleScrollSpeed;
             style.ScrollOffset += frameTime * speed;
@@ -1225,10 +1228,5 @@ public sealed partial class NivalisLobbyControl : Control
 
         RefreshPerksCount();
         UpdatePerksHoverHighlight(0.016f);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
     }
 }

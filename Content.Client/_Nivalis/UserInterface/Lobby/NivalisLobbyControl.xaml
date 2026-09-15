@@ -35,16 +35,16 @@
 
         <BoxContainer Name="Navigation" Orientation="Vertical"
                       MinWidth="230" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <Button Name="ReadyButton" Text="NOT READY" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
-            <Button Name="LoadoutButton" Text="LOADOUT" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
-            <Button Name="TraitsButton" Text="TRAITS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
-            <Button Name="PerksButton" Text="PERKS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
-            <Button Name="ChallengesButton" Text="CHALLENGES" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
-            <Button Name="QuartermasterButton" Text="QUARTERMASTER" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
-            <Button Name="PatreonButton" Text="PATREON" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
-            <Button Name="SettingsButton" Text="SETTINGS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <nivalis:SlantedButton Name="ReadyButton" Text="NOT READY" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <nivalis:SlantedButton Name="LoadoutButton" Text="LOADOUT" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <nivalis:SlantedButton Name="TraitsButton" Text="TRAITS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <nivalis:SlantedButton Name="PerksButton" Text="PERKS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <nivalis:SlantedButton Name="ChallengesButton" Text="CHALLENGES" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <nivalis:SlantedButton Name="QuartermasterButton" Text="QUARTERMASTER" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <nivalis:SlantedButton Name="PatreonButton" Text="PATREON" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <nivalis:SlantedButton Name="SettingsButton" Text="SETTINGS" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
             <Control MinSize="0 12" />
-            <Button Name="QuitButton" Text="QUIT" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
+            <nivalis:SlantedButton Name="QuitButton" Text="QUIT" HorizontalExpand="True" MinHeight="28" MinWidth="380" />
         </BoxContainer>
 
         <PanelContainer Name="TraitsPanel" Visible="False" MinWidth="380" MinHeight="520">

@@ -115,4 +115,5 @@
         </PanelContainer>
     </BoxContainer>
     <nivalis:NivalisLobbyControl Name="NivalisLobby" Access="Public" />
+    <nivalis:NivalisCharacterCustomization Name="NivalisCustomization" Access="Public" Visible="False" />
 </lobbyUi:LobbyGui>

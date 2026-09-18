@@ -1,0 +1,69 @@
+<nivalis:NivalisCharacterCustomization
+    xmlns="https://spacestation14.io"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+    xmlns:lobby="clr-namespace:Content.Client.Lobby.UI.ProfileEditorControls"
+    xmlns:nivalis="clr-namespace:Content.Client._Nivalis.UserInterface.Lobby">
+
+    <LayoutContainer Name="RootElement" HorizontalExpand="True" VerticalExpand="True" MouseFilter="Ignore">
+
+        <PanelContainer Name="Dimmer" HorizontalExpand="True" VerticalExpand="True" MouseFilter="Ignore">
+            <PanelContainer.PanelOverride>
+                <gfx:StyleBoxFlat BackgroundColor="#02040a77" />
+            </PanelContainer.PanelOverride>
+        </PanelContainer>
+
+        <PanelContainer Name="MenuFrame" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <BoxContainer Orientation="Vertical" Margin="12" SeparationOverride="6">
+
+                <BoxContainer Name="HeaderBar" Orientation="Vertical" HorizontalExpand="True">
+                    <Label Name="TitleLabel" FontColorOverride="#FFFFFF" Margin="0 2 0 0" />
+                    <Label Name="SubtitleLabel" FontColorOverride="#B9C6D2" Margin="2 2 0 2" />
+                </BoxContainer>
+
+                <BoxContainer Orientation="Horizontal" SeparationOverride="12" HorizontalExpand="True">
+                    <BoxContainer Orientation="Vertical" MinWidth="210" VerticalAlignment="Top"
+                                  SeparationOverride="0">
+                        <BoxContainer Name="CategoryNav" Orientation="Vertical"
+                                      HorizontalExpand="True" SeparationOverride="0" />
+                        <Control MinSize="0 10" />
+                        <nivalis:SlantedButton Name="SaveButton" HorizontalExpand="True" MinHeight="30" />
+                        <nivalis:SlantedButton Name="ResetButton" HorizontalExpand="True" MinHeight="30" />
+                        </BoxContainer>
+
+                    <PanelContainer Name="ContentPanel" MinWidth="500" MaxWidth="500">
+                        <LayoutContainer HorizontalExpand="True" VerticalExpand="True" Margin="10">
+                            <ScrollContainer Name="ContentScroll" HScrollEnabled="False"
+                                             HorizontalExpand="True" VerticalExpand="True" MinHeight="380">
+                                <BoxContainer Name="ContentBody" Orientation="Vertical"
+                                              HorizontalExpand="True" SeparationOverride="10" />
+                            </ScrollContainer>
+                            <TextureRect Name="FadeTop" VerticalAlignment="Top" HorizontalExpand="True"
+                                         MinHeight="26" MaxHeight="26" Stretch="Scale" MouseFilter="Ignore" Visible="False" />
+                            <TextureRect Name="FadeBottom" VerticalAlignment="Bottom" HorizontalExpand="True"
+                                         MinHeight="26" MaxHeight="26" Stretch="Scale" MouseFilter="Ignore" Visible="False" />
+                        </LayoutContainer>
+                    </PanelContainer>
+
+                    <BoxContainer Name="PreviewColumn" Orientation="Vertical"
+                                  MinSize="280 440" MaxSize="280 440" VerticalAlignment="Top">
+                        <Label Name="AgentTitleLabel" FontColorOverride="#58C6E8"
+                               HorizontalAlignment="Center" Margin="0 4 0 0" />
+                        <lobby:ProfilePreviewSpriteView Name="PreviewSprite" Access="Public"
+                                                        Scale="5 5"
+                                                        HorizontalExpand="True" VerticalExpand="True"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <BoxContainer Name="PreviewButtons" Orientation="Horizontal"
+                                      HorizontalAlignment="Center" Margin="0 6 0 2" SeparationOverride="8">
+                            <nivalis:SlantedButton Name="RotateLeft" Text="◀" MinSize="70 28" />
+                            <nivalis:SlantedButton Name="RotateRight" Text="▶" MinSize="70 28" />
+                </BoxContainer>
+                        <Label Name="AgentNameLabel" FontColorOverride="#FFFFFF"
+                               HorizontalAlignment="Center" Margin="0 2 0 6" />
+                    </BoxContainer>
+                </BoxContainer>
+            </BoxContainer>
+        </PanelContainer>
+    </LayoutContainer>
+</nivalis:NivalisCharacterCustomization>
+

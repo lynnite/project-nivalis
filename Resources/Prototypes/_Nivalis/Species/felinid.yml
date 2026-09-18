@@ -20,8 +20,7 @@
   limits:
     enum.HumanoidVisualLayers.HeadTop:
       limit: 1
-      required: true
-      default: [ FelinidEarsBasic ]
+      required: false
     enum.HumanoidVisualLayers.Hair:
       limit: 1
       required: false
@@ -61,8 +60,7 @@
       required: false
     enum.HumanoidVisualLayers.Tail:
       limit: 1
-      required: true
-      default: [ FelinidTailBasic ]
+      required: false
     enum.HumanoidVisualLayers.Special:
       limit: 0
       required: false

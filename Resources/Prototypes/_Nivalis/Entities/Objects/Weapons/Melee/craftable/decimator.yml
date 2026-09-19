@@ -5,7 +5,42 @@
   description: Crafted
   components:
   - type: Sprite
-    sprite: _Nivalis/Objects/Weapons/Melee/decimator/inhands.rsi
+    sprite: _Nivalis/Objects/Weapons/Melee/decimator/icon.rsi
     layers:
     - state: icon
-      sprite: _Nivalis/Objects/Weapons/Melee/decimator/icon.rsi # todo explosion
+  - type: Item
+    size: Ginormous
+    shape:
+    - 0,0,0,6
+    storedRotation: -45
+    sprite: _Nivalis/Objects/Weapons/Melee/decimator/inhands.rsi
+  - type: NivalisMelee
+    wideAnimationRotation: -135
+    lightComboCount: 3
+    lightComboInterval: 0.16
+    lightComboRecovery: 0.6
+    lightDamage:
+      types: { Melee: 24 }
+    lightStaminaDamage: 6
+    heavyDamage:
+      types: { Melee: 65 }
+    heavyStaminaDamage: 12
+    angle: 20
+    range: 1.6
+    attackRate: 0.8
+    animation: WeaponArcThrust
+    wideAnimation: WeaponArcThrust
+    soundHit:
+      path: /Audio/Weapons/bladeslice.ogg
+  - type: NivalisDecimator
+    explosionRadius: 1.6
+    explosionEdgeMultiplier: 0.25
+    attackSpeedGrowth: 0.5
+    maxAttackSpeedMultiplier: 3
+    explosionDamage:
+      types: { Explosive: 40 }
+  - type: NivalisBleed
+    damagePerSecond: 0.2
+    duration: 40
+  - type: NivalisFracturer
+    fractureChance: 0.05

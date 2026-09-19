@@ -538,7 +538,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
 
         if (entities.Count == 0)
         {
-            var missEvent = new NivalisMeleeHitEvent(new List<EntityUid>(), user, meleeUid, damage, direction);
+            var missEvent = new NivalisMeleeHitEvent(new List<EntityUid>(), user, meleeUid, damage, direction, heavy: true);
             RaiseLocalEvent(meleeUid, missEvent, broadcast: true);
             PlaySwingSound(user, meleeUid, component);
             return;
@@ -570,7 +570,7 @@ public abstract partial class SharedNivalisMeleeSystem : EntitySystem
             targets.Add(entity);
         }
 
-        var hitEvent = new NivalisMeleeHitEvent(targets, user, meleeUid, damage, direction);
+        var hitEvent = new NivalisMeleeHitEvent(targets, user, meleeUid, damage, direction, heavy: true);
         RaiseLocalEvent(meleeUid, hitEvent, broadcast: true);
 
         if (hitEvent.Handled)
@@ -696,6 +696,8 @@ public sealed class NivalisMeleeHitEvent : EntityEventArgs
     public DamageSpecifier Damage;
     public Vector2? Direction;
 
+    public bool Heavy;
+
     public DamageSpecifier BonusDamage = new();
     public List<DamageModifierSet> ModifiersList = new();
 
@@ -703,12 +705,13 @@ public sealed class NivalisMeleeHitEvent : EntityEventArgs
 
     public bool IsHit => HitEntities.Count > 0;
 
-    public NivalisMeleeHitEvent(List<EntityUid> hitEntities, EntityUid user, EntityUid weapon, DamageSpecifier damage, Vector2? direction)
+    public NivalisMeleeHitEvent(List<EntityUid> hitEntities, EntityUid user, EntityUid weapon, DamageSpecifier damage, Vector2? direction, bool heavy = false)
     {
         HitEntities = hitEntities;
         User = user;
         Weapon = weapon;
         Damage = damage;
         Direction = direction;
+        Heavy = heavy;
     }
 }

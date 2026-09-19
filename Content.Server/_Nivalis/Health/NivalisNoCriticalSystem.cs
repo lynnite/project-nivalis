@@ -7,7 +7,7 @@ namespace Content.Server._Nivalis.Health;
 
 public sealed partial class NivalisNoCriticalSystem : SharedNivalisNoCriticalSystem
 {
-    public const float BodyDeletionDelay = 2f;
+    public const float BodyDeletionDelay = 20f;
 
     public override void Initialize()
     {

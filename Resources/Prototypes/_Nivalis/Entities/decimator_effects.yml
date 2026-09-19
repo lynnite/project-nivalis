@@ -1,0 +1,22 @@
+- type: entity
+  id: NivalisBloodSplurt
+  categories: [ HideSpawnMenu ]
+  name: blood splurt
+  components:
+  - type: NivalisBloodSplurt
+    spurtDuration: 0.6
+    oozeDuration: 10
+    spurtSpeed: 16
+    spurtSpread: 0.26
+    spurtEmitRate: 90
+    oozeSpeed: 1.2
+    oozeEmitRate: 18
+    oozeReach: 1
+    oozeGravity: "0,-3.5"
+    transitionDuration: 0.35
+    maxReach: 2
+  - type: TimedDespawn
+    lifetime: 10.6
+  - type: Tag
+    tags:
+    - HideContextMenu

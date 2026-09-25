@@ -27,12 +27,17 @@ public sealed partial class SeparatedChatGameScreen : InGameScreen
         SetAnchorAndMarginPreset(Ghost, LayoutPreset.BottomWide, margin: 80);
         SetAnchorAndMarginPreset(Hotbar, LayoutPreset.BottomWide, margin: 5);
         SetAnchorAndMarginPreset(Alerts, LayoutPreset.CenterRight, margin: 10);
+        SetAnchorAndMarginPreset(SurvivalHud, LayoutPreset.BottomRight, margin: 10);
+        SetGrowHorizontal(SurvivalHud, GrowDirection.Begin);
+        SetGrowVertical(SurvivalHud, GrowDirection.Begin);
 
         Inventory.Visible = false;
         Hotbar.Hotbar.Visible = false;
         Hotbar.SingleStorageContainer.Visible = false;
         Hotbar.DoubleStorageContainer.Visible = false;
-        SetAnchorAndMarginPreset(NivalisHandsBar, LayoutPreset.BottomLeft, margin: 5);
+        SetAnchorAndMarginPreset(NivalisHandsBar, LayoutPreset.BottomLeft, margin: 25);
+        SetGrowHorizontal(NivalisHandsBar, GrowDirection.End);
+        SetGrowVertical(NivalisHandsBar, GrowDirection.Begin);
 
         ScreenContainer.OnSplitResizeFinished += () =>
             OnChatResized?.Invoke(new Vector2(ScreenContainer.SplitFraction, 0));

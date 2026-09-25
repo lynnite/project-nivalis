@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Content.Client.Gameplay;
 using Content.Client.Hands.Systems;
 using Content.Client.UserInterface.Systems.Gameplay;
+using Content.Client._Nivalis.UserInterface.Lobby;
 using Content.Shared.Hands.Components;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
@@ -91,7 +92,24 @@ public sealed partial class NivalisHandsUIController : UIController, IOnSystemCh
 
     private void OnSetActiveHand(string? handName)
     {
-        Rebuild();
+        var bar = Bar;
+        if (bar == null || _hands is not { } hands)
+            return;
+
+        var activeIndex = 0;
+        var index = 0;
+        foreach (var hand in hands.Comp.SortedHands)
+        {
+            if (hand == handName)
+            {
+                activeIndex = index;
+                break;
+            }
+
+            index++;
+        }
+
+        bar.SetActive(activeIndex);
     }
 
     private void Rebuild()
@@ -103,6 +121,7 @@ public sealed partial class NivalisHandsUIController : UIController, IOnSystemCh
         bar.Visible = true;
         bar.ClearHandButtons();
 
+        var names = new List<string?>();
         var activeIndex = 0;
         var index = 0;
         foreach (var handName in hands.Comp.SortedHands)
@@ -110,8 +129,7 @@ public sealed partial class NivalisHandsUIController : UIController, IOnSystemCh
             var isActive = handName == hands.Comp.ActiveHandId;
             if (isActive)
                 activeIndex = index;
-
-            var button = new Button();
+            var button = new SlantedButton();
             var captured = handName;
             button.OnPressed += _ =>
             {
@@ -120,11 +138,12 @@ public sealed partial class NivalisHandsUIController : UIController, IOnSystemCh
             };
 
             bar.AddHandButton(button, index, isActive);
+            names.Add(GetHeldItemName(hands, handName));
             index++;
         }
 
+        bar.SetItems(names);
         bar.SetActive(activeIndex);
-        Refresh();
     }
 
     private void Refresh()
@@ -135,25 +154,28 @@ public sealed partial class NivalisHandsUIController : UIController, IOnSystemCh
 
         bar.Visible = true;
 
-        if (_handsSystem == null)
-            return;
-
-        var names = new List<string>();
+        var names = new List<string?>();
         foreach (var handName in hands.Comp.SortedHands)
         {
-            if (_handsSystem.TryGetHeldItem((hands.Owner, hands.Comp), handName, out var held) &&
-                held is { } entity && _entities.TryGetComponent<MetaDataComponent>(entity, out var meta))
-            {
-                names.Add(meta.EntityName);
-            }
-            else
-            {
-                names.Add(string.Empty);
-            }
+            names.Add(GetHeldItemName(hands, handName));
         }
 
         bar.SetItems(names);
     }
+
+    private string? GetHeldItemName(Entity<HandsComponent> hands, string? handName)
+    {
+        if (_handsSystem == null || handName == null)
+            return null;
+
+        if (_handsSystem.TryGetHeldItem((hands.Owner, hands.Comp), handName, out var held) &&
+            held is { } entity && _entities.TryGetComponent<MetaDataComponent>(entity, out var meta))
+        {
+            return meta.EntityName;
+            }
+
+        return null;
+            }
 
     public override void FrameUpdate(FrameEventArgs args)
     {
@@ -162,4 +184,3 @@ public sealed partial class NivalisHandsUIController : UIController, IOnSystemCh
             bar.UpdateFrame(args.DeltaSeconds);
     }
 }
-

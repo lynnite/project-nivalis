@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.Hands;
+using Content.Shared.Hands.Components;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Item;
 using Robust.Client.GameObjects;
@@ -53,10 +54,13 @@ public sealed partial class ItemSystem : SharedItemSystem
     /// </summary>
     private void OnGetVisuals(EntityUid uid, ItemComponent item, GetInhandVisualsEvent args)
     {
-        var defaultKey = $"inhand-{args.Location.ToString().ToLowerInvariant()}";
+        var location = args.Location;
+        if (location == HandLocation.Middle && !HasMiddleVisuals(uid, item))
+            location = HandLocation.Right;
+        var defaultKey = $"inhand-{location.ToString().ToLowerInvariant()}";
 
         // try get explicit visuals
-        if (!item.InhandVisuals.TryGetValue(args.Location, out var layers))
+        if (!item.InhandVisuals.TryGetValue(location, out var layers))
         {
             // get defaults
             if (!TryGetDefaultVisuals(uid, item, defaultKey, out layers))
@@ -76,6 +80,29 @@ public sealed partial class ItemSystem : SharedItemSystem
             args.Layers.Add((key, layer));
         }
     }
+
+    private bool HasMiddleVisuals(EntityUid uid, ItemComponent item)
+    {
+        if (item.InhandVisuals.ContainsKey(HandLocation.Middle))
+        return true;
+
+        if (item.RsiPath != null &&
+            _resCache.GetResource<RSIResource>(SpriteSpecifierSerializer.TextureRoot / item.RsiPath).RSI
+                .TryGetState(GetDefaultStateName(item, "inhand-middle"), out _))
+            return true;
+
+        if (TryComp(uid, out SpriteComponent? sprite) &&
+            sprite.BaseRSI != null &&
+            sprite.BaseRSI.TryGetState(GetDefaultStateName(item, "inhand-middle"), out _))
+            return true;
+
+        return false;
+    }
+
+    private static string GetDefaultStateName(ItemComponent item, string defaultKey)
+    {
+        return item.HeldPrefix == null ? defaultKey : $"{item.HeldPrefix}-{defaultKey}";
+}
 
     /// <summary>
     ///     If no explicit in-hand visuals were specified, this attempts to populate with default values.

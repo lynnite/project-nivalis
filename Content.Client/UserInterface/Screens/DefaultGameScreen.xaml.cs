@@ -22,12 +22,17 @@ public sealed partial class DefaultGameScreen : InGameScreen
         SetAnchorAndMarginPreset(Hotbar, LayoutPreset.BottomWide, margin: 5);
         SetAnchorAndMarginPreset(Chat, LayoutPreset.TopRight, margin: 10);
         SetAnchorAndMarginPreset(Alerts, LayoutPreset.TopRight, margin: 10);
+        SetAnchorAndMarginPreset(SurvivalHud, LayoutPreset.BottomRight, margin: 10);
+        SetGrowHorizontal(SurvivalHud, GrowDirection.Begin);
+        SetGrowVertical(SurvivalHud, GrowDirection.Begin);
 
         Inventory.Visible = false;
         Hotbar.Hotbar.Visible = false;
         Hotbar.SingleStorageContainer.Visible = false;
         Hotbar.DoubleStorageContainer.Visible = false;
-        SetAnchorAndMarginPreset(NivalisHandsBar, LayoutPreset.BottomLeft, margin: 5);
+        SetAnchorAndMarginPreset(NivalisHandsBar, LayoutPreset.BottomLeft, margin: 25);
+        SetGrowHorizontal(NivalisHandsBar, GrowDirection.End);
+        SetGrowVertical(NivalisHandsBar, GrowDirection.Begin);
 
         Chat.OnResized += ChatOnResized;
         Chat.OnChatResizeFinish += ChatOnResizeFinish;
@@ -65,4 +70,3 @@ public sealed partial class DefaultGameScreen : InGameScreen
         SetMarginTop(Alerts, size.X);
     }
 }
-

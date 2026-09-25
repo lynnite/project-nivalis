@@ -14,11 +14,19 @@ namespace Content.Client._Nivalis.UserInterface.Hands;
 [GenerateTypedNameReferences]
 public sealed partial class NivalisHandsBar : UIWidget
 {
-    private const float ActiveScale = 1.08f;
-    private const float HoverScale = 1.06f;
-    private const float LerpSpeed = 9f;
+    private static readonly Color BoxBackground = Color.FromHex("#4a82bf");
+    private static readonly Color BoxBorder = Color.FromHex("#bfe3ff").WithAlpha(0.7f);
+    private const float BoxBorderThickness = 1.5f;
+    private const float BoxInwardLean = 0f;
+    private const float BoxSlant = 10f;
+
+    private const float ActiveBrightness = 1.0f;
+    private const float IdleBrightness = 0.6f;
+    private const float LerpSpeed = 10f;
     private const float IdleScrollSpeed = 9f;
-    private const float HoverScrollSpeed = 26f;
+    private const float ActiveScrollSpeed = 26f;
+
+    private static readonly Vector2 BoxSize = new(190, 30);
 
     private readonly List<HandButtonState> _buttons = new();
     private Texture? _scanline;
@@ -35,48 +43,45 @@ public sealed partial class NivalisHandsBar : UIWidget
         HandButtonContainer.RemoveAllChildren();
     }
 
-    public void AddHandButton(Button button, int index, bool active)
+    public void AddHandButton(SlantedButton button, int index, bool active)
     {
         var style = new ScrollingScanlineStyleBox
         {
             Texture = _scanline,
-            BackgroundColor = new Color(0.06f, 0.12f, 0.20f),
+            BackgroundColor = BoxBackground,
+            BorderColor = BoxBorder,
+            BorderThickness = BoxBorderThickness,
+            InwardLean = BoxInwardLean,
+            SlantPixels = BoxSlant,
         };
         button.StyleBoxOverride = style;
 
-        var baseSize = new Vector2(190, 20);
-        button.MinSize = baseSize;
-        button.Margin = new Thickness(index * 14, 0, 0, 3);
+        button.MinSize = BoxSize;
         button.HorizontalExpand = false;
         button.HorizontalAlignment = HAlignment.Left;
+        button.TextAlign = Label.AlignMode.Left;
+        button.Shear = BoxSlant;
+        button.Margin = new Thickness(BoxSlant, 0, 0, 0);
 
         var state = new HandButtonState
         {
             Button = button,
             Style = style,
-            BaseSize = baseSize,
-            CurrentSize = baseSize,
-            TargetSize = baseSize,
             Active = active,
-            Hover = false,
-            HoverAmount = active ? 1f : 0f,
+            Brightness = active ? ActiveBrightness : IdleBrightness,
+            TargetBrightness = active ? ActiveBrightness : IdleBrightness,
         };
-
-        button.OnMouseEntered += _ => state.Hover = true;
-        button.OnMouseExited += _ => state.Hover = false;
 
         _buttons.Add(state);
         HandButtonContainer.AddChild(button);
     }
 
-    public void SetItems(List<string> itemNames)
+    public void SetItems(IReadOnlyList<string?> itemNames)
     {
         for (var i = 0; i < _buttons.Count; i++)
         {
-            var text = (i + 1).ToString();
-            if (i < itemNames.Count && !string.IsNullOrWhiteSpace(itemNames[i]))
-                text = $"{i + 1}  {itemNames[i]}";
-            _buttons[i].Button.Text = text;
+            var name = i < itemNames.Count ? itemNames[i] : null;
+            _buttons[i].Button.Text = string.IsNullOrWhiteSpace(name) ? string.Empty : name;
         }
     }
 
@@ -84,32 +89,25 @@ public sealed partial class NivalisHandsBar : UIWidget
     {
         for (var i = 0; i < _buttons.Count; i++)
         {
-            _buttons[i].Active = i == index;
+            var state = _buttons[i];
+            state.Active = i == index;
+            state.TargetBrightness = state.Active ? ActiveBrightness : IdleBrightness;
         }
     }
 
     public void UpdateFrame(float frameTime)
     {
+        var lerp = 1f - MathF.Exp(-LerpSpeed * frameTime);
+
         foreach (var state in _buttons)
         {
-            if (state.Active)
-                state.TargetSize = new Vector2(state.BaseSize.X * ActiveScale, state.BaseSize.Y * ActiveScale);
-            else if (state.Hover)
-                state.TargetSize = new Vector2(state.BaseSize.X * HoverScale, state.BaseSize.Y * HoverScale);
-            else
-                state.TargetSize = state.BaseSize;
+            state.Brightness += (state.TargetBrightness - state.Brightness) * lerp;
 
-            var lerp = 1f - MathF.Exp(-LerpSpeed * frameTime);
-            state.CurrentSize = new Vector2(
-                state.CurrentSize.X + (state.TargetSize.X - state.CurrentSize.X) * lerp,
-                state.CurrentSize.Y + (state.TargetSize.Y - state.CurrentSize.Y) * lerp);
-            state.Button.MinSize = state.CurrentSize;
-
-            var speed = state.Active || state.Hover ? HoverScrollSpeed : IdleScrollSpeed;
-            state.Style.ScrollOffset += frameTime * speed;
-
-            var bright = state.Active ? 1f : 0.82f + 0.14f * (state.Hover ? 1f : 0f);
+            var bright = state.Brightness;
             state.Style.Modulate = new Color(bright, bright, bright, 1f);
+
+            var speed = state.Active ? ActiveScrollSpeed : IdleScrollSpeed;
+            state.Style.ScrollOffset += frameTime * speed;
         }
     }
 
@@ -146,13 +144,10 @@ public sealed partial class NivalisHandsBar : UIWidget
 
     private sealed class HandButtonState
     {
-        public Button Button = null!;
+        public SlantedButton Button = null!;
         public ScrollingScanlineStyleBox Style = null!;
-        public Vector2 BaseSize;
-        public Vector2 CurrentSize;
-        public Vector2 TargetSize;
         public bool Active;
-        public bool Hover;
-        public float HoverAmount;
+        public float Brightness;
+        public float TargetBrightness;
     }
 }

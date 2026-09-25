@@ -265,7 +265,7 @@ namespace Content.Client.Hands.Systems
 
             // Remove old layers. We could also just set them to invisible, but as items may add arbitrary layers, this
             // may eventually bloat the player with lots of layers.
-            if (handComp.RevealedLayers.TryGetValue(hand.Value.Location, out var revealedLayers))
+            if (handComp.RevealedLayers.TryGetValue(handId, out var revealedLayers))
             {
                 foreach (var key in revealedLayers)
                 {
@@ -277,10 +277,10 @@ namespace Content.Client.Hands.Systems
             else
             {
                 revealedLayers = new();
-                handComp.RevealedLayers[hand.Value.Location] = revealedLayers;
+                handComp.RevealedLayers[handId] = revealedLayers;
             }
 
-            if (HandIsEmpty((ent, handComp), handId))
+            if (handId != handComp.ActiveHandId || HandIsEmpty((ent, handComp), handId))
             {
                 // the held item was removed.
                 RaiseLocalEvent(held, new HeldVisualsUpdatedEvent(ent, revealedLayers), true);
@@ -348,6 +348,7 @@ namespace Content.Client.Hands.Systems
 
         private void HandlePlayerAttached(EntityUid uid, HandsComponent component, LocalPlayerAttachedEvent args)
         {
+            RefreshAllHandVisuals((uid, component));
             OnPlayerHandsAdded?.Invoke((uid, component));
         }
 
@@ -377,7 +378,18 @@ namespace Content.Client.Hands.Systems
             if (_playerManager.LocalEntity != hand.Owner)
                 return;
 
+            RefreshAllHandVisuals(hand);
+
             OnPlayerSetActiveHand?.Invoke(hand.Comp.ActiveHandId);
+        }
+
+        private void RefreshAllHandVisuals(Entity<HandsComponent> hands)
+        {
+            foreach (var (handId, _) in hands.Comp.Hands)
+            {
+                if (GetHeldItem(hands.AsNullable(), handId) is { } held)
+                    UpdateHandVisuals((hands.Owner, hands.Comp, (SpriteComponent?) null), held, handId);
+            }
         }
     }
 }

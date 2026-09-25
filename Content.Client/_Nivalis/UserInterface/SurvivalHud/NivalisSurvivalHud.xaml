@@ -1,9 +1,6 @@
 <widgets:NivalisSurvivalHud xmlns="https://spacestation14.io"
                               xmlns:widgets="clr-namespace:Content.Client._Nivalis.UserInterface.SurvivalHud"
-                              xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
-                              HorizontalAlignment="Right"
-                              VerticalAlignment="Bottom"
-                              Margin="0 0 10 80">
+                              xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client">
     <BoxContainer Orientation="Vertical" SeparationOverride="4">
         <BoxContainer Name="SpectatorControlsBox" Orientation="Horizontal" SeparationOverride="4" Visible="False" HorizontalAlignment="Right">
             <Button Name="PrevSurvivorButton" Text="&lt; PREV" MinWidth="70" MinHeight="28"/>
